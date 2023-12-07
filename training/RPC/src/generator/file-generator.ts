@@ -3,7 +3,7 @@ import { CompositeGeneratorNode, NL, toString } from 'langium';
 import * as path from 'node:path';
 import { extractDestinationAndName } from '../cli/cli-util.js';
 import { Game } from '../language/generated/ast.js';
-import { describeGame } from './generator.js';
+import { describeGame, translateToArduino } from './generator.js';
 
 
 
@@ -36,5 +36,19 @@ export function generateGameDescription(game: Game, filePath: string, destinatio
     const result = describeGame(game);
 
     fs.writeFileSync(generatedFilePath, JSON.stringify(result, undefined, 2));
+    return generatedFilePath;
+}
+
+export function generateIno(game: Game, filePath: string, destination: string | undefined): string {
+    const data = extractDestinationAndName(filePath, destination);
+    const generatedFilePath = `${path.join(data.destination, data.name)}.ino`;
+
+    if (!fs.existsSync(data.destination)) {
+        fs.mkdirSync(data.destination, { recursive: true });
+    }
+
+    const result = translateToArduino(game);
+
+    fs.writeFileSync(generatedFilePath, result);
     return generatedFilePath;
 }

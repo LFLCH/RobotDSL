@@ -5,7 +5,7 @@ import { RpcLanguageMetaData } from '../language/generated/module.js';
 import { createRpcServices } from '../language/rpc-module.js';
 import { extractAstNode, extractDocument } from './cli-util.js';
 import { NodeFileSystem } from 'langium/node';
-import { generateGameDescription, generateJavaScript } from '../generator/file-generator.js';
+import { generateGameDescription, generateIno, generateJavaScript } from '../generator/file-generator.js';
 
 export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createRpcServices(NodeFileSystem).Rpc;
@@ -26,6 +26,20 @@ export const parseGameAndDescribe = async (fileName: string, opts: GenerateOptio
     const model = await extractAstNode<Game>(fileName, services);
     const generatedFilePath = generateGameDescription(model, fileName, opts.destination);
     console.log(chalk.green(`Results stored in : ${generatedFilePath}`));
+}
+
+
+/**
+ * 
+ * @param fileName 
+ * @param opts 
+ * ./bin/cli.js compile  examples/test.rpc 
+ */
+export const generateArduino = async (fileName: string, opts: GenerateOptions): Promise<void> => {
+    const services = createRpcServices(NodeFileSystem).Rpc;
+    const model = await extractAstNode<Game>(fileName, services);
+    const generatedFilePath = generateIno(model, fileName, opts.destination);
+    console.log(chalk.green(`Arduino file stored in : ${generatedFilePath}`));
 }
 
 /**
@@ -78,6 +92,12 @@ export default function(): void {
         .option('-d, --destination <dir>', 'destination directory of generating')
         .description('generates JavaScript code that prints "Hello, {name}!" for each greeting in a source file')
         .action(generateAction);
+    program
+        .command('compile')
+        .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
+        .option('-d, --destination <dir>', 'destination directory of generating')
+        .description('generates JavaScript code that prints "Hello, {name}!" for each greeting in a source file')
+        .action(generateArduino);
 
     program
         .command('describe')
