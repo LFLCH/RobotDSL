@@ -1,0 +1,15 @@
+{
+    "projectName": "Rpc",
+    "languages": [{
+        "id": "rpc",
+        "grammar": "src/language/rpc.langium",
+        "fileExtensions": [".rpc"],
+        "textMate": {
+            "out": "syntaxes/rpc.tmLanguage.json"
+        },
+        "monarch": {
+            "out": "syntaxes/rpc.monarch.ts"
+        }
+    }],
+    "out": "src/language/generated"
+}

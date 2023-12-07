@@ -1,0 +1,17 @@
+{
+  "players": [
+    "Leo",
+    "Jeremy"
+  ],
+  "plays": [
+    [
+      "Leo",
+      "scissors"
+    ],
+    [
+      "Jeremy",
+      "paper"
+    ]
+  ],
+  "winner": "Leo"
+}
