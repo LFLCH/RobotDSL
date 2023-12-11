@@ -13,5 +13,7 @@
       "paper"
     ]
   ],
+  "draw": false,
+  "finished": true,
   "winner": "Leo"
 }
