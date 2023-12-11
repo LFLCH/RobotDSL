@@ -53,3 +53,23 @@ footer {
 *.info{
     background-color: darkslateblue;
 }
+
+.actions{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 1em 5%;   
+}
+.actions button{
+    background-color: yellow;
+    border-radius: 2em;
+    border: 1em;
+    /* border: 3px solid yellow; */
+    width: 10em;
+    aspect-ratio: 16/9;
+    font-weight: 700;
+}
+.actions button:hover{
+    cursor: pointer;
+    border: 5px solid blueviolet;
+}

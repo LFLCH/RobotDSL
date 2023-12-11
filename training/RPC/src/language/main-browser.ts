@@ -28,7 +28,7 @@ shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, documents
 
         if(document.diagnostics?.length == 0 &&  module.plays.length==2){
            let json : GameDescription =  describeGame(module);
-           console.log(json);
+           
            (module as unknown as GameDescription) = json
         }
         

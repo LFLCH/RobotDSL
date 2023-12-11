@@ -25,7 +25,7 @@ editorConfig.useLanguageClient = true;
 editorConfig.useWebSocket = false;
 
 const workerURL = new URL('./rpc-server-worker.js', import.meta.url);
-console.log(workerURL.href);
+console.log(workerURL);
 
 const lsWorker = new Worker(workerURL.href, {
     type: 'classic',
@@ -81,6 +81,24 @@ client.onNotification('browser/DocumentChange', (resp) => {
 
     }, 200);
 });
+
+document.getElementById("ino-button").addEventListener('click',()=>generateIno())
+
+async function generateIno(){
+    try {
+        // Make a GET request to the backend endpoint when the button is clicked
+        const response = await fetch('http://localhost:3000/ino');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+    
+        const responseData = await response.text();
+        console.log('Response from server:', responseData);
+      } catch (error) {
+        console.error('Error:', error);
+      }
+}
 
 
 function updateConsole(result){
