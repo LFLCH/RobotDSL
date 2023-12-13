@@ -11,7 +11,7 @@ A simple Domain Specific Language for Omni4WD Robots.
     └── RPC  // Rock Paper Scissors basic DSL
 ```
 
-## Commands
+## Main Commands
 For the langium projects, the following commands are very usefull.
 
 ### Generate the necessary files handling the grammmar 
