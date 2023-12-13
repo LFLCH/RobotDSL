@@ -9,8 +9,11 @@ FunctionDef:
 Parameter:
     type=Type name=ID;
 
+Type:
+    type='void' | 'boolean' | 'int' | 'double';
+
 VariableDecl:
-    type=Type name=ID '=' expression=Expression';';
+    type=Type name=ID '=' expression=Expression;
 
 RobotSymbol:
     Parameter | VariableDecl;
@@ -19,14 +22,53 @@ Block:
     {infer Block} '{' statements += Statement* '}';
 
 Statement:
-    VariableDecl |
+    VariableDecl ';'|
+    Assignment ';'|
     FunctionReturn |
     Expression ';' |
     ControlStructure
     ;
 
+Assignment:
+    lhs=[RobotSymbol:ID] '=' expr=Expression;
+
 FunctionReturn:
     'return' expression=Expression ';';
+
+Movement:
+    movement='Forward' | 'Backward' | 'Left' | 'Right';
+
+Rotation:
+    rotation='Clock' | 'Anticlock';
+
+TimeUnit:
+    unit='s' | 'ms';
+
+DistanceUnit:
+    unit='m' | 'dm' | 'cm' | 'mm';
+
+ControlStructure:
+   For | While | If;
+
+For:
+    'for' '(' 
+    init=(VariableDecl | Assignment) ';'
+    cond=Expression';'
+    advancement=Assignment
+    ')'
+    block=Block
+    ;
+
+
+While:
+    'while' '(' expr=Expression ')' block=Block
+    ; 
+
+If:
+    'if''('expr=Expression')' thenBlock=Block
+    ('elseif''('expr=Expression')'elifBlock=Block)*
+    ('else'elseBlock=Block)?
+    ;
 
 Expression:
     Or;
@@ -60,7 +102,7 @@ PlusOrMinus infers Expression:
 
 MulOrDiv infers Expression:
     Primary (
-        {infer MulOrDiv.left=current} op=('*'|'/')
+        {infer MulOrDiv.left=current} op=('*'|'/' |'%')
         right=Primary
     )*
     ;
@@ -68,42 +110,30 @@ MulOrDiv infers Expression:
 Primary infers Expression:
     '(' Expression ')' |
     {infer Not} "!" expression=Primary | 
+    {infer Minus} "-" expression=Primary |
     Atomic
     ;   
 
 Atomic infers Expression:
     {infer IntConstant} value=INT |
-    {infer DoubleConstant} value = DOUBLE |
-    {infer BoolConstant} value = ('true' | 'false') |
+    {infer DoubleConstant} value=DOUBLE |
+    {infer BoolConstant} value=('true' | 'false') |
     {infer VariableCall} variable=[RobotSymbol:ID] |
-    {infer FunctionCall} functionCall = [FunctionDef:ID] 
+    {infer FunctionCall} functionCall=[FunctionDef:ID] 
                                         methodInvocation='('
                                         (args+=Expression (','args+=Expression)*)? 
-                                        ')'
+                                        ')' |
+    {infer RobotAdjust} robotAdjustment='ModifySpeed' args=Expression 'in' unit=DistanceUnit |
+    {infer RobotMovement} robotMovement=Movement args=Expression 'in' unit=DistanceUnit |
+    {infer RobotRotation} robotRotation=Rotation args=Expression |
+    {infer RobotTimeSensor} robotTimeSensor='CurrentTime' 'in' unit=TimeUnit |
+    {infer RobotDistanceSensor} robotDistanceSensor='CurrentDistance' 'in' unit=DistanceUnit
     ;
-
-ControlStructure:
-    While;
-
-While:
-    'while(' expr=Expression ')' block=Block;
-
-Type:
-    type='void' | 'boolean' | 'int' | 'double'
-    ;
-
 
 hidden terminal WS: /\s+/;
-terminal VOID returns string: "NULL";
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal MOVEMENT returns string: ("Forward" | "Backward" | "Left" | "Right");
-terminal ROTATION returns string: ("Clock" | "Anticlock");
-terminal SENSOR returns string: ("GetDistance" | "GetTime");
-terminal UNIT returns string:("mm" | "cm" | "m");
 terminal INT returns number: /[0-9]+/;
-terminal BOOLEAN returns string: ("True" | "False");
 terminal DOUBLE returns number: /[0-9]+.[0-9]+/;
-// terminal TYPE returns string: ("void" | "boolean" | "int" | "double");
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
