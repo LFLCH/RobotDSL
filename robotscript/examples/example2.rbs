@@ -1,0 +1,57 @@
+int sum(int a, int b) {
+
+    int c = a;
+    for(int i = 0; i < b; i = i + 1){
+        c = c + 1;
+    }
+    return c;
+}
+
+int a = 0;
+int b = 3;
+int d = a + b;
+int c = sum(a, b);
+
+void entry() {
+    ModifySpeed 200 in mm;
+    double t = CurrentTime in s;
+    while(t < 600) {
+        double dist = CurrentDistance in cm;
+        Forward dist - 25 in cm;
+        Clock 90;
+        t = CurrentTime in s;
+    }
+}
+
+ModifySpeed 2 in mm;
+
+ModifySpeed c in cm;
+
+Forward 2 in m;
+Clock 90;
+
+int t = CurrentTime in s;
+
+int dist = CurrentDistance in cm;
+
+
+int mul(int a, int b) {
+
+    int c = a;
+    int i = b;
+    while(i > 1) {
+        c = c + a;
+        i = i - 1;
+    }
+    return c;
+}
+
+void cmp(int a, int b) {
+    if(a < b) {
+        return -1;
+    }elseif(a > b) {
+        return 1;
+    }else{
+        return 0;
+    }
+}
