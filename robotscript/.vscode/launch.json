@@ -18,6 +18,17 @@
             ]
         },
         {
+            "name": "Start web server",
+            "type": "node",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "runtimeExecutable": "npm",
+            "args": [
+                "run",
+                "serve"
+            ]
+        },
+        {
             "name": "Attach to Language Server",
             "type": "node",
             "port": 6009,
