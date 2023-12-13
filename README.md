@@ -1,50 +1,35 @@
 # RobotDSL
 A simple Domain Specific Language for Omni4WD Robots.
 
-## Structure
+## Structure Overview
 
-```
+```c
 .
 ├── model   // SVG Files representing the Metamodel
 ├── robotscript // langium project for the DSL
-│   ├── bin
-│   ├── public
-│   │   ├── monaco-editor-workers
-│   │   │   └── workers
-│   │   ├── monaco-editor-wrapper
-│   │   │   └── assets
-│   │   └── syntaxes
-│   └── src
-│       ├── cli
-│       ├── extension
-│       ├── language
-│       ├── static
-│       └── web
 └── training // Folder for a better understanding of langium
     └── RPC  // Rock Paper Scissors basic DSL
-        ├── bin
-        ├── examples
-        ├── generated
-        ├── scripts
-        └── src
-            ├── cli
-            ├── extension
-            ├── generator
-            ├── language
-            ├── static
-            └── web
 ```
 
 ## Commands
 For the langium projects, the following commands are very usefull.
+
+### Generate the necessary files handling the grammmar 
 ```bash
 npm run langium:generate
 ```
 
+### Compile for the cli
+```bash
+npm run build
+```
+
+### Compile for the web
 ```bash
 npm run build:web
 ```
 
+### Launch the web server
 ```bash
 npm run serve
 ```
