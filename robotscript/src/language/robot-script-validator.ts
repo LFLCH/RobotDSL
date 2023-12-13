@@ -20,7 +20,6 @@ export function registerValidationChecks(services: RobotScriptServices) {
 export class RobotScriptValidator {
 
     checkPersonStartsWithCapital(model : Model, accept: ValidationAcceptor): void {
-        console.log(model);
+        
     }
-
 }
