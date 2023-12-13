@@ -4,36 +4,29 @@ entry Model:
     (functionsDef+=FunctionDef | instructions+=Statement)*;
 
 FunctionDef:
-    type=Type 'function' name=ID '('(params+=Parameter(',' params+=Parameter)*)? ')' block=Block;
+    type=Type name=ID '('(params+=Parameter(',' params+=Parameter)*)? ')' block=Block;
 
 Parameter:
     type=Type name=ID;
 
-VariableDeclaration:
-    type=Type name=ID;
+VariableDecl:
+    type=Type name=ID '=' expression=Expression';';
 
 RobotSymbol:
-    Parameter | VariableDeclaration;
-
-
-
+    Parameter | VariableDecl;
 
 Block:
     {infer Block} '{' statements += Statement* '}';
 
 Statement:
-    Assignation |
+    VariableDecl |
     FunctionReturn |
     Expression ';' |
     ControlStructure
     ;
 
-Assignation:
-    VariableDeclaration '=' expression=Expression';';
-
 FunctionReturn:
-    'return' expression=Expression;
-
+    'return' expression=Expression ';';
 
 Expression:
     Or;
@@ -75,24 +68,18 @@ MulOrDiv infers Expression:
 Primary infers Expression:
     '(' Expression ')' |
     {infer Not} "!" expression=Primary | 
-    SelectionExpression
-    ;
-
-SelectionExpression infers Expression:
     Atomic
-    (
-        (methodInvocation?='('
-            (args+=Expression (','args+=Expression)*)? ')' )?
-    )*
     ;   
-
-
 
 Atomic infers Expression:
     {infer IntConstant} value=INT |
     {infer DoubleConstant} value = DOUBLE |
     {infer BoolConstant} value = ('true' | 'false') |
-    {infer VariableCall} variable=[RobotSymbol:ID]
+    {infer VariableCall} variable=[RobotSymbol:ID] |
+    {infer FunctionCall} functionCall = [FunctionDef:ID] 
+                                        methodInvocation='('
+                                        (args+=Expression (','args+=Expression)*)? 
+                                        ')'
     ;
 
 ControlStructure:
