@@ -1,5 +1,5 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import type { Model, RobotScriptAstType } from './generated/ast.js';
+import {   type Model, type RobotScriptAstType } from './generated/ast.js';
 import type { RobotScriptServices } from './robot-script-module.js';
 
 /**
@@ -20,6 +20,26 @@ export function registerValidationChecks(services: RobotScriptServices) {
 export class RobotScriptValidator {
 
     checkPersonStartsWithCapital(model : Model, accept: ValidationAcceptor): void {
-        
+
+        for(const instruction of model.statements) {
+            console.log("Instruction :", instruction.$type);
+            // switch(instruction.$type) {
+            //     case "VariableDecl":
+            //         console.log("VariableDecl");
+            //         break;
+            //     case "Assignment":
+            //         console.log("Assignment");
+            //         break;
+            //     case "FunctionReturn":
+            //         console.log("FunctionReturn");
+            //         break;
+            //     default:
+            //         console.log(instruction.$type);
+            // }
+        }
+
+        for(const functionDef of model.functionsDef) {
+            console.log("FunctionDef :", functionDef.name, functionDef.type.type);
+        }
     }
 }

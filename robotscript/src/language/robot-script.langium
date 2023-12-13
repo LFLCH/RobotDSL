@@ -1,7 +1,7 @@
 grammar RobotScript
 
 entry Model:
-    (functionsDef+=FunctionDef | instructions+=Statement)*;
+    (functionsDef+=FunctionDef | statements+=Statement)*;
 
 FunctionDef:
     type=Type name=ID '('(params+=Parameter(',' params+=Parameter)*)? ')' block=Block;
@@ -10,7 +10,7 @@ Parameter:
     type=Type name=ID;
 
 Type:
-    type='void' | 'boolean' | 'int' | 'double';
+    type=('void' | 'boolean' | 'int' | 'double');
 
 VariableDecl:
     type=Type name=ID '=' expression=Expression;
@@ -25,8 +25,8 @@ Statement:
     VariableDecl ';'|
     Assignment ';'|
     FunctionReturn |
-    Expression ';' |
-    ControlStructure
+    ControlStructure|
+    Expression ';' 
     ;
 
 Assignment:

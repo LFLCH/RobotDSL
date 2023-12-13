@@ -21,8 +21,9 @@ import type { Model } from '../language/generated/ast.js';
 // }
 
 export function generateArduino(model: Model, filePath: string){
-    console.log("Instructions: ")
+    console.log("Generating Arduino code...");
+    // console.log("Instructions: ")
     // model.instructions.forEach(instruction => console.log(`${instruction}`));
-    console.log("Functions: ")
+    // console.log("Functions: ")
     // model.functionsDef.forEach(functionDef => console.log(`${functionDef}`));
 }

@@ -1,11 +1,16 @@
 # RobotScript
 
+## Examples files
+Several Example files of valid RobotScript code are located in the ```examples/``` folder. 
+They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI.
+
 ## CLI
-Use the cli to interact rapidly with the DSL.
+Use the cli ( ```./bin/cli.js```) to interact rapidly with the DSL.
 ```bash
-./bin/cli.js -h
+# Example of usage. 
+# 'arduino' is a registered command in src/cli/main.ts
+./bin/cli.js arduino  examples/example2.rbs 
 ```
-Example files of the DSL are located in the ```examples/``` folder. You can give them as argument while running the cli commands.
 
 ## VScode launches
 ![VScode launches](assets/vscode-extension-run.png)
