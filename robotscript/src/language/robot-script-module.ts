@@ -2,6 +2,7 @@ import type { DefaultSharedModuleContext, LangiumServices, LangiumSharedServices
 import { createDefaultModule, createDefaultSharedModule, inject } from 'langium';
 import { RobotScriptGeneratedModule, RobotScriptGeneratedSharedModule } from './generated/module.js';
 import { RobotScriptValidator, registerValidationChecks } from './robot-script-validator.js';
+import { RoboMlAcceptWeaver, weaveAcceptMethods } from './semantics/accept-weaver.js';
 
 /**
  * Declaration of custom services - add your own service classes here.
@@ -9,6 +10,7 @@ import { RobotScriptValidator, registerValidationChecks } from './robot-script-v
 export type RobotScriptAddedServices = {
     validation: {
         RobotScriptValidator: RobotScriptValidator
+        RoboMlAcceptWeaver: RoboMlAcceptWeaver
     }
 }
 
@@ -25,7 +27,8 @@ export type RobotScriptServices = LangiumServices & RobotScriptAddedServices
  */
 export const RobotScriptModule: Module<RobotScriptServices, PartialLangiumServices & RobotScriptAddedServices> = {
     validation: {
-        RobotScriptValidator: () => new RobotScriptValidator()
+        RobotScriptValidator: () => new RobotScriptValidator(),
+        RoboMlAcceptWeaver: () => new RoboMlAcceptWeaver()
     }
 };
 
@@ -59,5 +62,6 @@ export function createRobotScriptServices(context: DefaultSharedModuleContext): 
     );
     shared.ServiceRegistry.register(RobotScript);
     registerValidationChecks(RobotScript);
+    weaveAcceptMethods(RobotScript);
     return { shared, RobotScript };
 }
