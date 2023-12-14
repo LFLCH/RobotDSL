@@ -26,26 +26,25 @@ Statement:
     Assignment ';'|
     FunctionReturn |
     ControlStructure|
-    Expression ';' 
-    ;
+    Expression ';' ;
 
 Assignment:
-    lhs=[RobotSymbol:ID] '=' expr=Expression;
+    symbol=[RobotSymbol:ID] '=' expr=Expression;
 
 FunctionReturn:
     'return' expression=Expression ';';
 
 Movement:
-    movement='Forward' | 'Backward' | 'Left' | 'Right';
+    movement=('Forward' | 'Backward' | 'Left' | 'Right');
 
 Rotation:
-    rotation='Clock' | 'Anticlock';
+    rotation=('Clock' | 'Anticlock');
 
 TimeUnit:
-    unit='s' | 'ms';
+    unit=('s' | 'ms');
 
 DistanceUnit:
-    unit='m' | 'dm' | 'cm' | 'mm';
+    unit=('m' | 'dm' | 'cm' | 'mm');
 
 ControlStructure:
    For | While | If;
@@ -95,14 +94,14 @@ Comparison infers Expression:
 
 PlusOrMinus infers Expression:
     MulOrDiv (
-        ({infer Plus.left=current} '+' | {infer Minus.left=current} '-')
+        ( {infer PlusMinus.left=current} op=('+' | '-'))
         right=MulOrDiv
     )*
     ;
 
 MulOrDiv infers Expression:
     Primary (
-        {infer MulOrDiv.left=current} op=('*'|'/' |'%')
+        {infer MulDiv.left=current} op=('*'|'/' |'%')
         right=Primary
     )*
     ;
@@ -117,12 +116,9 @@ Primary infers Expression:
 Atomic infers Expression:
     {infer IntConstant} value=INT |
     {infer DoubleConstant} value=DOUBLE |
-    {infer BoolConstant} value=('true' | 'false') |
+    {infer BoolConstant} value=('true'|'false') |
     {infer VariableCall} variable=[RobotSymbol:ID] |
-    {infer FunctionCall} functionCall=[FunctionDef:ID] 
-                                        methodInvocation='('
-                                        (args+=Expression (','args+=Expression)*)? 
-                                        ')' |
+    {infer FunctionCall} functionCall=[FunctionDef:ID] '(' (args+=Expression (','args+=Expression)*)? ')' |
     {infer RobotAdjust} robotAdjustment='ModifySpeed' args=Expression 'in' unit=DistanceUnit |
     {infer RobotMovement} robotMovement=Movement args=Expression 'in' unit=DistanceUnit |
     {infer RobotRotation} robotRotation=Rotation args=Expression |

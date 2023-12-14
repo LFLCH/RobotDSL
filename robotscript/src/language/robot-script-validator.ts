@@ -23,19 +23,9 @@ export class RobotScriptValidator {
 
         for(const instruction of model.statements) {
             console.log("Instruction :", instruction.$type);
-            // switch(instruction.$type) {
-            //     case "VariableDecl":
-            //         console.log("VariableDecl");
-            //         break;
-            //     case "Assignment":
-            //         console.log("Assignment");
-            //         break;
-            //     case "FunctionReturn":
-            //         console.log("FunctionReturn");
-            //         break;
-            //     default:
-            //         console.log(instruction.$type);
-            // }
+            if(instruction.$type === "Assignment") {
+                console.log("Assignment :", instruction.expr, instruction.symbol);
+            }
         }
 
         for(const functionDef of model.functionsDef) {
