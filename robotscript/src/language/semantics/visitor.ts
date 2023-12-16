@@ -84,7 +84,7 @@ export class VBoolConstant implements ASTInterfaces.BoolConstant {
 export class VComparison implements ASTInterfaces.Comparison {
   constructor(
     public $type: "Comparison",
-    public op: "<" | "<=" | ">" | ">=",
+    public operator: "<" | "<=" | ">" | ">=",
     public left: ASTInterfaces.Expression,
     public right: ASTInterfaces.Expression,
     public $container: any
@@ -113,7 +113,7 @@ export class VDoubleConstant implements ASTInterfaces.DoubleConstant {
 export class VEquality implements ASTInterfaces.Equality {
   constructor(
     public $type: "Equality",
-    public op: "!=" | "==",
+    public operator: "!=" | "==",
     public left: ASTInterfaces.Expression,
     public right: ASTInterfaces.Expression,
     public $container: any
@@ -126,8 +126,7 @@ export class VFor implements ASTInterfaces.For {
     public $type: "For",
     public condition: ASTInterfaces.Expression,
     public block: ASTInterfaces.Block,
-    public advancement: ASTInterfaces.Assignment,
-    public cond: ASTInterfaces.Expression,
+    public increment: ASTInterfaces.Assignment,
     public init: ASTInterfaces.Assignment | ASTInterfaces.VariableDecl,
     public $container: ASTInterfaces.Block
   ) {}
@@ -170,7 +169,8 @@ export class VFunctionReturn implements ASTInterfaces.FunctionReturn {
 export class VIf implements ASTInterfaces.If {
   constructor(
     public $type: "If",
-    public expr: ASTInterfaces.Expression,
+    public mainCondition: ASTInterfaces.Expression,
+    public subsidaryConditions: ASTInterfaces.Expression[],
     public thenBlock: ASTInterfaces.Block,
     public $container: ASTInterfaces.Block,
     public elifBlock?: ASTInterfaces.Block | undefined,
@@ -221,7 +221,7 @@ export class VMovement implements ASTInterfaces.Movement {
 export class VMulDiv implements ASTInterfaces.MulDiv {
   constructor(
     public $type: "MulDiv",
-    public op: "*" | "/",
+    public operator: "*" | "/",
     public left: ASTInterfaces.Expression,
     public right: ASTInterfaces.Expression,
     public $container: any
@@ -266,7 +266,7 @@ export class VParameter implements ASTInterfaces.Parameter {
 export class VPlusMinus implements ASTInterfaces.PlusMinus {
   constructor(
     public $type: "PlusMinus",
-    public op: "+" | "-",
+    public operator: "+" | "-",
     public left: ASTInterfaces.Expression,
     public right: ASTInterfaces.Expression,
     public $container: any
@@ -385,7 +385,6 @@ export class VWhile implements ASTInterfaces.While {
     public $type: "While",
     public condition: ASTInterfaces.Expression,
     public block: ASTInterfaces.Block,
-    public expr: ASTInterfaces.Expression,
     public $container: ASTInterfaces.Block
   ) {}
 

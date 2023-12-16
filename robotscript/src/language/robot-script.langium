@@ -29,7 +29,7 @@ Statement:
     Expression ';' ;
 
 Assignment:
-    symbol=[RobotSymbol:ID] '=' expr=Expression;
+    symbol=[RobotSymbol:ID] '=' expression=Expression;
 
 FunctionReturn:
     'return' expression=Expression ';';
@@ -52,20 +52,20 @@ ControlStructure:
 For:
     'for' '(' 
     init=(VariableDecl | Assignment) ';'
-    cond=Expression';'
-    advancement=Assignment
+    condition=Expression';'
+    increment=Assignment
     ')'
     block=Block
     ;
 
 
 While:
-    'while' '(' expr=Expression ')' block=Block
+    'while' '(' condition=Expression ')' block=Block
     ; 
 
 If:
-    'if''('expr=Expression')' thenBlock=Block
-    ('elseif''('expr=Expression')'elifBlock=Block)*
+    'if''('mainCondition=Expression')' thenBlock=Block
+    ('elseif''('subsidaryConditions+=Expression')'elifBlock=Block)*
     ('else'elseBlock=Block)?
     ;
 
@@ -80,28 +80,28 @@ And infers Expression:
 
 Equality infers Expression:
     Comparison (
-        {infer Equality.left=current} op=("==" | "!=")
+        {infer Equality.left=current} operator=("==" | "!=")
         right=Comparison
     )*
     ;
 
 Comparison infers Expression:
     PlusOrMinus (
-        {infer Comparison.left=current} op=(">=" | "<=" | ">" | "<")
+        {infer Comparison.left=current} operator=(">=" | "<=" | ">" | "<")
         right=PlusOrMinus
     )*
     ;
 
 PlusOrMinus infers Expression:
     MulOrDiv (
-        ( {infer PlusMinus.left=current} op=('+' | '-'))
+        ( {infer PlusMinus.left=current} operator=('+' | '-'))
         right=MulOrDiv
     )*
     ;
 
 MulOrDiv infers Expression:
     Primary (
-        {infer MulDiv.left=current} op=('*'|'/' |'%')
+        {infer MulDiv.left=current} operator=('*'|'/' |'%')
         right=Primary
     )*
     ;

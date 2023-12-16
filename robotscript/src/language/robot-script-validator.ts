@@ -24,7 +24,7 @@ export class RobotScriptValidator {
         for(const instruction of model.statements) {
             console.log("Instruction :", instruction.$type);
             if(instruction.$type === "Assignment") {
-                console.log("Assignment :", instruction.expr, instruction.symbol);
+                console.log("Assignment :", instruction.expression, instruction.symbol);
             }
         }
 
