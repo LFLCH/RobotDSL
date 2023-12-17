@@ -13,11 +13,49 @@ footer {
     font-size: 1.2rem;
     margin-bottom: 0.5rem;
 }
+body{
+    display: flex;
+    flex-direction: column;
+}
 
-/* for monaco */
 .wrapper {
+    display: flex;
+    flex-direction: row;
     padding: 0 5%;
 }
+
+.editor {
+    width: 50%;
+}
+
+.simulation{
+    background-color: royalblue;
+    aspect-ratio: 16/9;
+    width: 50%;
+}
+
 #monaco-editor-root {
     height: calc(100vh - 7.5rem - 70px);
+}
+
+.actions {
+    display: flex;
+    flex-direction: row;
+    padding: 1em 5%;
+    justify-content: flex-end;
+    gap: 1em;
+}
+
+.actions button{
+    background-color: yellow;
+    border-radius: 2em;
+    width: 6em;
+    border: 1em;
+    height: 2em;
+    font-weight: 700;
+}
+.actions button:hover{
+    cursor: pointer;
+    border: 5px solid white;
+    background-color: aquamarine;
 }

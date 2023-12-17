@@ -91,9 +91,14 @@ export class RobotEnvironment {
             if(robot.remainingDistance > 0 && robot.speed > 0){
                 const distance = Math.min(robot.remainingDistance, (robot.speed * dt/1000));
                 const mov = robot.moveInstruction;
-                const angle = mov==="Forward" ? robot.angle : mov==="Backward" ? this.validAngle(robot.angle - 180) : mov==="Left" ? this.validAngle(robot.angle -90) : this.validAngle(robot.angle + 90);    
-                    robot.y -= distance * Math.cos(this.toRadians(angle));
-                    robot.x += distance * Math.sin(this.toRadians(angle));
+                const angle = 
+                    mov==="Forward" ? robot.angle : 
+                    mov==="Backward" ? this.validAngle(robot.angle - 180) :
+                    mov==="Left" ? this.validAngle(robot.angle -90) : 
+                    this.validAngle(robot.angle + 90);    
+
+                robot.y -= distance * Math.cos(this.toRadians(angle));
+                robot.x += distance * Math.sin(this.toRadians(angle));
                 // Environment limits
                 robot.x = Math.max(0, Math.min(this.width, robot.x));
                 robot.y = Math.max(0, Math.min(this.height, robot.y));
@@ -114,20 +119,21 @@ export class RobotEnvironment {
      * Get the distance captured by the sensor in front of the robot
      * @param robotIndex 
      * @returns the distance between the robot and the border he is facing in his angle
+     * @warning incomplete function ! TODO: currently only one border is considered at the time. 
      */
     public getDistance(robotIndex: number): number {
         const robot = this.robots[robotIndex];
         let distance;
-        if(robot.angle <90){ //  up & right border
+        if(robot.angle <90){ //  up border
             distance = robot.y / Math.cos(this.toRadians(robot.angle));
         }
-        else if (robot.angle < 180){ // bottom & right border
+        else if (robot.angle < 180){ // right border
             distance = (this.height - robot.y) / Math.sin(this.toRadians(robot.angle));
         }
-        else if (robot.angle < 270){ // bottom & left border
+        else if (robot.angle < 270){ // bottom border
             distance = robot.x / Math.cos(this.toRadians(270-robot.angle));
         }
-        else { // top & left border
+        else { // left border
             distance = robot.x / Math.cos(this.toRadians(robot.angle - 270));
         }
         return distance;

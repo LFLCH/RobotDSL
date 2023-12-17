@@ -8,15 +8,24 @@
     </head>
     <body>
         <h1>RobotScript in Langium</h1>
+        <div class="actions">
+            <button id="run">Run</button>
+            <button id="compile">Compile</button>
+        </div>
         <div class="wrapper">
-            <!-- Monaco Root -->
-            <div id="monaco-editor-root"></div>
+            <div class="editor">
+                <div id="monaco-editor-root"></div>
+            </div>
+            <div class="simulation">
+                Expected simulation output here.
+                <canvas id="canvas"></canvas>
+            </div>
         </div>
         <footer>
             <p style="font-style:italic">Powered by</p>
             <img width="125" src="https://langium.org/assets/langium_logo_w_nib.svg" alt="Langium">
         </footer>
-        <!-- Monaco Configuration -->
-        <script type="module" src="setup.js"></script>
+    <!-- Monaco Configuration -->
+    <script type="module" src="setup.js"></script>
     </body>
 </html>
