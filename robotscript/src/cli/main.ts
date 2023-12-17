@@ -6,6 +6,7 @@ import { createRobotScriptServices } from '../language/robot-script-module.js';
 import { extractAstNode } from './cli-util.js';
 import { generateArduino } from './generator.js';
 import { NodeFileSystem } from 'langium/node';
+import { Interpreter } from '../interpretation/interpreter.js';
 
 // export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
 //     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
@@ -20,6 +21,13 @@ export const generateArduinoAction = async (fileName: string, opts: GenerateOpti
     const model = await extractAstNode<Model>(fileName, services);
     const generatedFilePath = generateArduino(model, fileName);
     console.log(chalk.green(`Arduino code generated successfully: ${generatedFilePath}`));
+}
+
+export const interpretRobotScriptFile = async (fileName: string): Promise<void> => {
+    const services = createRobotScriptServices(NodeFileSystem).RobotScript;
+    const model = await extractAstNode<Model>(fileName, services);
+    const interpreter = new Interpreter();
+    interpreter.interpret(model);
 }
 
 export type GenerateOptions = {
@@ -45,8 +53,13 @@ export default function(): void {
         .command('arduino')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
         .option('-d, --destination <dir>', 'destination directory of generating')
-        .description('generates Arduino file from a RobotScritp file (.rbs)')
+        .description('generates Arduino file from a RobotScript file (.rbs)')
         .action(generateArduinoAction);
-
+    
+    program
+        .command('interpret')
+        .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
+        .description('interprets a RobotScript file (.rbs)')
+        .action(interpretRobotScriptFile);
     program.parse(process.argv);
 }

@@ -119,11 +119,12 @@ Atomic infers Expression:
     {infer BoolConstant} value=('true'|'false') |
     {infer VariableCall} variable=[RobotSymbol:ID] |
     {infer FunctionCall} functionCall=[FunctionDef:ID] '(' (args+=Expression (','args+=Expression)*)? ')' |
-    {infer RobotAdjust} robotAdjustment='ModifySpeed' args=Expression 'in' unit=DistanceUnit |
-    {infer RobotMovement} robotMovement=Movement args=Expression 'in' unit=DistanceUnit |
-    {infer RobotRotation} robotRotation=Rotation args=Expression |
-    {infer RobotTimeSensor} robotTimeSensor='CurrentTime' 'in' unit=TimeUnit |
-    {infer RobotDistanceSensor} robotDistanceSensor='CurrentDistance' 'in' unit=DistanceUnit
+    {infer RobotSpeedAdjust} 'ModifySpeed' speed=Expression 'in' unit=DistanceUnit |
+    {infer RobotMovement} robotMovement=Movement distance=Expression 'in' unit=DistanceUnit |
+    {infer RobotRotation} robotRotation=Rotation angle=Expression |
+    {infer RobotTimeSensor} 'CurrentTime' 'in' unit=TimeUnit |
+    {infer RobotDistanceSensor} 'CurrentDistance' 'in' unit=DistanceUnit |
+    {infer Print} 'Print'  expression=Expression  
     ;
 
 hidden terminal WS: /\s+/;

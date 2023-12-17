@@ -26,7 +26,8 @@ export interface RobotScriptVisitor {
   visitOr(node: ASTInterfaces.Or): any;
   visitParameter(node: ASTInterfaces.Parameter): any;
   visitPlusMinus(node: ASTInterfaces.PlusMinus): any;
-  visitRobotAdjust(node: ASTInterfaces.RobotAdjust): any;
+  visitPrint(node: ASTInterfaces.Print): any;
+  visitRobotSpeedAdjust(node: ASTInterfaces.RobotSpeedAdjust): any;
   visitRobotDistanceSensor(node: ASTInterfaces.RobotDistanceSensor): any;
   visitRobotMovement(node: ASTInterfaces.RobotMovement): any;
   visitRobotRotation(node: ASTInterfaces.RobotRotation): any;
@@ -274,11 +275,19 @@ export class VPlusMinus implements ASTInterfaces.PlusMinus {
   accept(visitor: RobotScriptVisitor): any {}
 }
 
-export class VRobotAdjust implements ASTInterfaces.RobotAdjust {
+export class VPrint implements ASTInterfaces.Print {
   constructor(
-    public $type: "RobotAdjust",
-    public args: ASTInterfaces.Expression,
-    public robotAdjustment: "ModifySpeed",
+    public $type: "Print",
+    public expression: ASTInterfaces.Expression,
+    public $container: any
+  ) {}
+  accept(visitor: RobotScriptVisitor): any {}
+}
+
+export class VRobotSpeedAdjust implements ASTInterfaces.RobotSpeedAdjust {
+  constructor(
+    public $type: "RobotSpeedAdjust",
+    public speed: ASTInterfaces.Expression,
     public unit: ASTInterfaces.DistanceUnit,
     public $container: any
   ) {}
@@ -289,7 +298,6 @@ export class VRobotDistanceSensor implements ASTInterfaces.RobotDistanceSensor {
   constructor(
     public $type: "RobotDistanceSensor",
     public args: ASTInterfaces.Expression,
-    public robotDistanceSensor: "CurrentDistance",
     public unit: ASTInterfaces.DistanceUnit,
     public $container: any
   ) {}
@@ -299,7 +307,7 @@ export class VRobotMovement implements ASTInterfaces.RobotMovement {
   constructor(
     public $type: "RobotMovement",
     public robotMovement: ASTInterfaces.Movement,
-    public args: ASTInterfaces.Expression,
+    public distance: ASTInterfaces.Expression,
     public unit: ASTInterfaces.DistanceUnit,
     public $container: any
   ) {}
@@ -310,7 +318,7 @@ export class VRobotRotation implements ASTInterfaces.RobotRotation {
   constructor(
     public $type: "RobotRotation",
     public robotRotation: ASTInterfaces.Rotation,
-    public args: ASTInterfaces.Expression,
+    public angle: ASTInterfaces.Expression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}

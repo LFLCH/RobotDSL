@@ -20,16 +20,16 @@ export function registerValidationChecks(services: RobotScriptServices) {
 export class RobotScriptValidator {
 
     checkPersonStartsWithCapital(model : Model, accept: ValidationAcceptor): void {
+        console.log("Typechecking the model...");
+        // for(const instruction of model.statements) {
+        //     console.log("Instruction :", instruction.$type);
+        //     if(instruction.$type === "Assignment") {
+        //         console.log("Assignment :", instruction.expression, instruction.symbol);
+        //     }
+        // }
 
-        for(const instruction of model.statements) {
-            console.log("Instruction :", instruction.$type);
-            if(instruction.$type === "Assignment") {
-                console.log("Assignment :", instruction.expression, instruction.symbol);
-            }
-        }
-
-        for(const functionDef of model.functionsDef) {
-            console.log("FunctionDef :", functionDef.name, functionDef.type.type);
-        }
+        // for(const functionDef of model.functionsDef) {
+        //     console.log("FunctionDef :", functionDef.name, functionDef.type.type);
+        // }
     }
 }

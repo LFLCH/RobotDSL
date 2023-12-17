@@ -1,6 +1,6 @@
 
 import { RobotEnvironment } from "./environment/environment.js";
-import { And, Assignment, Block, BoolConstant, Comparison, DistanceUnit, DoubleConstant, Equality, For, FunctionCall, FunctionDef, FunctionReturn, If, IntConstant, Minus, Model, Movement, MulDiv, Not, Or, Parameter, PlusMinus, RobotAdjust, RobotDistanceSensor, RobotMovement, RobotRotation, RobotTimeSensor, Rotation, TimeUnit, Type, VariableDecl, VariableCall, While, Statement, isAssignment, isControlStructure, isExpression, isFunctionReturn, isVariableDecl, ControlStructure, isFor, isIf, isWhile, Expression, isAnd, isBoolConstant, isComparison, isDoubleConstant, isEquality, isFunctionCall, isIntConstant, isMinus, isMovement, isMulDiv, isNot, isOr, isPlusMinus, isRobotAdjust, isRobotDistanceSensor, isRobotMovement, isRobotRotation, isRobotTimeSensor, isVariableCall, RobotSymbol } from "../language/generated/ast.js";
+import { And, Assignment, Block, BoolConstant, Comparison, DistanceUnit, DoubleConstant, Equality, For, FunctionCall, FunctionDef, FunctionReturn, If, IntConstant, Minus, Model, Movement, MulDiv, Not, Or, Parameter, PlusMinus, RobotSpeedAdjust, RobotDistanceSensor, RobotMovement, RobotRotation, RobotTimeSensor, Rotation, TimeUnit, Type, VariableDecl, VariableCall, While, Statement, isAssignment, isControlStructure, isExpression, isFunctionReturn, isVariableDecl, ControlStructure, isFor, isIf, isWhile, Expression, isAnd, isBoolConstant, isComparison, isDoubleConstant, isEquality, isFunctionCall, isIntConstant, isMinus, isMovement, isMulDiv, isNot, isOr, isPlusMinus, isRobotSpeedAdjust, isRobotDistanceSensor, isRobotMovement, isRobotRotation, isRobotTimeSensor, isVariableCall, RobotSymbol, isPrint, Print } from "../language/generated/ast.js";
 import { RobotScriptVisitor } from "../language/semantics/visitor.js";
 
 
@@ -223,8 +223,8 @@ export class InterpreterVisitor implements RobotScriptVisitor {
     }
   }
 
-  visitMovement(node: Movement) {
-    throw new Error("Method not implemented.");
+  visitMovement(node: Movement, value: number = 0) : void {
+    this.environment.setRobotMovement(value, node.movement);
   }
   visitMulDiv(node: MulDiv) : number{
     const left = this.visitNumberExpression(node.left);
@@ -259,30 +259,44 @@ export class InterpreterVisitor implements RobotScriptVisitor {
         return left - right;
     }
   }
-  visitRobotAdjust(node: RobotAdjust) {
-    throw new Error("Method not implemented.");
+
+  visitPrint(node: Print) {
+    console.log(this.visitTypedExpression(node.expression));
   }
-  visitRobotDistanceSensor(node: RobotDistanceSensor) {
-    throw new Error("Method not implemented.");
+  visitRobotSpeedAdjust(node: RobotSpeedAdjust) : void {
+    this.environment.setRobotSpeed(this.robotIndex, this.visitDistanceUnit(node.unit, this.visitNumberExpression(node.speed)));
+  }
+  visitRobotDistanceSensor(node: RobotDistanceSensor) : number{
+    const d : number =this.environment.getDistance(this.robotIndex);
+    return this.visitDistanceUnit(node.unit, d);
   }
   visitRobotMovement(node: RobotMovement) {
-    throw new Error("Method not implemented.");
+    return this.visitMovement(node.robotMovement, this.visitNumberExpression(node.distance) )
   }
   visitRobotRotation(node: RobotRotation) {
-    throw new Error("Method not implemented.");
+    this.visitRotation(node.robotRotation, this.visitNumberExpression(node.angle));
   }
-  visitRobotTimeSensor(node: RobotTimeSensor) {
-    throw new Error("Method not implemented.");
+  visitRobotTimeSensor(node: RobotTimeSensor) : number{
+    return this.visitTimeUnit(node.unit, this.environment.getTime()); 
   }
-  visitRotation(node: Rotation) {
-    throw new Error("Method not implemented.");
+  visitRotation(node: Rotation, value : number = 0) : void {
+    const angle = this.environment.getRobotAngle(this.robotIndex);
+    switch(node.rotation)
+    {
+      case "Clock":
+        this.environment.setRobotAngle(this.robotIndex, angle + value);
+        break;
+      case "Anticlock":
+        this.environment.setRobotAngle(this.robotIndex, angle - value)
+        break;
+    }
   }
   /**
    * Converts a time unit to seconds.
    * @param node 
    * @param value 
    */
-  visitTimeUnit(node: TimeUnit, value: number = 0) {
+  visitTimeUnit(node: TimeUnit, value: number = 0) : number{
     switch (node.unit) {
       case "s":
         return value;
@@ -291,7 +305,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
     }
   }
   visitType(node: Type) {
-    throw new Error("Method not implemented.");
+    // Not necessary. Handled by other methods. 
   }
   visitVariableDecl(node: VariableDecl) {
     this.contexts[this.contexts.length - 1].variables.set(node.name, { type: node.type.type, value: this.visitTypedExpression(node.expression) });
@@ -324,13 +338,12 @@ export class InterpreterVisitor implements RobotScriptVisitor {
    */
   visitStatement(stmt: Statement) {
     // Assignment | ControlStructure | Expression | FunctionReturn | VariableDecl
+    
     if (isAssignment(stmt)) this.visitAssignment(stmt);
     else if (isControlStructure(stmt)) this.visitControlStructure(stmt);
     else if (isExpression(stmt)) this.visitExpression(stmt);
     else if (isFunctionReturn(stmt)) this.visitFunctionReturn(stmt);
-    else if (isVariableDecl(stmt)) {
-      this.visitVariableDecl(stmt);
-    } 
+    else if (isVariableDecl(stmt))  this.visitVariableDecl(stmt);
   }
 
   visitControlStructure(stmt: ControlStructure) {
@@ -355,9 +368,9 @@ export class InterpreterVisitor implements RobotScriptVisitor {
     else if (isNot(stmt)) return this.visitNot(stmt);
     else if (isOr(stmt)) return this.visitOr(stmt);
     else if (isPlusMinus(stmt)) return this.visitPlusMinus(stmt);
-    else if (isRobotAdjust(stmt)) return this.visitRobotAdjust(stmt);
-    else if (isRobotDistanceSensor(stmt))
-      return this.visitRobotDistanceSensor(stmt);
+    else if (isPrint(stmt)) return this.visitPrint(stmt);
+    else if (isRobotSpeedAdjust(stmt)) return this.visitRobotSpeedAdjust(stmt);
+    else if (isRobotDistanceSensor(stmt)) return this.visitRobotDistanceSensor(stmt);
     else if (isRobotMovement(stmt)) return this.visitRobotMovement(stmt);
     else if (isRobotRotation(stmt)) return this.visitRobotRotation(stmt);
     else if (isRobotTimeSensor(stmt)) return this.visitRobotTimeSensor(stmt);

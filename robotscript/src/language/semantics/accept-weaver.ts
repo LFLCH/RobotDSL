@@ -109,8 +109,8 @@ export class RoboMlAcceptWeaver {
     }
 
 
-    weaveRobotAdjust(node : InterfaceAST.RobotAdjust, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotAdjust(node as unknown as InterfaceAST.RobotAdjust);}
+    weaveRobotSpeedAdjust(node : InterfaceAST.RobotSpeedAdjust, accept : ValidationAcceptor) : void{
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotSpeedAdjust(node as unknown as InterfaceAST.RobotSpeedAdjust);}
     }
 
     weaveRobotDistanceSensor(node : InterfaceAST.RobotDistanceSensor, accept : ValidationAcceptor) : void{
@@ -176,7 +176,7 @@ export class RoboMlAcceptWeaver {
         Or : this.weaveOr,
         Parameter : this.weaveParameter,
         PlusMinus : this.weavePlusMinus,
-        RobotAdjust : this.weaveRobotAdjust,
+        RobotSpeedAdjust : this.weaveRobotSpeedAdjust,
         RobotDistanceSensor : this.weaveRobotDistanceSensor,
         RobotMovement : this.weaveRobotMovement,
         RobotRotation : this.weaveRobotRotation,
