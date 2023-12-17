@@ -224,7 +224,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitMovement(node: Movement, value: number = 0) : void {
-    this.environment.setRobotMovement(value, node.movement);
+    this.environment.makeRobotMove(this.robotIndex, node.movement, value);
   }
   visitMulDiv(node: MulDiv) : number{
     const left = this.visitNumberExpression(node.left);

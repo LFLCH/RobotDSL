@@ -13,10 +13,6 @@ export class Interpreter {
      }
 
     interpret(model: Model): void {
-        this.environment?.startSimulation();
-        console.log("Interpreting the model...");
         this.visitor.visitModel(model);
-        console.log("Interpretation finished.");
-        this.environment?.stopSimulation();
     }
 }

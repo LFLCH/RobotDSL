@@ -25,7 +25,6 @@ export class RobotEnvironment {
         public height: number,
         private robots: Robot[] = [ new Robot(width / 2, height / 2)],
         private time: number = 0, // in milliseconds
-        private simulationId: NodeJS.Timer | undefined = undefined
     ) {}
 
     /**
@@ -43,8 +42,18 @@ export class RobotEnvironment {
      * @param angle in degrees. Can be negative (it will be processed for its positive value)
      */
     public setRobotAngle(robotIndex: number, angle: number) : void {
+        console.log("Setting up the angle ", angle);
+        this.robots[robotIndex].angle = this.validAngle(angle);
+    }
+
+    /**
+     * 
+     * @param angle 
+     * @returns the angle value between 0 and 360
+     */
+    private  validAngle(angle : number){
         if(angle<0) angle= 360 + (angle%360)
-        this.robots[robotIndex].angle = angle%360;
+        return angle%360;
     }
 
     /**
@@ -61,45 +70,37 @@ export class RobotEnvironment {
      * @param robotIndex 
      * @param movement 
      */
-    public setRobotMovement(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right"){
-        this.robots[robotIndex].moveInstruction = movement;
+    public makeRobotMove(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right", distance : number){
+        console.log("Making the robot move ", movement, " for ", distance, " meters.");
+        const robot = this.robots[robotIndex];
+        robot.moveInstruction = movement;
+        robot.remainingDistance =distance;
+        while(robot.remainingDistance > 0){
+            this.update(10000);
+            console.log(`Current position : (${robot.x}, ${robot.y})`)
+        }
     }
 
     /**
      * 
      * @param dt delta time in ms
      */
-    public update(dt: number) {
-        if(this.time%100===0) console.log(`Updating simulation at ${this.time}ms`);
+    private update(dt: number) {
         this.time += dt;
         for (const robot of this.robots) {
-            robot.x += robot.speed * Math.cos(robot.angle) * dt;
-            robot.y += robot.speed * Math.sin(robot.angle) * dt;
-
-            // Beware environment limits
-            robot.x = Math.max(0, Math.min(this.width, robot.x));
-            robot.y = Math.max(0, Math.min(this.height, robot.y));
+            if(robot.remainingDistance > 0 && robot.speed > 0){
+                const distance = Math.min(robot.remainingDistance, (robot.speed * dt/1000));
+                const mov = robot.moveInstruction;
+                const angle = mov==="Forward" ? robot.angle : mov==="Backward" ? this.validAngle(robot.angle - 180) : mov==="Left" ? this.validAngle(robot.angle -90) : this.validAngle(robot.angle + 90);    
+                    robot.y -= distance * Math.cos(this.toRadians(angle));
+                    robot.x += distance * Math.sin(this.toRadians(angle));
+                // Environment limits
+                robot.x = Math.max(0, Math.min(this.width, robot.x));
+                robot.y = Math.max(0, Math.min(this.height, robot.y));
+                
+                robot.remainingDistance = Math.max(0, robot.remainingDistance - distance);
+            }
         }
-    }
-
-    public startSimulation(){
-        console.log("Simulation started")
-        this.time = 0;
-        // Simulate every 10ms
-        this.simulationId = setInterval(() => this.update(100), 10);
-    }
-
-    public stopSimulation(){
-        if(this.simulationId) {
-            console.log("Simulation stopped")
-            clearInterval(this.simulationId);
-        }
-    }
-
-    public resetSimulation(){
-        this.stopSimulation();
-        this.robots = [ new Robot(this.width / 2, this.height / 2)];
-        this.time = 0;
     }
 
     /**
