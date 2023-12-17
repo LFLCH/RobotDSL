@@ -6,9 +6,12 @@ They can be used as reference to understand the language and to verify the behav
 
 ## CLI
 Use the cli ( ```./bin/cli.js```) to interact rapidly with the DSL.
+### Interpret in command line
 ```bash
-# Example of usage. 
-# 'arduino' is a registered command in src/cli/main.ts
+./bin/cli.js interpret  examples/example2.rbs 
+```
+### Compile to Arduino
+```bash
 ./bin/cli.js arduino  examples/example2.rbs 
 ```
 
