@@ -27,7 +27,11 @@ export const interpretRobotScriptFile = async (fileName: string): Promise<void> 
     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
     const model = await extractAstNode<Model>(fileName, services);
     const interpreter = new Interpreter();
-    interpreter.interpret(model);
+    const environment = interpreter.interpret(model);
+    console.log("Execution environment:", "width:", environment.width, "height:", environment.height, "robots:", environment.executors)
+    for(const instruction of environment.instructions){
+        console.log(instruction.timestamp, instruction.executor, instruction.name, instruction.value);
+    }
 }
 
 export type GenerateOptions = {

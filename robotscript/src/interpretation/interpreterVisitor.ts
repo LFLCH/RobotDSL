@@ -261,7 +261,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitPrint(node: Print) {
-    console.log(this.visitTypedExpression(node.expression));
+    this.environment.makeRobotSpeak(this.robotIndex, this.visitTypedExpression(node.expression));
   }
   visitRobotSpeedAdjust(node: RobotSpeedAdjust) : void {
     this.environment.setRobotSpeed(this.robotIndex, this.visitDistanceUnit(node.unit, this.visitNumberExpression(node.speed)));

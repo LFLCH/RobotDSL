@@ -3,6 +3,7 @@ import { BrowserMessageReader, BrowserMessageWriter, createConnection, Notificat
 import { createRobotScriptServices } from './robot-script-module.js';
 import { Model } from './generated/ast.js';
 import { Interpreter } from '../interpretation/interpreter.js';
+import { RunningEnvironment } from '../interpretation/environment/runningEnvironment.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -34,7 +35,6 @@ function liveASTAnalysis(){
                 diagnostics: document.diagnostics ?? []
             });
             // }
-            console.log(documents)
     });
 }
 
@@ -46,15 +46,18 @@ function compile(){
 }
 
 function run(){
-    type RunResult = { result: string };
+    type RunResult = { errorMessage?:string, environment?: RunningEnvironment};
     const analysisRunResultNotification = new NotificationType<RunResult>('browser/run-result');
     connection.onNotification('browser/run', (params: any) => {
-        console.log("Received run request !")
-        if(currentModel){
-            const interpreter = new Interpreter();
-            interpreter.interpret(currentModel);
+        let errorMessage = undefined;
+        let environment = undefined;
+        if (currentModel) {
+          const interpreter = new Interpreter();
+          environment = interpreter.interpret(currentModel);
+        } else {
+          errorMessage = "No valid model to run";
         }
-        connection.sendNotification(analysisRunResultNotification, {result: currentModel?"ok":"unavailable"});
+        connection.sendNotification(analysisRunResultNotification, {errorMessage, environment});
     }
     );
 }

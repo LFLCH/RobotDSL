@@ -1,3 +1,4 @@
+import { Instruction, RunningEnvironment } from "./runningEnvironment.js";
 import { Robot } from "./robot.js";
 
 // Maybe in next version ?
@@ -27,6 +28,32 @@ export class RobotEnvironment {
         private time: number = 0, // in milliseconds
     ) {}
 
+    public getAllInstructions() : Instruction[] {
+        let instructions : Instruction[] = [];
+        // Retrieve all instructions from all robots, and sort them by timestamp
+        for (const robot of this.robots) {
+            for (let instruction of robot.getInstructionHistory()) {
+                instruction.executor = "@Robot" + this.robots.indexOf(robot);
+                instructions.push(instruction);
+            }
+        }
+        instructions.sort((a, b) => a.timestamp - b.timestamp);
+        return instructions;
+    }
+
+    public getRobotInstructions(robotIndex : number) : Instruction[] {
+        return this.robots[robotIndex].getInstructionHistory();
+    }
+
+    public export() : RunningEnvironment {
+        return {
+            width: this.width,
+            height: this.height,
+            executors: this.robots.map( (robot, index) => "@Robot" + index),
+            instructions: this.getAllInstructions()
+        }
+    }
+
     /**
      * Sets up the robot speed
      * @param robotIndex 
@@ -34,6 +61,7 @@ export class RobotEnvironment {
      */
     public setRobotSpeed(robotIndex: number, speed: number) {
         this.robots[robotIndex].speed = speed;
+        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "speed", "value":speed});
     }
 
     /**
@@ -42,8 +70,8 @@ export class RobotEnvironment {
      * @param angle in degrees. Can be negative (it will be processed for its positive value)
      */
     public setRobotAngle(robotIndex: number, angle: number) : void {
-        console.log("Setting up the angle ", angle);
         this.robots[robotIndex].angle = this.validAngle(angle);
+        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "rotate", "value":this.robots[robotIndex].angle});
     }
 
     /**
@@ -71,13 +99,12 @@ export class RobotEnvironment {
      * @param movement 
      */
     public makeRobotMove(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right", distance : number){
-        console.log("Making the robot move ", movement, " for ", distance, " meters.");
+        // console.log("Making the robot move ", movement, " for ", distance, " meters.");
         const robot = this.robots[robotIndex];
         robot.moveInstruction = movement;
         robot.remainingDistance =distance;
         while(robot.remainingDistance > 0){
             this.update(10000);
-            console.log(`Current position : (${robot.x}, ${robot.y})`)
         }
     }
 
@@ -104,6 +131,8 @@ export class RobotEnvironment {
                 robot.y = Math.max(0, Math.min(this.height, robot.y));
                 
                 robot.remainingDistance = Math.max(0, robot.remainingDistance - distance);
+
+                robot.recordInstruction({"timestamp": this.time, "name": "move", "value":[robot.x, robot.y]});
             }
         }
     }
@@ -141,6 +170,10 @@ export class RobotEnvironment {
 
     private toRadians (angle : number) : number {
         return angle * (Math.PI / 180);
+    }
+
+    public makeRobotSpeak(robotIndex: number, message: any) {
+        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "speak", "value":message});
     }
 
 }

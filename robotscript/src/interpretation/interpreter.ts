@@ -1,5 +1,6 @@
 import { Model } from "../language/generated/ast.js";
 import { RobotEnvironment } from "./environment/environment.js";
+import { RunningEnvironment } from "./environment/runningEnvironment.js";
 import { InterpreterVisitor } from "./interpreterVisitor.js";
 
 export class Interpreter {
@@ -12,7 +13,8 @@ export class Interpreter {
         this.visitor = new InterpreterVisitor(this.environment);
      }
 
-    interpret(model: Model): void {
+    interpret(model: Model): RunningEnvironment {
         this.visitor.visitModel(model);
+        return this.environment.export();
     }
 }
