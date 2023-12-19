@@ -59,3 +59,8 @@ body{
     border: 5px solid white;
     background-color: aquamarine;
 }
+
+#canvas {
+    aspect-ratio: 1;
+    background-color: blanchedalmond;
+}

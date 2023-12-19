@@ -55,3 +55,6 @@ document.getElementById("compile").addEventListener("click", () => {
 client.onNotification("browser/run-result", (resp) => {
     console.log(resp);
 } );
+
+
+// Expected simulation output here.

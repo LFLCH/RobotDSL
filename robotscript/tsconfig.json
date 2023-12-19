@@ -15,7 +15,8 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": [
-     "src/**/*.ts"
+     "src/**/*.ts",
+    //  "src/static/scripts/rbs-canvas.ts"
   ],
   "exclude": [
      "out",
