@@ -29,9 +29,31 @@ body{
 }
 
 .simulation{
-    background-color: royalblue;
-    aspect-ratio: 16/9;
     width: 50%;
+    display: flex;
+    padding: 2em;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.canvas-wrapper {
+    display: block;
+}
+
+ #simulation-canvas {
+    border-radius: 1em;
+    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+}
+
+#simulation-console{
+    font-family:monospace;
+    color: green;
+    border-radius: 1em;
+    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+    min-width: 20em;
+    padding: 1em;
 }
 
 #monaco-editor-root {
@@ -58,9 +80,4 @@ body{
     cursor: pointer;
     border: 5px solid white;
     background-color: aquamarine;
-}
-
-#canvas {
-    aspect-ratio: 1;
-    background-color: blanchedalmond;
 }

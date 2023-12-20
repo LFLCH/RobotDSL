@@ -17,8 +17,12 @@
                 <div id="monaco-editor-root"></div>
             </div>
             <div class="simulation">
-                <img hidden id="robotImage" src="assets/metro.svg" alt="robot">
-                <canvas id="canvas"></canvas>
+                <div class="canvas-wrapper">
+                    <canvas id="simulation-canvas"></canvas>
+                </div>
+                <div id="simulation-console">
+                    hello, world!
+                </div>
             </div>
         </div>
         <footer>
@@ -28,7 +32,7 @@
     <!-- Monaco Configuration -->
     <script type="module" src="setup.js"></script>
     <script type="module" src="rbs-canvas.js"></script>
-    <script type="module" src="test.js"></script>
+    <!-- <script type="module" src="canvas.js"></script> -->
     <!-- <script type="module" src="canvas.js"></script> -->
     </body>
 </html>

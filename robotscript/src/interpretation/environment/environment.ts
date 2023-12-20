@@ -18,7 +18,7 @@ import { Robot } from "./robot.js";
 export class RobotEnvironment {
 
     public static getDefaultEnvironment(): RobotEnvironment {
-        return new RobotEnvironment(100, 100);
+        return new RobotEnvironment(400, 400);
     }
 
     public constructor(

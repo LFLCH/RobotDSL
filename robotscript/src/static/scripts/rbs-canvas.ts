@@ -1,31 +1,52 @@
-function updateRobotScriptCanvas() {
-    const canvas : HTMLCanvasElement | null = document.getElementById('canvas') as HTMLCanvasElement | null;
-    if (!canvas) {
-        throw new Error('Unable to find canvas element!');
-    }
-    const context = canvas.getContext('2d');
+import { RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
 
-    if (!context) {
-        throw new Error('Unable to get canvas context!');
-    }
+const canvas : HTMLCanvasElement  = document.getElementById('simulation-canvas')! as HTMLCanvasElement;
+const ctx = canvas.getContext('2d')!;
 
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = "black";
+document.addEventListener('run-execution', (event) => {
+    const environment = (event as CustomEvent<RunningEnvironment>).detail;
+    console.log(environment);
+    drawEnvironment(environment);
+});
 
-    context.beginPath();
-    context.strokeStyle = '#333';
-    for (let x = 0; x <= canvas.width; x+=(canvas.width / 10)) {
-        context.moveTo(x, 0);
-        context.lineTo(x, canvas.height);
-    }
-    for (let y = 0; y <= canvas.height; y+=(canvas.height / 10)) {
-        context.moveTo(0, y);
-        context.lineTo(canvas.width, y);
-    }
-    context.stroke();
 
-    context.strokeStyle = 'white';
-    console.log('Updating canvas');
+function drawEnvironment(environment: RunningEnvironment) {
+    // update the canvas width and height
+    let height = environment.height;
+    let width = environment.width;
+
+    // if(width<height) height = (width*environment.height)/environment.width;
+    // else width = (height*environment.width) / environment.height;
+
+    canvas.setAttribute('width', `${width}`);
+    canvas.setAttribute('height', `${height}`);
+
+    // draw a grid on the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    const gridSize = 50;
+
+    ctx.strokeStyle = 'yellow';
+
+    // Draw vertical lines
+    for (let x = 0; x <= canvas.width; x += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(Math.floor(x), 0);
+      ctx.lineTo(Math.floor(x), canvas.height);
+      ctx.stroke();
+    }
+  
+    // Draw horizontal lines
+    for (let y = 0; y <= canvas.height; y += gridSize) {
+      ctx.beginPath();
+      ctx.moveTo(0, Math.floor(y));
+      ctx.lineTo(canvas.width, Math.floor(y));
+      ctx.stroke();
+    }
+  
+    // Draw the robot (red square)
+    // ctx.fillStyle = 'red';
+    // ctx.fillRect(robotPosition.x * gridSize, robotPosition.y * gridSize, gridSize, gridSize);
+  
+
 }
 
-updateRobotScriptCanvas()

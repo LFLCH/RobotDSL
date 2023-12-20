@@ -50,11 +50,16 @@ document.getElementById("run").addEventListener("click", () => {
 
 document.getElementById("compile").addEventListener("click", () => {
     client.sendNotification("browser/compile", { content: editorConfig.getMainCode() });
+    document.dispatchEvent(new CustomEvent('compilation'));
 } );
+
+// type RunResult = { errorMessage?:string, environment?: RunningEnvironment};
 
 client.onNotification("browser/run-result", (resp) => {
-    console.log(resp);
+    if(resp.errorMessage) {
+        console.error(resp.errorMessage);
+    } else {
+        // emit event to the canvas
+        document.dispatchEvent(new CustomEvent('run-execution', { detail: resp.environment }));
+    }
 } );
-
-
-// Expected simulation output here.
