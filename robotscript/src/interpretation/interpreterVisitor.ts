@@ -322,6 +322,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitWhile(node: While) {
+    //TODO: while (acceptExpression(this , node.condition));
     while(this.visitBooleanExpression(node.condition)) {
       let returnValue : number | boolean | undefined = this.visitBlock(node.block);
       if(returnValue !== undefined)  return returnValue;
@@ -329,7 +330,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
     return undefined;
   }
 
-// Custom visitor methods.
+// Custom visitor methods. Should be removed thanks to the weaver.
 
 
   /**

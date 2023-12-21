@@ -12,3 +12,8 @@ export interface Instruction {
     value: any,
     executor?: string
 }
+
+export interface Executor {
+    initPosition : [number, number],
+    name : string
+}

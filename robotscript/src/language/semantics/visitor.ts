@@ -398,3 +398,43 @@ export class VWhile implements ASTInterfaces.While {
 
   accept(visitor: RobotScriptVisitor): any {}
 }
+
+// export function acceptExpression(
+//   visitor: RobotScriptVisitor,
+//   node: ASTInterfaces.Expression
+// ): any {
+//   switch (node.$type) {
+//     case "And":
+//       return visitor.accept(node);
+//     case "BoolConstant":
+//       return visitor.visitBoolConstant(node);
+//     case "Comparison":
+//       return visitor.visitComparison(node);
+//     case "DoubleConstant":
+//       return visitor.visitDoubleConstant(node);
+//     case "Equality":
+//       return visitor.visitEquality(node);
+//     case "FunctionCall":
+//       return visitor.visitFunctionCall(node);
+//     case "IntConstant":
+//       return visitor.visitIntConstant(node);
+//     case "Minus":
+//       return visitor.visitMinus(node);
+//     case "MulDiv":
+//       return visitor.visitMulDiv(node);
+//     case "Not":
+//       return visitor.visitNot(node);
+//     case "Or":
+//       return visitor.visitOr(node);
+//     case "PlusMinus":
+//       return visitor.visitPlusMinus(node);
+//     case "RobotDistanceSensor":
+//       return visitor.visitRobotDistanceSensor(node);
+//     case "RobotTimeSensor":
+//       return visitor.visitRobotTimeSensor(node);
+//     case "VariableCall":
+//       return visitor.visitVariableCall(node);
+//     default:
+//       throw new Error("Unknown expression type " + node.$type);
+//   }
+// }
