@@ -20,22 +20,22 @@ body{
 
 .wrapper {
     display: flex;
-    flex-direction: row;
-    display: flex;
     flex-wrap: wrap;
     gap: 1em;
     padding: 5%;
+    align-items: flex-start;
 }
 
 .editor {
-    width: 50%;
+    width: 30em;
+    margin-right: 5em;
 }
 
 .canvas-wrapper {
     display: block;
 }
 
- #simulation-canvas {
+#simulation-canvas {
     border-radius: 1em;
     box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
     margin: 0 auto;
@@ -48,11 +48,18 @@ body{
     box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
     margin: 0 auto;
     min-width: 10em;
+    max-height: 400px;
+    overflow: auto;
     padding: 1em;
 }
 
+#simulation-console.error{
+    color: red;
+}
+
 #monaco-editor-root {
-    height: calc(100vh - 7.5rem - 70px);
+    height: 20em;
+    height: 400px;
 }
 
 .actions {

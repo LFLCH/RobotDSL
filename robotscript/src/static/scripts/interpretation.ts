@@ -4,6 +4,7 @@ import { moveRobot } from "./canvas.js";
 const terminal = document.getElementById('simulation-console')! as HTMLDivElement;
 
 document.addEventListener('run-execution', (event) => {
+    terminal.classList.remove('error');
     const environment = (event as CustomEvent<RunningEnvironment>).detail;
     terminal.innerText = environment.instructions.map(instruction => instruction.name + ' ' + instruction.value).join('\n');
     // let robotsInitPositions : [number, number][] = environment.executors.map(executor => executor.initPosition);
@@ -15,4 +16,10 @@ document.addEventListener('run-execution', (event) => {
             moveRobot(200, 200, instruction.value[0], instruction.value[1], 1000);
         }
     }
+});
+
+document.addEventListener('run-error', (event) => {
+    const errorMessage = (event as CustomEvent<string>).detail;
+    terminal.className = 'error';
+    terminal.innerText = errorMessage;
 });
