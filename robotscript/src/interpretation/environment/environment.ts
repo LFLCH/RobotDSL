@@ -49,7 +49,7 @@ export class RobotEnvironment {
         return {
             width: this.width,
             height: this.height,
-            executors: this.robots.map( (robot, index) => "@Robot" + index),
+            executors:  this.robots.map(robot => ({initPosition: [200, 200], name: "@Robot" + this.robots.indexOf(robot)})),
             instructions: this.getAllInstructions()
         }
     }
@@ -103,8 +103,9 @@ export class RobotEnvironment {
         const robot = this.robots[robotIndex];
         robot.moveInstruction = movement;
         robot.remainingDistance =distance;
-        while(robot.remainingDistance > 0){
-            this.update(10000);
+        const duration = distance / robot.speed;
+        if(duration > 0){
+            this.update(duration * 1000);
         }
     }
 

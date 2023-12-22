@@ -1,7 +1,7 @@
 export interface RunningEnvironment {
     width: number,
     height: number,
-    executors: string[],
+    executors: Executor[],
     instructions: Instruction[]
 }
 

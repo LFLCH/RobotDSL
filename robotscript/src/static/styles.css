@@ -21,19 +21,14 @@ body{
 .wrapper {
     display: flex;
     flex-direction: row;
-    padding: 0 5%;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 5%;
 }
 
 .editor {
     width: 50%;
-}
-
-.simulation{
-    width: 50%;
-    display: flex;
-    padding: 2em;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 .canvas-wrapper {

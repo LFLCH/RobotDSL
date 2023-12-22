@@ -1,37 +1,40 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset='utf-8'>
-        <!-- Page & Monaco styling -->
-        <link href="styles.css" rel="stylesheet"/>
-        <title>RobotScript in Langium</title>
-    </head>
-    <body>
-        <h1>RobotScript in Langium</h1>
-        <div class="actions">
-            <button id="run">Run</button>
-            <button id="compile">Compile</button>
+
+<head>
+    <meta charset='utf-8'>
+    <!-- Page & Monaco styling -->
+    <link href="styles.css" rel="stylesheet" />
+    <title>RobotScript in the web</title>
+</head>
+
+<body>
+    <h1>RobotScript in the web</h1>
+    <div class="actions">
+        <button id="run">Run</button>
+        <button id="compile">Compile</button>
+        <!-- <button id="plus">+</button>
+        <button id="minus">-</button> -->
+    </div>
+    <div class="wrapper">
+        <div class="editor">
+            <div id="monaco-editor-root"></div>
         </div>
-        <div class="wrapper">
-            <div class="editor">
-                <div id="monaco-editor-root"></div>
-            </div>
-            <div class="simulation">
-                <div class="canvas-wrapper">
-                    <canvas id="simulation-canvas"></canvas>
-                </div>
-                <div id="simulation-console">
-                    hello, world!
-                </div>
-            </div>
+        <div class="canvas-wrapper">
+            <canvas id="simulation-canvas" width="400" height="400"></canvas>
         </div>
-        <footer>
-            <p style="font-style:italic">Powered by</p>
-            <img width="125" src="https://langium.org/assets/langium_logo_w_nib.svg" alt="Langium">
-        </footer>
+        <div id="simulation-console">
+        </div>
+    </div>
+    <footer>
+        <p style="font-style:italic">RobotScript has been made possible thanks to  <br>
+            <img width="125" src="https://langium.org/assets/langium_logo_w_nib.svg" alt="Langium"></p>
+        <p style="font-style:italic">Made with ❤️ <br> By Léo Filoche & Jérémy Bindel</p>
+    </footer>
     <!-- Monaco Configuration -->
     <script type="module" src="setup.js"></script>
     <script type="module" src="canvas.js"></script>
     <script type="module" src="interpretation.js"></script>
-    </body>
+</body>
+
 </html>
