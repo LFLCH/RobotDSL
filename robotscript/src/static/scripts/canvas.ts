@@ -28,12 +28,15 @@ export let animationRequestId : number = 0;
 export let currentx = 0;
 export let currenty = 0;
 
-export function moveRobot(xstart : number, ystart : number, xtarget : number, ytarget : number, duration : number){
+
+// Async function to move the robot. It returns a promise that resolves when the movement is finished
+export async function moveRobot(xstart : number, ystart : number, xtarget : number, ytarget : number, duration : number){
   const startTime = performance.now();
   
   currentx = xstart;
   currenty = ystart;
 
+  return new Promise<void>((resolve, reject) => {
     function update() {
       const elapsed = performance.now() - startTime;
       const progress = Math.min(1, elapsed / duration);
@@ -47,6 +50,8 @@ export function moveRobot(xstart : number, ystart : number, xtarget : number, yt
       if (progress < 1) {
         // Continue the animation
         animationRequestId = requestAnimationFrame(update);
+      } else {
+        resolve();
       }
     }
     
@@ -55,4 +60,5 @@ export function moveRobot(xstart : number, ystart : number, xtarget : number, yt
 
     // Start the animation
     animationRequestId = requestAnimationFrame(update);
+  });
 }

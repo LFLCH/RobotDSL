@@ -24,11 +24,11 @@ body{
     gap: 1em;
     padding: 5%;
     align-items: flex-start;
+    justify-content: space-between;
 }
 
 .editor {
     width: 30em;
-    margin-right: 5em;
 }
 
 .canvas-wrapper {
@@ -46,7 +46,6 @@ body{
     color: green;
     border-radius: 1em;
     box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
-    margin: 0 auto;
     min-width: 10em;
     max-height: 400px;
     overflow: auto;
