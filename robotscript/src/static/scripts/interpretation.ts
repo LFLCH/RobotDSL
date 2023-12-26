@@ -4,9 +4,11 @@ import { moveRobot } from "./canvas.js";
 const terminal = document.getElementById('simulation-console')! as HTMLDivElement;
 
 document.addEventListener('run-execution', async (event) => {
-    terminal.classList.remove('error');
+    clearTerminal();
     const environment = (event as CustomEvent<RunningEnvironment>).detail;
-    terminal.innerText = environment.instructions.map(instruction => instruction.name + ' ' + instruction.value).join('\n');
+    for(const instruction of environment.instructions){
+        addTerminalLine(instruction.name + ' ' + instruction.value);
+    }
     let robotsCurrentPositions : [number, number][] = environment.executors.map(executor => executor.initPosition);
 
     for(const instruction of environment.instructions){
@@ -22,6 +24,21 @@ document.addEventListener('run-execution', async (event) => {
 
 document.addEventListener('run-error', (event) => {
     const errorMessage = (event as CustomEvent<string>).detail;
-    terminal.className = 'error';
-    terminal.innerText = errorMessage;
+    addTerminalLine(errorMessage, 'error');
 });
+
+
+function clearTerminal() {
+    terminal.innerHTML = '';
+}
+
+function addTerminalLine(line: string, level: string = 'info') {
+    if(level === 'info')
+        terminal.innerHTML += "<pre data-prefix='>'><code  class='text-info'>" + line + "</code></pre>";
+    else if(level === 'error')
+        terminal.innerHTML += "<pre  data-prefix='>'  ><code class='text-warning'>" + line + "</code></pre>";
+    else if(level === 'success')
+        terminal.innerHTML += "<pre  data-prefix='>'><code class='text-success'>" + line + "</code></pre>";
+    else
+        terminal.innerHTML += "<pre data-prefix='>' ><code>" + line + "</code></pre>";
+}

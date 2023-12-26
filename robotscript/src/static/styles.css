@@ -1,67 +1,22 @@
-html,body {
-    /* background: rgb(33,33,33);
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-    color: white; */
-    margin: 0;
+html, body {
+    height: 100%;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
 }
-h1 {
-    text-align: center;
-}
-footer {
-    text-align: center;
-    /* color: #444; */
-    font-size: 1.2rem;
-    margin-bottom: 0.5rem;
-}
+
 body{
     display: flex;
+    min-height: 100vh;
     flex-direction: column;
 }
 
-.wrapper {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1em;
-    padding: 5%;
-    align-items: flex-start;
-    justify-content: space-between;
+h1 {
+    text-align: center;
+    font-size: xx-large !important;
 }
-
 .editor {
-    width: 30em;
     height: 400px;
-    background-color:#1e1e1e;
-    border-radius: 1em;
-    overflow: hidden;
 }
-
-.canvas-wrapper {
-    display: block;
-}
-
-#simulation-canvas {
-    border-radius: 1em;
-    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
-    margin: 0 auto;
-    background-color:#1e1e1e;
-}
-
-#simulation-console{
-    background-color:#1e1e1e;
-    font-family:monospace;
-    color: green;
-    border-radius: 1em;
-    box-shadow: 0 0 1em 0.5em rgba(0, 0, 0, 0.5);
-    min-width: 10em;
-    max-height: 400px;
-    overflow: auto;
-    padding: 1em;
-}
-
-#simulation-console.error{
-    color: red;
-}
-
 #monaco-editor-root {
     height: 100%;
     width: 100%;
@@ -70,11 +25,35 @@ body{
 .actions {
     display: flex;
     flex-direction: row;
-    padding: 1em 5%;
+    padding-right: 2em;
     justify-content: flex-end;
     gap: 1em;
+}
+
+footer p{
+    display: block !important;
+    font-size: initial !important;
 }
 p img {
     height: 2em;
     display: inline-block;
+}
+
+main{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1em;
+    padding: 2em;
+    flex-grow: 1;
+}
+
+.main-activity{
+    display: flex;
+    width: 100%;
+    gap: 1em;
+}
+
+.canvas-wrapper{
+    display: flex;
+    justify-content: center;
 }

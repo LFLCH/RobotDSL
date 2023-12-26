@@ -10,26 +10,57 @@
 </head>
 
 <body>
-    <h1 class="text-4xl">RobotScript in the web</h1>
+    <h1>RobotScript in the web</h1>
     <div class="actions">
         <button class="btn btn-primary btn-sm" id="run">Run</button>
         <button class="btn btn-secondary btn-sm" id="compile">Compile</button>
         <!-- <button id="plus">+</button>
         <button id="minus">-</button> -->
     </div>
-    <div class="wrapper">
-        <div class="editor">
-            <div id="monaco-editor-root"></div>
+    <main>
+        <div class="main-activity">
+            <div class="collapse collapse-arrow bg-base-200">
+                <input type="checkbox" checked />
+                <div class="collapse-title text-xl font-medium">
+                    Editor
+                </div>
+                <div class="collapse-content">
+                    <div class="editor">
+                        <div id="monaco-editor-root"></div>
+                    </div>
+                </div>
+            </div>
+    
+            <div class="collapse collapse-arrow bg-base-200">
+                <input type="checkbox" checked />
+                <div class="collapse-title text-xl font-medium">
+                    Output
+                </div>
+                <div class="collapse-content">
+                    <div class="canvas-wrapper">
+                        <canvas id="simulation-canvas" width="400" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="canvas-wrapper">
-            <canvas id="simulation-canvas" width="400" height="400"></canvas>
+        <div class="collapse collapse-arrow bg-base-200">
+            <input type="checkbox" />
+            <div class="collapse-title text-xl font-medium">
+                Console
+            </div>
+            <div class="collapse-content">
+                <div id="simulation-console" class="mockup-code">
+                </div>
+            </div>
         </div>
-        <div id="simulation-console">
-        </div>
-    </div>
-    <footer>
-        <p>Made with ❤️ &  <img height="25" src="https://langium.org/assets/langium_logo_w_nib.svg" alt="Langium">  <br> By Léo Filoche & Jérémy Bindel</p>
-    </footer>
+    </main>
+
+    <footer class="footer footer-center p-10 bg-base-200 rounded">
+        <p>Made with ❤️ & <img height="25" src="https://langium.org/assets/langium_logo_w_nib.svg" alt="Langium"> <br>
+            By Léo Filoche & Jérémy Bindel</p>
+      </footer>
+
+
     <!-- Monaco Configuration -->
     <script type="module" src="monaco-rbs.js"></script>
     <script type="module" src="setup.js"></script>
