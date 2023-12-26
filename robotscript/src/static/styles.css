@@ -19,7 +19,6 @@ h1 {
 }
 #monaco-editor-root {
     height: 100%;
-    width: 100%;
 }
 
 .actions {
@@ -45,15 +44,33 @@ main{
     gap: 1em;
     padding: 2em;
     flex-grow: 1;
+    align-content: flex-start;
 }
 
 .main-activity{
     display: flex;
     width: 100%;
     gap: 1em;
+    height: fit-content;
+    display: flex;
+}
+
+@media screen and (max-width: 768px) {
+    main{
+        padding: 1em;
+    }
+    .main-activity{
+        flex-direction: column;
+    }
+    
 }
 
 .canvas-wrapper{
     display: flex;
     justify-content: center;
+}
+
+
+.collapse:has(> input[type="checkbox"]:not(:checked)) {
+    height: fit-content;
 }
