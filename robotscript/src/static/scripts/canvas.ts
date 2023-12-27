@@ -2,6 +2,11 @@ export const canvas : HTMLCanvasElement  = document.getElementById('simulation-c
 const context = canvas.getContext('2d')!;
 
 
+export function changeCanvasVisibility(visible : boolean = true){
+  const wrapper = canvas.parentElement! as HTMLDivElement;
+  wrapper.hidden = !visible;
+}
+
 export function drawEnvironment() {
   context.clearRect(0, 0, canvas.width, canvas.height);
 

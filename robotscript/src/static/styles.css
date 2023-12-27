@@ -55,7 +55,7 @@ main{
     display: flex;
 }
 
-@media screen and (max-width: 768px) {
+@media  (max-width: 768px) {
     main{
         padding: 1em;
     }
@@ -73,4 +73,8 @@ main{
 
 .collapse:has(> input[type="checkbox"]:not(:checked)) {
     height: fit-content;
+}
+
+.language-ino{
+    background-color: transparent !important;
 }

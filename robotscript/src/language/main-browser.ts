@@ -39,9 +39,23 @@ function liveASTAnalysis(){
 }
 
 function compile(){
+    type CompileResult = { errorMessage?:string, inocode?:string}
+    const analysisCompilationResultNotification = new NotificationType<CompileResult>('browser/compilation-result');
     connection.onNotification('browser/compile', (params: any) => {
-        console.log("Received compile request !")
-        console.log(params)
+        let errorMessage = undefined;
+        let inocode = `
+void setup() {
+    // put your setup code here, to run once:
+    Serial.begin(9600);
+}
+  
+void loop() {
+  // put your main code here, to run repeatedly:
+  Serial.println("Hello World!");
+  delay(1000);
+}          
+        `;
+        connection.sendNotification(analysisCompilationResultNotification, {errorMessage, inocode});
     });
 }
 

@@ -18,16 +18,24 @@ async function  setup() {
 
     document.getElementById("compile")!.addEventListener("click", () => {
         client.sendNotification("browser/compile", { content: getMainCode(config) });
-        document.dispatchEvent(new CustomEvent('compilation'));
     } );
 
     client.onNotification("browser/run-result", (resp) => {
         if(resp.errorMessage) {
             document.dispatchEvent(new CustomEvent('run-error', { detail: resp.errorMessage }));
         } else {
-            document.dispatchEvent(new CustomEvent('run-execution', { detail: resp.environment }));
+            document.dispatchEvent(new CustomEvent('run-content', { detail: resp.environment }));
         }
     });
+
+    client.onNotification("browser/compilation-result", (resp)=>{
+        if(resp.errorMessage) {
+            document.dispatchEvent(new CustomEvent('compilation-error', {detail : resp.errorMessage}));
+        }
+        else {
+            document.dispatchEvent(new CustomEvent('compilation-content', {detail : resp.inocode}));
+        }
+    })
 }
 
 document.addEventListener('DOMContentLoaded', setup);

@@ -1,10 +1,13 @@
 import { RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
-import { moveRobot } from "./canvas.js";
+import { changeCanvasVisibility, moveRobot } from "./canvas.js";
+import { changeArduinoWrapperVisibility } from "./compilation.js";
 
 const terminal = document.getElementById('simulation-console')! as HTMLDivElement;
 
-document.addEventListener('run-execution', async (event) => {
+document.addEventListener('run-content', async (event) => {
     clearTerminal();
+    changeCanvasVisibility(true);
+    changeArduinoWrapperVisibility(false);
     const environment = (event as CustomEvent<RunningEnvironment>).detail;
     for(const instruction of environment.instructions){
         addTerminalLine(instruction.name + ' ' + instruction.value);

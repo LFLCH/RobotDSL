@@ -3,9 +3,12 @@
 
 <head>
     <meta charset='utf-8'>
-    <!-- Page & Monaco styling -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+
     <link href="styles.css" rel="stylesheet" />
     <link href="daisy.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/prism.css" type="text/css">
+
     <title>RobotScript in the web</title>
 </head>
 
@@ -37,7 +40,29 @@
                     Output
                 </div>
                 <div class="collapse-content">
-                    <div class="canvas-wrapper"> <canvas id="simulation-canvas" width="400" height="400"></canvas></div>
+                    <div class="canvas-wrapper" hidden> <canvas id="simulation-canvas" width="400" height="400"></canvas></div>
+                    <div class="compilation-wrapper" id="arduino-wrapper" hidden>
+                        
+                            <pre class="language-ino"><code class="text-sm" id="arduino-code"></code></pre>
+                                <script src="libs/prism.js"></script>
+                                <script>
+                                    document.addEventListener('prism-update', ()=>{
+                                        Prism.highlightAll();
+                                    })
+                                </script>
+                                <button class="btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
+                                        <path fill="currentColor" d="M208 0H332.1c12.7 0 24.9 5.1 33.9 14.1l67.9 67.9c9 9 14.1 21.2 14.1 33.9V336c0 26.5-21.5 48-48 48H208c-26.5 0-48-21.5-48-48V48c0-26.5 21.5-48 48-48zM48 128h80v64H64V448H256V416h64v48c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V176c0-26.5 21.5-48 48-48z"/></svg>
+                                    Copy
+                                  </button>
+                                  <button class="btn">
+                                    <svg xmlns="http://www.w3.org/2000/svg" height="16" width="14" viewBox="0 0 448 512">
+                                        <!--!Font Awesome Free 6.5.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2023 Fonticons, Inc.-->
+                                        <path fill="currentColor" d="M64 32C28.7 32 0 60.7 0 96V416c0 35.3 28.7 64 64 64H384c35.3 0 64-28.7 64-64V173.3c0-17-6.7-33.3-18.7-45.3L352 50.7C340 38.7 323.7 32 306.7 32H64zm0 96c0-17.7 14.3-32 32-32H288c17.7 0 32 14.3 32 32v64c0 17.7-14.3 32-32 32H96c-17.7 0-32-14.3-32-32V128zM224 288a64 64 0 1 1 0 128 64 64 0 1 1 0-128z"/></svg>
+                                    Save
+                                  </button>
+                    </div>
                     <!-- <img src="assets/metro.svg" alt="Metro" /> -->
                 </div>
             </div>
@@ -65,6 +90,7 @@
     <script type="module" src="setup.js"></script>
     <script type="module" src="canvas.js"></script>
     <script type="module" src="interpretation.js"></script>
+    <script type="module" src="compilation.js"></script>
 </body>
 
 </html>
