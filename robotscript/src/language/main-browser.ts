@@ -76,11 +76,16 @@ function run(){
 }
 
 function save(){
-    connection.onNotification('browser/save-compilation', (params: {type: string}) => {
-        // fetch the app.get('/save-arduino', (req, res)  endpoint
-        console.log("Saving compilation result");
-        fetch(`http://localhost:3001/save-arduino?content=${encodeURIComponent(currentCompilationResult!)}`)
-        console.log("Saved compilation result");
+    connection.onNotification('browser/save-compilation', async (params: {type: string}) => {
+        const data = await fetch(`http://localhost:3001/save-arduino?content=${encodeURIComponent(currentCompilationResult!)}`).then(async (response) => {
+            if(response.ok){
+                const data = await response.json()
+                return data;
+            }
+        }, (error) => {
+            return {message: "Error while saving compilation result", level: "error", content: error};
+        });
+        connection.sendNotification('browser/save-compilation-result', {detail : data});
     });
 }
 

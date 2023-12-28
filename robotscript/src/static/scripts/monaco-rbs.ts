@@ -116,13 +116,13 @@ Left 5 in m;
 Right 10 in m;
     `;
     
-    // // seek to restore any previous code from our last session
-    // if (window.localStorage) {
-    //     const storedCode = window.localStorage.getItem('mainCode');
-    //     if (storedCode !== null) {
-    //         mainCode = storedCode;
-    //     }
-    // }
+    // seek to restore any previous code from our last session
+    if (window.localStorage) {
+        const storedCode = window.localStorage.getItem('mainCode');
+        if (storedCode !== null) {
+            mainCode = storedCode;
+        }
+    }
 
     return mainCode;
 }

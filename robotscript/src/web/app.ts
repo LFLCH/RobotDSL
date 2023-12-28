@@ -8,7 +8,7 @@ app.use(express.static('./public'));
 app.get('/save-arduino', (req, res) => {
     const content : string = req.query.content as string;
     saveFile(content, 'uploads/robotscript.ino');
-    res.send('Saved');
+    res.send({"level": "success", "message": "Saved compilation result at uploads/robotscript.ino"});
     console.log("Saved compilation result at uploads/robotscript.ino");
 });
 

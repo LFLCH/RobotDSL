@@ -2,9 +2,12 @@ import { RunningEnvironment } from "../../interpretation/environment/runningEnvi
 import { changeCanvasVisibility, moveRobot } from "./canvas.js";
 import { changeArduinoWrapperVisibility } from "./compilation.js";
 
+const defaultWrapper = document.getElementById('default-output-wrapper') as HTMLElement;
+
 const terminal = document.getElementById('simulation-console')! as HTMLDivElement;
 
 document.addEventListener('run-content', async (event) => {
+    defaultWrapper.hidden = true;
     clearTerminal();
     changeCanvasVisibility(true);
     changeArduinoWrapperVisibility(false);

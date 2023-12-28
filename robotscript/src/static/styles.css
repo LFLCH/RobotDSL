@@ -104,17 +104,31 @@ main{
 }
 
 #toast {
-    visibility: hidden;
     opacity: 0;
     transition: visibility 0s, opacity 1s ease;
 }
 
 #toast.show {
-    visibility: visible;
     opacity: 1;
     transition: visibility 0s, opacity 1s ease;
 }
-/* 
-.alert-icon{
-    visibility: hidden;
-} */
+
+.range-selection{
+    display: block !important;
+}
+
+#default-output-wrapper[hidden]{
+    display: none !important;
+}
+
+#default-output-wrapper{
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    align-items: center;
+    flex-direction: column;
+}
+
+#default-output-wrapper p{
+    padding: 1em;
+}

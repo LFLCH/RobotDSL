@@ -3,7 +3,7 @@ const context = canvas.getContext('2d')!;
 
 
 export function changeCanvasVisibility(visible : boolean = true){
-  const wrapper = canvas.parentElement! as HTMLDivElement;
+  const wrapper = document.querySelector('.run-wrapper') as HTMLElement;
   wrapper.hidden = !visible;
 }
 

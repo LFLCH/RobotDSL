@@ -41,6 +41,20 @@ async function  setup() {
         const data = (evt as CustomEvent<{code : string}>).detail.code;
         client.sendNotification("browser/save-compilation", { type: "compilation", content: data });
     })
+
+    client.onNotification("browser/save-compilation-result", (resp)=>{
+        document.dispatchEvent(new CustomEvent('toast-notification', {detail : resp.detail}));
+    });
+
+    document.addEventListener('load-code', (evt)=>{
+        const data = (evt as CustomEvent<{code : string}>).detail.code;
+        wrapper.getEditor()?.setValue(data);
+    }) 
+
+    document.addEventListener('capture-code', (evt)=>{
+        const data = wrapper.getEditor()?.getValue();
+        document.dispatchEvent(new CustomEvent('code-captured', {detail : data}));
+    })
 }
 
 document.addEventListener('DOMContentLoaded', setup);
