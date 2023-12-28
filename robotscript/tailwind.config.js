@@ -17,6 +17,7 @@ export default {
           ...require("daisyui/src/theming/themes")["dim"],
           primary: "yellow",
           secondary: "aquamarine",
+          info: "#0086ff",
         }
       },
       "dim", "dark", "cupcake"

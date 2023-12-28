@@ -19,12 +19,57 @@ copyButtons.forEach((btn)=>{
     });
 });
 
-const saveButtons = document.querySelectorAll('.save');
+const saveDiskButtons = document.querySelectorAll('.save-disk');
 
-saveButtons.forEach((btn)=>{
+saveDiskButtons.forEach((btn)=>{
     btn.addEventListener('click', ()=>{
         const code = document.getElementById(btn.getAttribute('data-save')).innerText;
         const event = new CustomEvent('save-code', {detail: {code: code}});
         document.dispatchEvent(event);
     });
 });
+
+const saveBrowserButtons = document.querySelectorAll('.save-browser');
+
+saveBrowserButtons.forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+        if(saveLocally(document.querySelector('.'+btn.getAttribute('data-save')).innerText)){
+            toastPop("Code saved locally");
+        }
+        else{
+            toastPop("Local storage not supported", "error");
+        }
+    });
+});
+
+function toastPop(message, level="success") {
+    const toastContent = document.getElementById("toast-content");
+    toastContent.querySelector(".toast-title").innerText = message;
+    toastContent.className =  "alert alert-" + level;
+    showIcon(level);
+    const toastElem = document.getElementById("toast")
+    toastElem.className = "show";
+    setTimeout(function(){ toastElem.className = toastElem.className.replace("show", ""); }, 3000);
+}
+
+function showIcon(level){
+    const icons = document.querySelectorAll('.alert-icon');
+    icons.forEach((icon)=>{
+        if(icon.classList.contains('toast-icon-'+level)){
+            icon.classList.remove('hidden');
+        }
+        else{
+            icon.classList.add('hidden');
+        }
+    });
+}
+
+function saveLocally(code){
+    if (window.localStorage) {
+        window.localStorage.setItem("mainCode", code);
+        return true;
+    }
+    else{
+        return false;
+    }
+}

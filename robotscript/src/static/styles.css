@@ -14,9 +14,6 @@ h1 {
     text-align: center;
     font-size: xx-large !important;
 }
-.editor {
-    height: 400px;
-}
 #monaco-editor-root {
     height: 100%;
 }
@@ -27,6 +24,10 @@ h1 {
     padding-right: 2em;
     justify-content: flex-end;
     gap: 1em;
+}
+
+pre{
+    margin: 0px !important;
 }
 
 footer p{
@@ -97,3 +98,23 @@ main{
 .dependencies-list img {
     height: 2.25em;
 }
+
+.working-window{
+    height: 400px;
+}
+
+#toast {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s, opacity 1s ease;
+}
+
+#toast.show {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s, opacity 1s ease;
+}
+/* 
+.alert-icon{
+    visibility: hidden;
+} */
