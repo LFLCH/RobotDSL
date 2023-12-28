@@ -4,22 +4,15 @@ import { Command } from 'commander';
 import { RobotScriptLanguageMetaData } from '../language/generated/module.js';
 import { createRobotScriptServices } from '../language/robot-script-module.js';
 import { extractAstNode } from './cli-util.js';
-import { generateArduino } from './generator.js';
 import { NodeFileSystem } from 'langium/node';
 import { Interpreter } from '../interpretation/interpreter.js';
-
-// export const generateAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
-//     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
-//     const model = await extractAstNode<Model>(fileName, services);
-//     const generatedFilePath = generateJavaScript(model, fileName, opts.destination);
-//     console.log(chalk.green(`JavaScript code generated successfully: ${generatedFilePath}`));
-// };
+import { generateArduino } from './generator.js';
 
 
 export const generateArduinoAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
     const model = await extractAstNode<Model>(fileName, services);
-    const generatedFilePath = generateArduino(model, fileName);
+    const generatedFilePath = generateArduino(model, fileName, opts.destination);
     console.log(chalk.green(`Arduino code generated successfully: ${generatedFilePath}`));
 }
 
@@ -46,15 +39,9 @@ export default function(): void {
         // .version(require('../../package.json').version);
 
     const fileExtensions = RobotScriptLanguageMetaData.fileExtensions.join(', ');
-    // program
-    //     .command('generate')
-    //     .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
-    //     .option('-d, --destination <dir>', 'destination directory of generating')
-    //     .description('generates JavaScript code that prints "Hello, {name}!" for each greeting in a source file')
-    //     .action(generateAction);
 
     program
-        .command('arduino')
+        .command('compile')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
         .option('-d, --destination <dir>', 'destination directory of generating')
         .description('generates Arduino file from a RobotScript file (.rbs)')

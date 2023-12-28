@@ -4,6 +4,7 @@ import { createRobotScriptServices } from './robot-script-module.js';
 import { Model } from './generated/ast.js';
 import { Interpreter } from '../interpretation/interpreter.js';
 import { RunningEnvironment } from '../interpretation/environment/runningEnvironment.js';
+import { Compiler } from '../compilation/compiler.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -17,6 +18,7 @@ const { shared, RobotScript } = createRobotScriptServices({ connection, ...Empty
 startLanguageServer(shared)
 
 let currentModel: Model | undefined = undefined;
+let currentCompilationResult: string | undefined = undefined;
 
 function liveASTAnalysis(){
     // Send a notification with the serialized AST after every document change
@@ -43,18 +45,15 @@ function compile(){
     const analysisCompilationResultNotification = new NotificationType<CompileResult>('browser/compilation-result');
     connection.onNotification('browser/compile', (params: any) => {
         let errorMessage = undefined;
-        let inocode = `
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-  
-void loop() {
-  // put your main code here, to run repeatedly:
-  Serial.println("Hello World!");
-  delay(1000);
-}          
-        `;
+        let inocode = undefined;
+        if(currentModel){
+            const compiler = new Compiler();
+            inocode = compiler.compile(currentModel);
+        }
+        else {
+            errorMessage = "No valid model to compile";
+        }
+        currentCompilationResult = inocode;
         connection.sendNotification(analysisCompilationResultNotification, {errorMessage, inocode});
     });
 }
@@ -76,6 +75,16 @@ function run(){
     );
 }
 
+function save(){
+    connection.onNotification('browser/save-compilation', (params: {type: string}) => {
+        // fetch the app.get('/save-arduino', (req, res)  endpoint
+        console.log("Saving compilation result");
+        fetch(`http://localhost:3001/save-arduino?content=${encodeURIComponent(currentCompilationResult!)}`)
+        console.log("Saved compilation result");
+    });
+}
+
 liveASTAnalysis();
 run();
 compile()
+save();

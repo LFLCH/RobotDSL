@@ -35,6 +35,11 @@ async function  setup() {
         else {
             document.dispatchEvent(new CustomEvent('compilation-content', {detail : resp.inocode}));
         }
+    });
+
+    document.addEventListener('save-code', (evt)=>{
+        const data = (evt as CustomEvent<{code : string}>).detail.code;
+        client.sendNotification("browser/save-compilation", { type: "compilation", content: data });
     })
 }
 

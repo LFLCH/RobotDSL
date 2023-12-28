@@ -1,24 +1,31 @@
-import type { Model } from '../language/generated/ast.js';
-// export function generateJavaScript(model: Model, filePath: string, destination: string | undefined): string {
-//     const data = extractDestinationAndName(filePath, destination);
-//     const generatedFilePath = `${path.join(data.destination, data.name)}.js`;
+import * as fs from 'node:fs';
+import { Model } from '../language/generated/ast.js';
+import { extractDestinationAndName } from './cli-util.js';
+import { Compiler } from '../compilation/compiler.js';
+import path from 'node:path';
 
-//     const fileNode = new CompositeGeneratorNode();
-//     fileNode.append('"use strict";', NL, NL);
-//     // model.greetings.forEach(greeting => fileNode.append(`console.log('Hello, ${greeting.person.ref?.name}!');`, NL));
-//     // model.instructions.forEach(instruction => fileNode.append(`console.log('${instruction}');`, NL));
 
-//     if (!fs.existsSync(data.destination)) {
-//         fs.mkdirSync(data.destination, { recursive: true });
-//     }
-//     fs.writeFileSync(generatedFilePath, toString(fileNode));
-//     return generatedFilePath;
-// }
+export function generateArduino(model : Model, filePath: string, destination: string | undefined): string {
+    const data = extractDestinationAndName(filePath, destination);
+    const generatedFilePath = `${path.join(data.destination, data.name)}.ino`;
 
-export function generateArduino(model: Model, filePath: string){
-    console.log("Generating Arduino code...");
-    // console.log("Instructions: ")
-    // model.instructions.forEach(instruction => console.log(`${instruction}`));
-    // console.log("Functions: ")
-    // model.functionsDef.forEach(functionDef => console.log(`${functionDef}`));
+    const compiler = new Compiler();
+    const result = compiler.compile(model);
+
+    saveFile(result, generatedFilePath);
+    return generatedFilePath;
+}
+
+export  function saveFile(data: string, fileName: string) {
+    // saves the file in the given path from the filename. Creates the directories if they don't exist
+    const directory = path.dirname(fileName);
+    if (!fs.existsSync(directory)) {
+        fs.mkdirSync(directory, { recursive: true });
+    }
+
+    fs.writeFile(fileName, data, (err) => {
+        if (err) {
+            console.error(err);
+        }
+    });
 }
