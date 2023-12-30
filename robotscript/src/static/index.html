@@ -4,7 +4,8 @@
 <head>
     <meta charset='utf-8'>
     <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
-
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.7.0/lib/p5.js"></script>
+    <link rel="icon" href="assets/metro.svg">
     <link href="styles.css" rel="stylesheet" />
     <link href="daisy.css" rel="stylesheet">
     <link rel="stylesheet" href="libs/prism.css" type="text/css">
@@ -71,16 +72,11 @@
                 </div>
                 <div class="run-wrapper" hidden>
                     <div class="canvas-wrapper">
-                        <canvas id="simulation-canvas" width="400" height="400">
+                        <canvas id="simulation-canvas" tabindex="0" width="400" height="400">
                         </canvas>
                     </div>
                     <div class="navbar">
-                        <div class="range-selection">
-                            <input id="time-input" type="range" min="0" max="100" value="25" class="range range-sm" step="25" />
-                        <div class="w-full flex justify-between text-xs px-2">
-                            <span>Time = <span id="time-progress">25</span></span>
-                        </div>
-                        </div>
+                       
                     </div>
                 </div>
                 <div class="compilation-wrapper" id="arduino-wrapper" hidden>
@@ -183,11 +179,11 @@
             </div>
         </div>
       </div>
-    <script type="text/javascript" src="libs/prism.js"></script>
-    <script type="module" src="uibasics.js"></script>
+      <script type="text/javascript" src="libs/prism.js"></script>
+      <script type="module" src="uibasics.js"></script>
+      <script src="sketch.js"></script>
     <script type="module" src="monaco-rbs.js"></script>
     <script type="module" src="setup.js"></script>
-    <script type="module" src="canvas.js"></script>
     <script type="module" src="interpretation.js"></script>
     <script type="module" src="compilation.js"></script>
 </body>

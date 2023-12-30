@@ -91,10 +91,6 @@ document.addEventListener('toast-notification', (e)=>{
     toastPop(e.detail.message, e.detail.level);
 });
 
-document.getElementById('time-input').addEventListener('input', (e)=>{
-    document.getElementById('time-progress').innerText = e.target.value;
-});
-
 document.addEventListener('code-captured', (e)=>{
     const code = e.detail;
     if(saveLocally(code)){
