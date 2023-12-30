@@ -5,7 +5,8 @@ class Square {
     this.y = startY;
     this.targetX = startX;
     this.targetY = startY;
-    this.angle = 45; // Default angle in radians
+    this.angle = 0; // Default angle in dehrees
+    this.image = loadImage("assets/metro.svg")
   }
 
   display() {
@@ -15,9 +16,11 @@ class Square {
     push();
     translate(this.x, this.y);
     rotate(radians(this.angle));
-    fill(237, 34, 93); 
-    rectMode(CENTER);
-    rect(0, 0, this.size, this.size);
+    const img = this.image;
+    const ratio = this.image.width / this.image.height;
+    if(ratio <1) img.resize(this.size * ratio, this.size)
+    else img.resize(this.size, this.size * ratio);
+    image(img, - this.image.width/2 , - this.image.height/2 );
     pop();
   }
 
@@ -27,6 +30,7 @@ class Square {
   }
 
   moveInDirection(angle) {
+    angle -=PI/2;
     let dx = cos(angle) * 10;
     let dy = sin(angle) * 10;
     this.setTargetPosition(this.targetX + dx, this.targetY + dy);
@@ -44,16 +48,13 @@ function resetCanvas(){
     panX = 0;
     panY = 0;
     squares = [];
-    squares.push(new Square(-50, 50));
-    squares.push(new Square(0, -50));
-    squares.push(new Square(50, 0));
+    squares.push(new Square(0, 0));
 }
 
 
 const simulationCanvas = document.getElementById("simulation-canvas");
 
 simulationCanvas.addEventListener("mousewheel", function (event) {
-    console.log(event)
     event.preventDefault();
 });
 
@@ -100,13 +101,20 @@ function keyPressed(event) {
         // Move all squares based on arrow key presses
         for (let square of squares) {
           if (keyCode === RIGHT_ARROW) {
-            square.moveInDirection(square.angle);
-          } else if (keyCode === LEFT_ARROW) {
-            square.moveInDirection(square.angle + PI); // Opposite direction
-          } else if (keyCode === UP_ARROW) {
-            square.moveInDirection(square.angle - HALF_PI); // 90 degrees counter-clockwise
-          } else if (keyCode === DOWN_ARROW) {
-            square.moveInDirection(square.angle + HALF_PI); // 90 degrees clockwise
+           square.angle += 90;
+           square.moveInDirection(radians(square.angle));
+          }
+          else if (keyCode === LEFT_ARROW) {
+            square.angle += 270;
+            square.moveInDirection(radians(square.angle));
+          }
+          else if(keyCode === UP_ARROW){
+            square.moveInDirection(radians(square.angle));
+          }
+          else if (keyCode === DOWN_ARROW) {
+            // square.moveInDirection(PI);
+            square.angle += 180;
+            square.moveInDirection(radians(square.angle));
           }
         }
       }
