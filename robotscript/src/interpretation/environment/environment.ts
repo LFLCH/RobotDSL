@@ -133,7 +133,7 @@ export class RobotEnvironment {
                 
                 robot.remainingDistance = Math.max(0, robot.remainingDistance - distance);
 
-                robot.recordInstruction({"timestamp": this.time, "name": "move", "value":[robot.x, robot.y]});
+                robot.recordInstruction({"timestamp": this.time, "name": "move", "value": {"direction" : mov.toLocaleLowerCase(), "vector" :  [robot.x, robot.y], "distance" : distance}});
             }
         }
     }
