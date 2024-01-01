@@ -27,7 +27,7 @@ export class CanvasSession{
     return {
       ...entity,
       x : this.metersToPixels(entity.position.x),
-      y : this.metersToPixels(entity.position.y),
+      y : -this.metersToPixels(entity.position.y), // y is inverted in canvas
       size : this.metersToPixels(Math.max(entity.width, entity.height))
     }
   }

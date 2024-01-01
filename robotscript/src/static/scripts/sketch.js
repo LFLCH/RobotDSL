@@ -50,7 +50,9 @@ class Robot {
     angle -= PI / 2;
     let dx = cos(angle) * distance;
     let dy = sin(angle) * distance;
-    this.setTargetPosition(this.targetX + dx, this.targetY + dy);
+    const roundX = + (this.targetX + dx).toFixed(4);
+    const roundY = + (this.targetY + dy).toFixed(4);
+    this.setTargetPosition(roundX, roundY);
   }
 
   moveRight(distance = 1) {
@@ -185,7 +187,6 @@ document.addEventListener("canvas-run-instruction", (event) => {
 
 document.addEventListener("run-canvas", () => {
   if(instructions){
-    
     for (let instruction of instructions) {
       const robot = robots.find((robot) => robot.id === instruction.robot.initstate.id);
       robot.state_queue.push(instruction.robot.nextstate);

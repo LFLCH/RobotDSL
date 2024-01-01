@@ -114,8 +114,8 @@ Primary infers Expression:
     ;   
 
 Atomic infers Expression:
-    {infer IntConstant} value=INT |
     {infer DoubleConstant} value=DOUBLE |
+    {infer IntConstant} value=INT |
     {infer BoolConstant} value=('true'|'false') |
     {infer VariableCall} variable=[RobotSymbol:ID] |
     {infer FunctionCall} functionCall=[FunctionDef:ID] '(' (args+=Expression (','args+=Expression)*)? ')' |
@@ -130,7 +130,7 @@ Atomic infers Expression:
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
 terminal INT returns number: /[0-9]+/;
-terminal DOUBLE returns number: /[0-9]+.[0-9]+/;
+terminal DOUBLE returns number: (INT '.' INT) | INT;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;
