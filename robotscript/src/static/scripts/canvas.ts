@@ -32,24 +32,26 @@ export class CanvasSession{
     }
   }
 
+  private translateInstructionToP5(instruction : Instruction) {
+      instruction.robot.initstate = this.movingEntityToPixels(instruction.robot.initstate);
+      instruction.robot.nextstate = this.movingEntityToPixels(instruction.robot.nextstate);
+      if(instruction.name === "move"){
+        instruction.value = (instruction.value as Move)
+        instruction.value.vector = {
+          x : this.metersToPixels(instruction.value.vector.x),
+          y : this.metersToPixels(instruction.value.vector.y)
+        }
+        instruction.value.distance = this.metersToPixels(instruction.value.distance);
+      }
+      return instruction;
+    }
+
   
  public start(){
   const robots = this.environment.initrobots.map(robot => {
     return this.movingEntityToPixels(robot);
   });
-  const instructions = this.environment.instructions.map(instruction => {
-    instruction.robot.initstate = this.movingEntityToPixels(instruction.robot.initstate);
-    instruction.robot.nextstate = this.movingEntityToPixels(instruction.robot.nextstate);
-    if(instruction.name === "move"){
-      instruction.value = (instruction.value as Move)
-      instruction.value.vector = {
-        x : this.metersToPixels(instruction.value.vector.x),
-        y : this.metersToPixels(instruction.value.vector.y)
-      }
-      instruction.value.distance = this.metersToPixels(instruction.value.distance);
-    }
-    return instruction;
-  });
+  const instructions = this.environment.instructions.map(instruction => this.translateInstructionToP5(instruction));
   document.dispatchEvent(new CustomEvent('init-canvas', {detail: {"env" : {"robots" : robots, "instructions" : instructions}}}));
   console.log("Canvas session started");
 }

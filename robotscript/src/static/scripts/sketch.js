@@ -4,23 +4,34 @@ class Robot {
     this.size = size;
     this.x = startX;
     this.y = startY;
-    this.targetX = startX;
-    this.targetY = startY;
     this.angle = angle;
-    // this.speed = 0.1; // Default speed in pixels per frame
     this.image = loadImage("assets/metro.svg");
-    this.state_queue = [];
+    this.instruction_queue = [];
     this.draw_path = true;
     this.draw_name = true;
     this.path = [];
+    this.time = 0;
+    this.currentInstruction = undefined;
   }
 
   display() {
-    if (this.state_queue.length > 0) this.updateState();
+    this.time+=deltaTime;
 
-    this.x = this.targetX;
-    this.y = this.targetY;
-
+    if(this.currentInstruction){
+      const instru = this.currentInstruction;
+      const ended =  this.time > (instru.timestamp + instru.duration);
+      const started = this.time >= instru.timestamp;
+      if(started && !ended){
+        this.x = instru.robot.nextstate.x;
+        this.y = instru.robot.nextstate.y;
+        this.angle = instru.robot.nextstate.angle;
+      }
+      else if(ended)this.currentInstruction = undefined;
+    }
+    else if(this.instruction_queue.length > 0){
+      this.currentInstruction =  this.instruction_queue.shift();
+    }
+    
     if (this.draw_path) {
       this.path.push(createVector(this.x, this.y));
       this.drawPath();
@@ -41,18 +52,16 @@ class Robot {
     }
   }
 
-  setTargetPosition(x, y) {
-    this.targetX = x;
-    this.targetY = y;
-  }
+
 
   moveInDirection(angle, distance = 1) {
     angle -= PI / 2;
     let dx = cos(angle) * distance;
     let dy = sin(angle) * distance;
-    const roundX = + (this.targetX + dx).toFixed(4);
-    const roundY = + (this.targetY + dy).toFixed(4);
-    this.setTargetPosition(roundX, roundY);
+    const roundX = + (dx).toFixed(4);
+    const roundY = + (dy).toFixed(4);
+    this.x += roundX;
+    this.y += roundY;
   }
 
   moveRight(distance = 1) {
@@ -72,15 +81,6 @@ class Robot {
   moveBackward(distance = 1) {
     this.angle += 180;
     this.moveInDirection(radians(this.angle), distance);
-  }
-
-  updateState() {
-    if (this.state_queue.length > 0) {
-      let state = this.state_queue.shift();
-      this.setTargetPosition(state.x, state.y);
-      this.angle = state.angle;
-
-    }
   }
 
   drawPath() {
@@ -121,6 +121,7 @@ function setup() {
   createCanvas(400, 400, simulationCanvas);
   const env = {
     robots: [new Robot("@NiceRobot", 50, 0, 0)],
+    instructions: [],
   };
   resetCanvas(env);
 }
@@ -179,19 +180,22 @@ function keyPressed(event) {
   }
 }
 
-//TODO: modify. receive only an id of instruction to run.
-document.addEventListener("canvas-run-instruction", (event) => {
-  // robots[0].move_queue.push(event.detail.value);
-  const instruction = event.detail;
-});
+
+function loadInstructions(){
+  for (let instruction of instructions) {
+    const initstate = instruction.robot.initstate;
+    const robot = robots.find((robot) => robot.id === initstate.id);
+    robot.instruction_queue.push(instruction);
+  }
+}
+
+
 
 document.addEventListener("run-canvas", () => {
-  if(instructions){
-    for (let instruction of instructions) {
-      const robot = robots.find((robot) => robot.id === instruction.robot.initstate.id);
-      robot.state_queue.push(instruction.robot.nextstate);
-    }
-  }
+  robots = robots.map((robot) => {
+    return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);
+  });
+  loadInstructions();
 });
 
 
@@ -205,6 +209,7 @@ document.addEventListener("init-canvas", (event) => {
     return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);
   });
   resetCanvas(env);
+  loadInstructions();
 });
 
 // // Optional: Double-click to reset zoom, pan, and rotation
