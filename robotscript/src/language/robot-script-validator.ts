@@ -20,6 +20,7 @@ export function registerValidationChecks(services: RobotScriptServices) {
 export class RobotScriptValidator {
 
     checkPersonStartsWithCapital(model : Model, accept: ValidationAcceptor): void {
+        //TODO: check that the function calls are correct (right number of arguments, right type of arguments, etc.)
         // console.log("Typechecking the model...");
         // for(const instruction of model.statements) {
         //     console.log("Instruction :", instruction.$type);

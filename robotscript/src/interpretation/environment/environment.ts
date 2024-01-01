@@ -1,55 +1,32 @@
-import { Instruction, RunningEnvironment } from "./runningEnvironment.js";
-import { Robot } from "./robot.js";
-
-// Maybe in next version ?
-// export interface Wall {
-//     x1: number;
-//     y1: number;
-//     x2: number;
-//     y2: number;
-//     thickness: number;
-// }
+import { DistanceCheck, Instruction, Log, Move, MovingEntity, Rotation, RunningEnvironment, Speedset, Vector } from "./runningEnvironment.js";
+import { Robot } from "./entities.js";
 
 /**
  * 2D environment where robots can evolve.
- * The coordinate system starts at the upper left (0,0) of the grid. 
- * Every considered value is therefore positive.
  */
 export class RobotEnvironment {
 
     public static getDefaultEnvironment(): RobotEnvironment {
-        return new RobotEnvironment(400, 400);
+        return new RobotEnvironment([new Robot("@Robot1", {x: 0, y: 0})]);
     }
 
+    readonly initRobots : MovingEntity[];
+
     public constructor(
-        public width: number,
-        public height: number,
-        private robots: Robot[] = [ new Robot(width / 2, height / 2)],
-        private time: number = 0, // in milliseconds
-    ) {}
+        public robots: Robot[]
+    ) {
+        this.initRobots = robots.map(r => r.clone().asMovingEntity());
+    }
 
     public getAllInstructions() : Instruction[] {
-        let instructions : Instruction[] = [];
-        // Retrieve all instructions from all robots, and sort them by timestamp
-        for (const robot of this.robots) {
-            for (let instruction of robot.getInstructionHistory()) {
-                instruction.executor = "@Robot" + this.robots.indexOf(robot);
-                instructions.push(instruction);
-            }
-        }
+        const instructions : Instruction[] = this.robots.flatMap(r => r.getInstructions());
         instructions.sort((a, b) => a.timestamp - b.timestamp);
         return instructions;
     }
 
-    public getRobotInstructions(robotIndex : number) : Instruction[] {
-        return this.robots[robotIndex].getInstructionHistory();
-    }
-
     public export() : RunningEnvironment {
         return {
-            width: this.width,
-            height: this.height,
-            executors:  this.robots.map(robot => ({initPosition: [200, 200], name: "@Robot" + this.robots.indexOf(robot)})),
+            initrobots: this.initRobots,
             instructions: this.getAllInstructions()
         }
     }
@@ -57,21 +34,50 @@ export class RobotEnvironment {
     /**
      * Sets up the robot speed
      * @param robotIndex 
-     * @param speed value un m/s
+     * @param speed value in m/s
      */
     public setRobotSpeed(robotIndex: number, speed: number) {
-        this.robots[robotIndex].speed = speed;
-        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "speed", "value":speed});
+        const robot = this.robots[robotIndex]; 
+        const entity = robot.clone().asMovingEntity();
+        robot.speed = speed;
+        const speedset : Speedset = {"value" : speed}
+        robot.addInstruction({
+            "timestamp" : 0,
+            "duration" : 0,
+            "robot" : {
+                "initstate" : entity,
+                "nextstate" : robot.clone().asMovingEntity()
+            },
+            "name" : "speed",
+            "value" : speedset
+        })
     }
 
     /**
      * Sets up the robot angle
      * @param robotIndex 
      * @param angle in degrees. Can be negative (it will be processed for its positive value)
+     * @param rotationname the name of the rotation : "clockwise" | "anticlockwise"
      */
-    public setRobotAngle(robotIndex: number, angle: number) : void {
-        this.robots[robotIndex].angle = this.validAngle(angle);
-        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "rotate", "value":this.robots[robotIndex].angle});
+    public setRobotAngle(robotIndex: number, angle: number, rotationname : "clockwise" | "anticlockwise") : void {
+        const robot = this.robots[robotIndex]; 
+        const entity = robot.clone().asMovingEntity();
+        robot.angle = RobotEnvironment.validAngle(angle);
+        const angleset : Rotation = {
+            "name" : rotationname,
+            "duration" : 500,
+            "value" : robot.angle
+        }
+        robot.addInstruction({
+            "timestamp" : 0,
+            "duration" : 0,
+            "robot" : {
+                "initstate" : entity,
+                "nextstate" : robot.clone().asMovingEntity()
+            },
+            "name" : "rotate",
+            "value" : angleset
+        })
     }
 
     /**
@@ -79,7 +85,7 @@ export class RobotEnvironment {
      * @param angle 
      * @returns the angle value between 0 and 360
      */
-    private  validAngle(angle : number){
+    private static validAngle(angle : number){
         if(angle<0) angle= 360 + (angle%360)
         return angle%360;
     }
@@ -93,88 +99,109 @@ export class RobotEnvironment {
         return this.robots[robotIndex].angle;
     }
 
+    private static toRadians (angle : number) : number {
+        return angle * (Math.PI / 180);
+    }
+
     /**
      * Sets up the robot movement 
      * @param robotIndex 
      * @param movement 
+     * @param distance in m
      */
-    public makeRobotMove(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right", distance : number){
-        // console.log("Making the robot move ", movement, " for ", distance, " meters.");
+    public moveRobot(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right", distance : number){
         const robot = this.robots[robotIndex];
-        robot.moveInstruction = movement;
-        robot.remainingDistance =distance;
-        const duration = distance / robot.speed;
-        if(duration > 0){
-            this.update(duration * 1000);
+        const entity = robot.clone().asMovingEntity();
+        const duration = distance/robot.speed; // in seconds
+        const action = RobotEnvironment.computeRobotAction(movement, robot.angle, distance);
+        const vector : Vector = action.vector;
+        robot.angle = RobotEnvironment.validAngle(action.angle) ;
+        robot.position.x = vector.x +robot.position.x;
+        robot.position.y = vector.y + robot.position.y;
+        const name = movement==="Forward"?"forward": movement==="Backward"?"backward": movement==="Left"?"left": "right"; 
+        const move : Move = {
+            "duration" : duration * 1000, // in milliseconds
+            "name" : name,
+            "vector" : vector,
+            "distance" : distance
         }
+        robot.addInstruction({
+            "timestamp" : 0,
+            "duration" : duration * 1000,
+            "robot" : {
+                "initstate" : entity,
+                "nextstate" : robot.clone().asMovingEntity()
+            },
+            "name" : "move",
+            "value" : move,
+        })
     }
 
-    /**
-     * 
-     * @param dt delta time in ms
-     */
-    private update(dt: number) {
-        this.time += dt;
-        for (const robot of this.robots) {
-            if(robot.remainingDistance > 0 && robot.speed > 0){
-                const distance = Math.min(robot.remainingDistance, (robot.speed * dt/1000));
-                const mov = robot.moveInstruction;
-                const angle = 
-                    mov==="Forward" ? robot.angle : 
-                    mov==="Backward" ? this.validAngle(robot.angle - 180) :
-                    mov==="Left" ? this.validAngle(robot.angle -90) : 
-                    this.validAngle(robot.angle + 90);    
-
-                robot.y -= distance * Math.cos(this.toRadians(angle));
-                robot.x += distance * Math.sin(this.toRadians(angle));
-                // Environment limits
-                robot.x = Math.max(0, Math.min(this.width, robot.x));
-                robot.y = Math.max(0, Math.min(this.height, robot.y));
-                
-                robot.remainingDistance = Math.max(0, robot.remainingDistance - distance);
-
-                robot.recordInstruction({"timestamp": this.time, "name": "move", "value": {"direction" : mov.toLocaleLowerCase(), "vector" :  [robot.x, robot.y], "distance" : distance}});
-            }
+    private static computeRobotAction(movement : "Forward" | "Backward" | "Left" | "Right", angle : number, distance = 1): {"vector" : Vector, "angle" : number} {
+        if(movement === "Backward"){
+            angle = RobotEnvironment.validAngle(angle - 180);
+        } else if(movement === "Left"){
+            angle = RobotEnvironment.validAngle(angle - 90);
+        } else if(movement === "Right"){
+            angle = RobotEnvironment.validAngle(angle + 90);
         }
+        const vector : Vector = {"x": distance*Math.sin(RobotEnvironment.toRadians(angle)), "y" : distance*Math.cos(RobotEnvironment.toRadians(angle))};
+        // Round to 4 decimals to avoid floating point errors
+        vector.x = +vector.x.toFixed(4);
+        vector.y = +vector.y.toFixed(4);
+        return {"vector" : vector, "angle" : angle};
     }
+
+
 
     /**
      * @return time (in seconds)
      */
-    public getTime() : number {
-        return this.time / 1000;
+    public getTime(robotIndex : number) : number {
+        return this.robots[robotIndex].getTime() / 1000;
     }
 
     /**
      * Get the distance captured by the sensor in front of the robot
      * @param robotIndex 
-     * @returns the distance between the robot and the border he is facing in his angle
-     * @warning incomplete function ! TODO: currently only one border is considered at the time. 
+     * @returns the distance between the robot and the next obstacle he will face
      */
     public getDistance(robotIndex: number): number {
         const robot = this.robots[robotIndex];
-        let distance;
-        if(robot.angle <90){ //  up border
-            distance = robot.y / Math.cos(this.toRadians(robot.angle));
+        const entity = robot.clone().asMovingEntity();
+        let distance = Infinity; // TODO: calculate the distance
+        const distancecheck : DistanceCheck = {
+            "value" : distance
         }
-        else if (robot.angle < 180){ // right border
-            distance = (this.height - robot.y) / Math.sin(this.toRadians(robot.angle));
-        }
-        else if (robot.angle < 270){ // bottom border
-            distance = robot.x / Math.cos(this.toRadians(270-robot.angle));
-        }
-        else { // left border
-            distance = robot.x / Math.cos(this.toRadians(robot.angle - 270));
-        }
+        robot.addInstruction({
+            "timestamp" : 0,
+            "duration" : 0,
+            "name" : "distance",
+            "robot" : {
+                "initstate" : entity,
+                "nextstate" : robot.clone().asMovingEntity()
+            },
+            "value": distancecheck
+        })
         return distance;
     }
 
-    private toRadians (angle : number) : number {
-        return angle * (Math.PI / 180);
-    }
-
     public makeRobotSpeak(robotIndex: number, message: any) {
-        this.robots[robotIndex].recordInstruction({"timestamp": this.time, "name": "speak", "value":message});
+        const robot = this.robots[robotIndex]
+        const entity = robot.clone().asMovingEntity();
+        const log : Log = {
+            "value" : message
+        }
+        robot.addInstruction({
+            "timestamp" : 0,
+            "duration" : 0,
+            "name" : "speak",
+            "value" : log,
+            "robot" : {
+                "initstate" : entity,
+                "nextstate" : robot.clone().asMovingEntity()
+            }
+        })
     }
 
 }

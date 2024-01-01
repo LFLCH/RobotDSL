@@ -1,5 +1,11 @@
+void square(int size){
+    Clock 45;
+    Forward size in m;
+    Right size in m;
+    Clock 90;
+    Forward size in m;
+    Clock 90;
+    Forward size in m;
+}
 
-Forward 2 in m;
-Backward 2 in m;
-Left 5 in m;
-Right 10 in m;
+square(10);

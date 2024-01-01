@@ -224,7 +224,7 @@ export class InterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitMovement(node: Movement, value: number = 0) : void {
-    this.environment.makeRobotMove(this.robotIndex, node.movement, value);
+    this.environment.moveRobot(this.robotIndex, node.movement, value);
   }
   visitMulDiv(node: MulDiv) : number{
     const left = this.visitNumberExpression(node.left);
@@ -277,17 +277,17 @@ export class InterpreterVisitor implements RobotScriptVisitor {
     this.visitRotation(node.robotRotation, this.visitNumberExpression(node.angle));
   }
   visitRobotTimeSensor(node: RobotTimeSensor) : number{
-    return this.visitTimeUnit(node.unit, this.environment.getTime()); 
+    return this.visitTimeUnit(node.unit, this.environment.getTime(this.robotIndex)); 
   }
   visitRotation(node: Rotation, value : number = 0) : void {
     const angle = this.environment.getRobotAngle(this.robotIndex);
     switch(node.rotation)
     {
       case "Clock":
-        this.environment.setRobotAngle(this.robotIndex, angle + value);
+        this.environment.setRobotAngle(this.robotIndex, angle + value, "clockwise");
         break;
       case "Anticlock":
-        this.environment.setRobotAngle(this.robotIndex, angle - value)
+        this.environment.setRobotAngle(this.robotIndex, angle - value, "anticlockwise")
         break;
     }
   }

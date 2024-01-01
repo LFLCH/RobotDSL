@@ -1,5 +1,5 @@
 import { RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
-import { changeCanvasVisibility, moveRobot } from "./canvas.js";
+import { CanvasSession, changeCanvasVisibility } from "./canvas.js";
 import { changeArduinoWrapperVisibility } from "./compilation.js";
 
 const defaultWrapper = document.getElementById('default-output-wrapper') as HTMLElement;
@@ -13,17 +13,13 @@ document.addEventListener('run-content', async (event) => {
     changeArduinoWrapperVisibility(false);
     const environment = (event as CustomEvent<RunningEnvironment>).detail;
     for(const instruction of environment.instructions){
-        addTerminalLine(instruction.name + ' ' + instruction.value);
+        addTerminalLine(instruction.name + ' ' + JSON.stringify(instruction.value) );
     }
-    let robotsCurrentPositions : [number, number][] = environment.executors.map(executor => executor.initPosition);
+    let cs : CanvasSession = new CanvasSession(environment);
+    cs.start();
 
     for(const instruction of environment.instructions){
-        if(instruction.name === "move"){
-            const robotIndex = environment.executors.findIndex(executor => executor.name === instruction.executor);
-            // const robotPosition = robotsCurrentPositions[robotIndex];
-            moveRobot(instruction);
-            robotsCurrentPositions[robotIndex] = instruction.value;
-        }
+        cs.runInstruction(instruction);
     }
 
 });

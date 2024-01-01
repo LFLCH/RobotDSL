@@ -21,10 +21,8 @@ export const interpretRobotScriptFile = async (fileName: string): Promise<void> 
     const model = await extractAstNode<Model>(fileName, services);
     const interpreter = new Interpreter();
     const environment = interpreter.interpret(model);
-    console.log("Execution environment:", "width:", environment.width, "height:", environment.height, "robots:", environment.executors)
-    for(const instruction of environment.instructions){
-        console.log(instruction.timestamp, instruction.executor, instruction.name, instruction.value);
-    }
+    // log the environment as a JSON string
+    console.log(JSON.stringify(environment, undefined, 2));
 }
 
 export type GenerateOptions = {

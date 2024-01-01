@@ -145,3 +145,19 @@ exampleButtons.forEach((btn)=>{
         document.dispatchEvent(new CustomEvent('load-code', {detail: {code: code}}));   
     });
 });
+
+const resetCanvasButtons = document.querySelectorAll('.reset-canvas');
+
+resetCanvasButtons.forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+        document.dispatchEvent(new CustomEvent('reset-canvas'));
+    });
+});
+
+const runCanvasButtons = document.querySelectorAll('.run-canvas');
+
+runCanvasButtons.forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+        document.dispatchEvent(new CustomEvent('run-canvas'));
+    });
+});

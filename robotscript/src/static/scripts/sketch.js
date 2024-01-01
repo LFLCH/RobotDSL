@@ -1,23 +1,25 @@
 class Robot {
-  constructor(startX, startY) {
-    this.size = 50;
+  constructor(id, size, startX, startY, angle = 0) {
+    this.id = id;
+    this.size = size;
     this.x = startX;
     this.y = startY;
     this.targetX = startX;
     this.targetY = startY;
-    this.angle = 0; // Default angle in degrees
+    this.angle = angle;
     // this.speed = 0.1; // Default speed in pixels per frame
     this.image = loadImage("assets/metro.svg");
-    this.move_queue = [];
+    this.state_queue = [];
     this.draw_path = true;
+    this.draw_name = true;
     this.path = [];
   }
 
   display() {
-    if (this.move_queue.length > 0) this.updateMovement();
+    if (this.state_queue.length > 0) this.updateState();
 
-    this.x = this.targetX; 
-    this.y = this.targetY; 
+    this.x = this.targetX;
+    this.y = this.targetY;
 
     if (this.draw_path) {
       this.path.push(createVector(this.x, this.y));
@@ -33,6 +35,10 @@ class Robot {
     else img.resize(this.size, this.size * ratio);
     image(img, -this.image.width / 2, -this.image.height / 2);
     pop();
+
+    if (this.draw_name) {
+      this.drawName((2 * img.height) / 3);
+    }
   }
 
   setTargetPosition(x, y) {
@@ -66,24 +72,12 @@ class Robot {
     this.moveInDirection(radians(this.angle), distance);
   }
 
-  updateMovement() {
-    if (this.move_queue.length > 0) {
-      let move = this.move_queue.shift();
-      
-      switch (move.direction) {
-        case "forward":
-          this.moveForward(move.distance);
-          break;
-        case "backward":
-          this.moveBackward(move.distance);
-          break;
-        case "left":
-          this.moveLeft(move.distance);
-          break;
-        case "right":
-          this.moveRight(move.distance);
-          break;
-      }
+  updateState() {
+    if (this.state_queue.length > 0) {
+      let state = this.state_queue.shift();
+      this.setTargetPosition(state.x, state.y);
+      this.angle = state.angle;
+
     }
   }
 
@@ -96,26 +90,37 @@ class Robot {
     }
     endShape();
   }
+
+  drawName(shift) {
+    fill(0);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    text(this.id, this.x, this.y + shift);
+  }
 }
 
 let zoomLevel;
 let panX;
 let panY;
 let robots;
+let instructions;
 
-function resetCanvas() {
+function resetCanvas(env) {
   zoomLevel = 1;
   panX = 0;
   panY = 0;
-  robots = [];
-  robots.push(new Robot(0, 0));
+  robots = env.robots;
+  instructions = env.instructions;
 }
 
 const simulationCanvas = document.getElementById("simulation-canvas");
 
 function setup() {
   createCanvas(400, 400, simulationCanvas);
-  resetCanvas();
+  const env = {
+    robots: [new Robot("@NiceRobot", 50, 0, 0)],
+  };
+  resetCanvas(env);
 }
 
 function draw() {
@@ -124,7 +129,7 @@ function draw() {
   scale(zoomLevel);
 
   // Display all robots
-  for (let robot of robots) {
+  for (let robot of robots.values()) {
     robot.display();
   }
 }
@@ -172,14 +177,38 @@ function keyPressed(event) {
   }
 }
 
+//TODO: modify. receive only an id of instruction to run.
+document.addEventListener("canvas-run-instruction", (event) => {
+  // robots[0].move_queue.push(event.detail.value);
+  const instruction = event.detail;
+});
 
-// Optional: Double-click to reset zoom, pan, and rotation
+document.addEventListener("run-canvas", () => {
+  if(instructions){
+    
+    for (let instruction of instructions) {
+      const robot = robots.find((robot) => robot.id === instruction.robot.initstate.id);
+      robot.state_queue.push(instruction.robot.nextstate);
+    }
+  }
+});
+
+
+document.addEventListener("reset-canvas", () => {
+  setup();
+});
+
+document.addEventListener("init-canvas", (event) => {
+  const env = event.detail.env;
+  env.robots = env.robots.map((robot) => {
+    return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);
+  });
+  resetCanvas(env);
+});
+
+// // Optional: Double-click to reset zoom, pan, and rotation
 function doubleClicked(event) {
   if (isFocused(event)) {
-    resetCanvas();
+    setup();
   }
 }
-
-document.addEventListener("move-robot", (event) => {
-  robots[0].move_queue.push(event.detail.value);
-});
