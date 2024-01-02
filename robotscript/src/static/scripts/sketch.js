@@ -21,9 +21,10 @@ class Robot {
         const ended =  this.time > (instru.timestamp + instru.duration);
         const started = this.time >= instru.timestamp;
         if(started && !ended){
-          // this.x = instru.robot.nextstate.x;
-          // this.y = instru.robot.nextstate.y;
-          // this.angle = instru.robot.nextstate.angle;
+          const progress = (this.time - instru.timestamp) / instru.duration;
+          this.x = instru.robot.nextstate.x * progress + instru.robot.initstate.x * (1 - progress);
+          this.y = instru.robot.nextstate.y * progress + instru.robot.initstate.y * (1 - progress);
+          this.angle = instru.robot.nextstate.angle;
         }
         else if(ended){
           this.x = instru.robot.nextstate.x;
