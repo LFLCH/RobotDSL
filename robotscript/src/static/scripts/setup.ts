@@ -1,5 +1,6 @@
 import { MonacoEditorLanguageClientWrapper, UserConfig } from "monaco-editor-wrapper";
 import { setupMonacoRBS } from "./monaco-rbs.js";
+import { EnvironmentParameters } from "../../interpretation/environment/parameters.js";
 
 function getMainCode(config : UserConfig) :string{
     return config.wrapperConfig.editorAppConfig.code!;
@@ -13,7 +14,14 @@ async function  setup() {
 
     // Add event listeners
     document.getElementById("run")!.addEventListener("click", () => {
-        client.sendNotification("browser/run", { content: getMainCode(config) })
+        const robotNumber = (document.getElementById("robot-number") as HTMLInputElement).valueAsNumber;
+        const spaceAtStart = (document.getElementById("robot-space") as HTMLInputElement).valueAsNumber;
+        const params : EnvironmentParameters = { 
+            robotsNumber : robotNumber,
+            spaceAtStart : spaceAtStart
+        };
+        client.sendNotification("browser/run", params)
+        // client.sendNotification("browser/run", { content: getMainCode(config), params : params })
     });
 
     document.getElementById("compile")!.addEventListener("click", () => {

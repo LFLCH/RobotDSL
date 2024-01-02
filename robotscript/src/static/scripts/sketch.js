@@ -153,9 +153,12 @@ function draw() {
   translate(width / 2 + panX, height / 2 + panY);
   scale(zoomLevel);
 
+  const trailingActivated = trailingLineActive();
+
   
   for (const robot of robots.values()) {
     robot.time = time;
+    robot.draw_path = trailingActivated;
     robot.display();
   }
 
@@ -260,3 +263,7 @@ document.addEventListener('pause-canvas', (event)=>{
 document.addEventListener('restart-canvas', ()=>{
   canvasInitialisationFromSignal(initSignal);
 });
+
+function trailingLineActive(){
+  return localStorage.getItem('showTrail') === '1';
+}

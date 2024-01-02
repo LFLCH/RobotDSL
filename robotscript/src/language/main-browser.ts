@@ -5,6 +5,8 @@ import { Model } from './generated/ast.js';
 import { Interpreter } from '../interpretation/interpreter.js';
 import { RunningEnvironment } from '../interpretation/environment/runningEnvironment.js';
 import { Compiler } from '../compilation/compiler.js';
+import { EnvironmentParameters } from '../interpretation/environment/parameters.js';
+import { RobotEnvironment } from '../interpretation/environment/environment.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -61,11 +63,11 @@ function compile(){
 function run(){
     type RunResult = { errorMessage?:string, environment?: RunningEnvironment};
     const analysisRunResultNotification = new NotificationType<RunResult>('browser/run-result');
-    connection.onNotification('browser/run', (params: any) => {
+    connection.onNotification('browser/run', (params: EnvironmentParameters) => {
         let errorMessage = undefined;
         let environment = undefined;
         if (currentModel) {
-          const interpreter = new Interpreter();
+          const interpreter = new Interpreter(RobotEnvironment.getParameteredEnvironment(params));
           environment = interpreter.interpret(currentModel);
         } else {
           errorMessage = "No valid model to run";

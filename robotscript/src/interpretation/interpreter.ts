@@ -1,20 +1,25 @@
 import { Model } from "../language/generated/ast.js";
 import { RobotEnvironment } from "./environment/environment.js";
 import { RunningEnvironment } from "./environment/runningEnvironment.js";
-import { InterpreterVisitor } from "./interpreterVisitor.js";
+import { RobotInterpreterVisitor } from "./interpreterVisitor.js";
 
 export class Interpreter {
 
-    private visitor: InterpreterVisitor;
+    private visitors: RobotInterpreterVisitor[];
     
     constructor(
         public environment: RobotEnvironment = RobotEnvironment.getDefaultEnvironment()
         ) {
-        this.visitor = new InterpreterVisitor(this.environment);
+            this.visitors = [];
+            for(let i=0; i<environment.robots.length ; i++){
+                this.visitors.push(new RobotInterpreterVisitor(environment, i));
+            }
      }
 
     interpret(model: Model): RunningEnvironment {
-        this.visitor.visitModel(model);
+        for(const visitor of this.visitors){
+            visitor.visitModel(model);
+        }
         return this.environment.export();
     }
 }

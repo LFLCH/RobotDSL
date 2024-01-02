@@ -14,14 +14,14 @@ class Context {
     public functionNames: string[] = [];
 }
 
-export class InterpreterVisitor implements RobotScriptVisitor {
+export class RobotInterpreterVisitor implements RobotScriptVisitor {
 
     // Stack of contexts. The last one is the most recent.
     private contexts : Context[];
 
     public constructor(
         public environment: RobotEnvironment, 
-        public robotIndex: number = 0
+        public robotIndex: number
     ) { 
         this.contexts = [new Context()];
     }

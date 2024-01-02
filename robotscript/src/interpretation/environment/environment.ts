@@ -1,5 +1,6 @@
 import { DistanceCheck, Instruction, Log, Move, MovingEntity, Rotation, RunningEnvironment, Speedset, Vector } from "./runningEnvironment.js";
 import { Robot } from "./entities.js";
+import { EnvironmentParameters } from "./parameters.js";
 
 /**
  * 2D environment where robots can evolve.
@@ -7,7 +8,20 @@ import { Robot } from "./entities.js";
 export class RobotEnvironment {
 
     public static getDefaultEnvironment(): RobotEnvironment {
-        return new RobotEnvironment([new Robot("@Robot1", {x: 0, y: 0})]);
+        return new RobotEnvironment([new Robot("@Robot1", {x: 0, y: 0}), new Robot("@Robot2", {x: 3, y: 3})]);
+    }
+
+    public static getParameteredEnvironment(params : EnvironmentParameters) : RobotEnvironment {
+        const robots : Robot[] = [];
+        // Place the robots on a line. (we could be more creative)
+        const space = params.spaceAtStart;
+        const retrait = ((params.robotsNumber-1)*space)/2;
+        for(let i = 0; i<params.robotsNumber; i++){
+            const x = i*space - retrait;
+            robots.push(new Robot(`@Robot${i}`, {x: x, y: 0}));
+        }
+    
+        return new RobotEnvironment(robots);
     }
 
     readonly initRobots : MovingEntity[];
