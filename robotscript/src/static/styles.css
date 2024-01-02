@@ -136,3 +136,16 @@ main{
 #default-output-wrapper p{
     padding: 1em;
 }
+
+.paused-canvas, .playing-canvas{
+    width: 8em !important;
+}
+
+.simulation-navbar{
+    gap:1em;
+}
+
+/*Disabled input should have a cursor set to auto */
+input:disabled {
+    cursor: auto !important;
+}

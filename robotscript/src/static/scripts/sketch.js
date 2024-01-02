@@ -6,30 +6,31 @@ class Robot {
     this.y = startY;
     this.angle = angle;
     this.image = loadImage("assets/metro.svg");
-    this.instruction_queue = [];
     this.draw_path = true;
     this.draw_name = true;
     this.path = [];
     this.time = 0;
     this.currentInstruction = undefined;
+    this.playing = true;
   }
 
   display() {
-    this.time+=deltaTime;
 
-    if(this.currentInstruction){
-      const instru = this.currentInstruction;
-      const ended =  this.time > (instru.timestamp + instru.duration);
-      const started = this.time >= instru.timestamp;
-      if(started && !ended){
-        this.x = instru.robot.nextstate.x;
-        this.y = instru.robot.nextstate.y;
-        this.angle = instru.robot.nextstate.angle;
-      }
-      else if(ended)this.currentInstruction = undefined;
-    }
-    else if(this.instruction_queue.length > 0){
-      this.currentInstruction =  this.instruction_queue.shift();
+    if(this.playing && this.currentInstruction){
+        const instru = this.currentInstruction;
+        const ended =  this.time > (instru.timestamp + instru.duration);
+        const started = this.time >= instru.timestamp;
+        if(started && !ended){
+          // this.x = instru.robot.nextstate.x;
+          // this.y = instru.robot.nextstate.y;
+          // this.angle = instru.robot.nextstate.angle;
+        }
+        else if(ended){
+          this.x = instru.robot.nextstate.x;
+          this.y = instru.robot.nextstate.y;
+          this.angle = instru.robot.nextstate.angle;
+          this.currentInstruction = undefined;
+        }
     }
     
     if (this.draw_path) {
@@ -52,8 +53,25 @@ class Robot {
     }
   }
 
+  drawPath() {
+    noFill();
+    stroke(255, 0, 0);
+    beginShape();
+    for (let point of this.path) {
+      vertex(point.x, point.y);
+    }
+    endShape();
+  }
+
+  drawName(shift) {
+    fill(0);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    text(this.id, this.x, this.y + shift);
+  }
 
 
+  // Methods for the robot control with the keyboard
   moveInDirection(angle, distance = 1) {
     angle -= PI / 2;
     let dx = cos(angle) * distance;
@@ -82,23 +100,6 @@ class Robot {
     this.angle += 180;
     this.moveInDirection(radians(this.angle), distance);
   }
-
-  drawPath() {
-    noFill();
-    stroke(255, 0, 0);
-    beginShape();
-    for (let point of this.path) {
-      vertex(point.x, point.y);
-    }
-    endShape();
-  }
-
-  drawName(shift) {
-    fill(0);
-    noStroke();
-    textAlign(CENTER, CENTER);
-    text(this.id, this.x, this.y + shift);
-  }
 }
 
 let zoomLevel;
@@ -106,13 +107,22 @@ let panX;
 let panY;
 let robots;
 let instructions;
+let time;
+let playing;
+let slider;
+let initSignal;
+let previousDeltaTime;
 
 function resetCanvas(env) {
   zoomLevel = 1;
   panX = 0;
   panY = 0;
+  playing = true;
+  time = 0;
+  previousDeltaTime = 0;
   robots = env.robots;
   instructions = env.instructions;
+  slider = select('#simulation-progress-slider');
 }
 
 const simulationCanvas = document.getElementById("simulation-canvas");
@@ -124,6 +134,17 @@ function setup() {
     instructions: [],
   };
   resetCanvas(env);
+
+
+  // Maybe later, using the slider to control the time. For now there is a little problem in the drawing : when we select another time, the robot draw a line from the previous position to the new one.
+  slider.elt.addEventListener('input', () => {
+    console.log("Current value", slider.value());
+  });
+  
+  slider.elt.addEventListener('change', () => {
+    // This event is triggered when the user releases the slider handle
+    console.log('Selected value:', slider.value());
+  });
 }
 
 function draw() {
@@ -131,10 +152,28 @@ function draw() {
   translate(width / 2 + panX, height / 2 + panY);
   scale(zoomLevel);
 
-  // Display all robots
-  for (let robot of robots.values()) {
+  
+  for (const robot of robots.values()) {
+    robot.time = time;
     robot.display();
   }
+
+  // Update the instruction of each robot if necesssary
+  const currentInstructions = instructions.filter((instru) => {
+    return instru.timestamp <= time - previousDeltaTime && time <= (instru.timestamp + instru.duration);
+  });
+  for (const instruction of currentInstructions) {
+    const robot = robots.find((robot) => robot.id === instruction. robot.initstate.id);
+    if(robot.instruction !== instruction){
+      robot.currentInstruction = instruction;
+    }
+  }
+  if(playing) {
+    previousDeltaTime = deltaTime;
+    time+= previousDeltaTime;
+    slider.value(time);
+  }
+  
 }
 
 function mouseWheel(event) {
@@ -180,41 +219,43 @@ function keyPressed(event) {
   }
 }
 
-
-function loadInstructions(){
-  for (let instruction of instructions) {
-    const initstate = instruction.robot.initstate;
-    const robot = robots.find((robot) => robot.id === initstate.id);
-    robot.instruction_queue.push(instruction);
-  }
+function canvasInitialisationFromSignal(event) {
+  initSignal = event;
+  const env = event.detail.env;
+  resetCanvas({
+    robots: env.robots.map((robot) => { return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);}),
+    instructions: env.instructions,
+  });
 }
 
-
-
-document.addEventListener("run-canvas", () => {
-  robots = robots.map((robot) => {
-    return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);
-  });
-  loadInstructions();
-});
-
-
-document.addEventListener("reset-canvas", () => {
-  setup();
-});
-
 document.addEventListener("init-canvas", (event) => {
-  const env = event.detail.env;
-  env.robots = env.robots.map((robot) => {
-    return new Robot(robot.id, robot.size, robot.x, robot.y, robot.angle);
-  });
-  resetCanvas(env);
-  loadInstructions();
+  canvasInitialisationFromSignal(event);
 });
 
 // // Optional: Double-click to reset zoom, pan, and rotation
-function doubleClicked(event) {
-  if (isFocused(event)) {
-    setup();
+// function doubleClicked(event) {
+//   if (isFocused(event)) {
+//     setup();
+//   }
+// }
+
+function updateRobotsPlayingState(){
+  for (const robot of robots.values()){
+    robot.playing = playing;
   }
 }
+
+document.addEventListener('play-canvas', (event)=>{
+  playing = true;
+  updateRobotsPlayingState();
+});
+
+document.addEventListener('pause-canvas', (event)=>{
+  playing = false;
+  updateRobotsPlayingState();
+})
+
+
+document.addEventListener('restart-canvas', ()=>{
+  canvasInitialisationFromSignal(initSignal);
+});

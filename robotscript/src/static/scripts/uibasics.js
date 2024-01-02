@@ -146,18 +146,56 @@ exampleButtons.forEach((btn)=>{
     });
 });
 
-const resetCanvasButtons = document.querySelectorAll('.reset-canvas');
 
-resetCanvasButtons.forEach((btn)=>{
+const playingCanvasButtons = document.querySelectorAll('.playing-canvas');
+const pausedCanvasButtons = document.querySelectorAll('.paused-canvas');
+
+function updatePlayState(play){
+    pausedCanvasButtons.forEach((psd)=>{
+        if(play) psd.classList.add('hidden')
+        else  psd.classList.remove('hidden');
+    });
+    
+    playingCanvasButtons.forEach((ply)=>{
+        if(play) ply.classList.remove('hidden');
+        else  ply.classList.add('hidden')
+    });
+}
+
+playingCanvasButtons.forEach((btn)=>{
     btn.addEventListener('click', ()=>{
-        document.dispatchEvent(new CustomEvent('reset-canvas'));
+        document.dispatchEvent(new CustomEvent('pause-canvas'));
+        updatePlayState(false)
     });
 });
 
-const runCanvasButtons = document.querySelectorAll('.run-canvas');
-
-runCanvasButtons.forEach((btn)=>{
+pausedCanvasButtons.forEach((btn)=>{
     btn.addEventListener('click', ()=>{
-        document.dispatchEvent(new CustomEvent('run-canvas'));
+        document.dispatchEvent(new CustomEvent('play-canvas'));
+        updatePlayState(true)
+    });
+});
+
+document.addEventListener('init-canvas', ()=>updatePlayState(true))
+
+const simulationProgressSlider = document.getElementById('simulation-progress-slider')
+
+simulationProgressSlider.addEventListener('input', () => {
+    document.dispatchEvent(new CustomEvent('pause-canvas'));
+    updatePlayState(false)
+});
+  
+  simulationProgressSlider.addEventListener('change', () => {
+    document.dispatchEvent(new CustomEvent('play-canvas'));
+    updatePlayState(true)
+  });
+
+
+const restartCanvasButtons = document.querySelectorAll('.restart-canvas');
+
+restartCanvasButtons.forEach((btn)=>{
+    btn.addEventListener('click', ()=>{
+        document.dispatchEvent(new CustomEvent('restart-canvas'));
+        updatePlayState(true)
     });
 });

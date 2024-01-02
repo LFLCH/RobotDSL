@@ -1,8 +1,8 @@
 import { Instruction, Move, MovingEntity, RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
 
-export const canvas : HTMLCanvasElement  = document.getElementById('simulation-canvas')! as HTMLCanvasElement;
+export const canvas : HTMLCanvasElement  = document.getElementById('simulation-canvas') as HTMLCanvasElement;
 const context = canvas.getContext('2d')!;
-
+const slider: HTMLInputElement = document.getElementById('simulation-progress-slider') as HTMLInputElement;
 
 export function changeCanvasVisibility(visible : boolean = true){
   const wrapper = document.querySelector('.run-wrapper') as HTMLElement;
@@ -32,6 +32,7 @@ export class CanvasSession{
     }
   }
 
+////  condense the instructions that have the same timestamp
   private translateInstructionToP5(instruction : Instruction) {
       instruction.robot.initstate = this.movingEntityToPixels(instruction.robot.initstate);
       instruction.robot.nextstate = this.movingEntityToPixels(instruction.robot.nextstate);
@@ -52,6 +53,11 @@ export class CanvasSession{
     return this.movingEntityToPixels(robot);
   });
   const instructions = this.environment.instructions.map(instruction => this.translateInstructionToP5(instruction));
+  // slider.max= (instructions.length).toString();
+  if(instructions.length>0) {
+    const lastinstruction = instructions[instructions.length-1];
+    slider.max = (lastinstruction.timestamp + lastinstruction.duration).toString();
+  }
   document.dispatchEvent(new CustomEvent('init-canvas', {detail: {"env" : {"robots" : robots, "instructions" : instructions}}}));
   console.log("Canvas session started");
 }
