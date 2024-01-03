@@ -7,18 +7,19 @@ import { extractAstNode } from './cli-util.js';
 import { NodeFileSystem } from 'langium/node';
 import { Interpreter } from '../interpretation/interpreter.js';
 import { generateArduino } from './generator.js';
+import { VModel } from '../language/semantics/visitor.js';
 
 
 export const generateArduinoAction = async (fileName: string, opts: GenerateOptions): Promise<void> => {
     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
-    const model = await extractAstNode<Model>(fileName, services);
+    const model = await extractAstNode<VModel>(fileName, services);
     const generatedFilePath = generateArduino(model, fileName, opts.destination);
     console.log(chalk.green(`Arduino code generated successfully: ${generatedFilePath}`));
 }
 
 export const interpretRobotScriptFile = async (fileName: string): Promise<void> => {
     const services = createRobotScriptServices(NodeFileSystem).RobotScript;
-    const model = await extractAstNode<Model>(fileName, services);
+    const model = await extractAstNode<VModel>(fileName, services);
     const interpreter = new Interpreter();
     const environment = interpreter.interpret(model);
     // log the environment as a JSON string

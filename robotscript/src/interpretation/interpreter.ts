@@ -1,4 +1,4 @@
-import { Model } from "../language/generated/ast.js";
+import { VModel } from "../language/semantics/visitor.js";
 import { RobotEnvironment } from "./environment/environment.js";
 import { RunningEnvironment } from "./environment/runningEnvironment.js";
 import { RobotInterpreterVisitor } from "./interpreterVisitor.js";
@@ -16,7 +16,7 @@ export class Interpreter {
             }
      }
 
-    interpret(model: Model): RunningEnvironment {
+    interpret(model: VModel): RunningEnvironment {
         for(const visitor of this.visitors){
             visitor.visitModel(model);
         }
