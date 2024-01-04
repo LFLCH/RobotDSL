@@ -1,6 +1,6 @@
 import type { DefaultSharedModuleContext, LangiumServices, LangiumSharedServices, Module, PartialLangiumServices } from 'langium';
 import { createDefaultModule, createDefaultSharedModule, inject } from 'langium';
-import { RobotScriptGeneratedModule, RobotScriptGeneratedSharedModule } from './generated/module.js';
+import { RobotScriptGeneratedModule, RobotScriptGeneratedSharedModule } from './representation/module.js';
 import { RobotScriptValidator, registerValidationChecks } from './robot-script-validator.js';
 import { RoboMlAcceptWeaver, weaveAcceptMethods } from './semantics/accept-weaver.js';
 

@@ -1,12 +1,12 @@
 import { EmptyFileSystem, startLanguageServer, DocumentState } from 'langium';
 import { BrowserMessageReader, BrowserMessageWriter, createConnection, NotificationType, Diagnostic } from 'vscode-languageserver/browser.js';
 import { createRobotScriptServices } from './robot-script-module.js';
-import { Model } from './generated/ast.js';
 import { Interpreter } from '../interpretation/interpreter.js';
 import { RunningEnvironment } from '../interpretation/environment/runningEnvironment.js';
 import { Compiler } from '../compilation/compiler.js';
 import { EnvironmentParameters } from '../interpretation/environment/parameters.js';
 import { RobotEnvironment } from '../interpretation/environment/environment.js';
+import { VModel } from './semantics/visitor.js';
 
 declare const self: DedicatedWorkerGlobalScope;
 
@@ -19,7 +19,7 @@ const { shared, RobotScript } = createRobotScriptServices({ connection, ...Empty
 
 startLanguageServer(shared)
 
-let currentModel: Model | undefined = undefined;
+let currentModel: VModel | undefined = undefined;
 let currentCompilationResult: string | undefined = undefined;
 
 function liveASTAnalysis(){
@@ -30,7 +30,7 @@ function liveASTAnalysis(){
     shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, documents => {
         // for (const document of documents) {
             const document = documents[0];
-            if(!document.diagnostics || document.diagnostics.length==0) currentModel = document.parseResult.value as Model;
+            if(!document.diagnostics || document.diagnostics.length==0) currentModel = document.parseResult.value as VModel;
             else currentModel = undefined;
             jsonSerializer; 
             connection.sendNotification(documentChangeNotification, {

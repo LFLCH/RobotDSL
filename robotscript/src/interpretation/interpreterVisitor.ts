@@ -1,7 +1,6 @@
 
 import { RobotEnvironment } from "./environment/environment.js";
-import { And, Assignment, Block, BoolConstant, Comparison, DistanceUnit, DoubleConstant, Equality, For, FunctionCall, FunctionDef, FunctionReturn, If, IntConstant, Minus, Model, Movement, MulDiv, Not, Or, Parameter, PlusMinus, RobotSpeedAdjust, RobotDistanceSensor, RobotMovement, RobotRotation, RobotTimeSensor, Rotation, TimeUnit, Type, VariableDecl, VariableCall, While, Statement, isAssignment, isControlStructure, isExpression, isFunctionReturn, isVariableDecl, ControlStructure, isFor, isIf, isWhile, Expression, isAnd, isBoolConstant, isComparison, isDoubleConstant, isEquality, isFunctionCall, isIntConstant, isMinus, isMovement, isMulDiv, isNot, isOr, isPlusMinus, isRobotSpeedAdjust, isRobotDistanceSensor, isRobotMovement, isRobotRotation, isRobotTimeSensor, isVariableCall, RobotSymbol, isPrint, Print } from "../language/generated/ast.js";
-import { RobotScriptVisitor } from "../language/semantics/visitor.js";
+import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VBoolConstant, VComparison, VDistanceUnit, VDoubleConstant, VEquality, VFor, VFunctionCall, VFunctionDef, VFunctionReturn, VIf, VIntConstant, VMinus, VModel, VMovement, VMulDiv, VNot, VOr, VParameter, VPlusMinus, VPrint, VRobotDistanceSensor, VRobotMovement, VRobotRotation, VRobotSpeedAdjust, VRobotSymbol, VRobotTimeSensor, VRotation, VTimeUnit, VType, VVariableCall, VVariableDecl, VWhile } from "../language/semantics/visitor.js";
 
 
 interface MemoryZone {
@@ -15,27 +14,26 @@ class Context {
 }
 
 export class RobotInterpreterVisitor implements RobotScriptVisitor {
+  // Stack of contexts. The last one is the most recent.
+  private contexts: Context[];
 
-    // Stack of contexts. The last one is the most recent.
-    private contexts : Context[];
-
-    public constructor(
-        public environment: RobotEnvironment, 
-        public robotIndex: number
-    ) { 
-        this.contexts = [new Context()];
-    }
-
-
-// Visitor methods    
-  visitAnd(node: And): boolean {
-    const left = this.visitBooleanExpression(node.left);
-    const right = this.visitBooleanExpression(node.right);
-    return left && right;
+  public constructor(
+    public environment: RobotEnvironment,
+    public robotIndex: number
+  ) {
+    this.contexts = [new Context()];
   }
 
-  visitAssignment(node: Assignment) {
-    const nodevariable : RobotSymbol | undefined = node.symbol.ref;
+  // Visitor methods
+  visitAnd(node: VAnd): boolean {
+    // const left = this.visitBooleanExpression(node.left);
+    // const right = this.visitBooleanExpression(node.right);
+    // return left && right;
+    return node.left.accept(this) && node.right.accept(this);
+  }
+
+  visitAssignment(node: VAssignment) {
+    const nodevariable : VRobotSymbol | undefined = node.symbol.ref;
     if(nodevariable) {
       const type = nodevariable.type.type;
       // 1 : check if variable exists among the contexts, starting from the last one (the most recent)
@@ -50,7 +48,8 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         // 3 : check if the type is the same
         if(this.contexts[contextIndex].variables.get(nodevariable.name)?.type === type) {
           // 4 : update the value
-          this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : this.visitTypedExpression(node.expression)});
+          // this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : this.visitTypedExpression(node.expression)});
+          this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : node.expression.accept(this)});
         } else {
           throw new Error(`Type mismatch : variable ${nodevariable.name} is of type ${this.contexts[contextIndex].variables.get(nodevariable.name)?.type} but you are trying to assign a value of type ${type}`);
         }
@@ -63,37 +62,34 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
    * It can call a function, declare a variable, etc.
    * And its scope is limited to the block.
    * A return statement can be used to exit the block. The return value will be added to the context calling the block.
-   * @param node 
-   * @param variables 
+   * @param node
+   * @param variables
    */
-  visitBlock(node: Block, inputVariables: Map<string, MemoryZone> = new Map()) :  number | boolean | undefined {
+  visitBlock(
+    node: VBlock,
+    inputVariables: Map<string, MemoryZone> = new Map()
+  ): number | boolean | undefined {
     this.contexts.push(new Context());
-    let returnValue : number | boolean | undefined = undefined;
+    let returnValue: number | boolean | undefined = undefined;
     // 1 : add input variables to the context
-    for(const [name, value] of inputVariables) {
+    for (const [name, value] of inputVariables) {
       this.contexts[this.contexts.length - 1].variables.set(name, value);
     }
     // 2 : visit all statements
     for (const stmt of node.statements) {
-      if(isFunctionReturn(stmt)) {
-        returnValue =  this.visitFunctionReturn(stmt);
-        break;
-      }
-      else {
-        this.visitStatement(stmt);
-      }
+        returnValue = stmt.accept(this);
     }
     // 3 : remove the context
     this.contexts.pop();
     // 4 : return the value
     return returnValue;
   }
-  visitBoolConstant(node: BoolConstant): boolean {
+  visitBoolConstant(node: VBoolConstant): boolean {
     return node.value === "true";
   }
-  visitComparison(node: Comparison): boolean {
-    const left = this.visitNumberExpression(node.left);
-    const right = this.visitNumberExpression(node.right);
+  visitComparison(node: VComparison): boolean {
+    const left = node.left.accept(this);
+    const right = node.right.accept(this);
     switch (node.operator) {
       case "<":
         return left < right;
@@ -105,13 +101,13 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         return left >= right;
     }
   }
-  
+
   /**
    * Visits a distance unit and returns its value in meters.
-   * @param node 
+   * @param node
    * @param value
    */
-  visitDistanceUnit(node: DistanceUnit, value: number = 0) : number{
+  visitDistanceUnit(node: VDistanceUnit, value: number = 0): number {
     switch (node.unit) {
       case "m":
         return value;
@@ -123,12 +119,12 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         return value / 1000;
     }
   }
-  visitDoubleConstant(node: DoubleConstant): number {
+  visitDoubleConstant(node: VDoubleConstant): number {
     return node.value;
   }
-  visitEquality(node: Equality): boolean {
-    const left = this.visitBooleanExpression(node.left);
-    const right = this.visitBooleanExpression(node.right);
+  visitEquality(node: VEquality): boolean {
+    const left = node.left.accept(this);
+    const right = node.right.accept(this);
     switch (node.operator) {
       case "==":
         return left == right;
@@ -136,99 +132,111 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         return left != right;
     }
   }
-  visitFor(node: For) {
-   if(isAssignment(node.init)) this.visitAssignment(node.init);
-   else if(isVariableDecl(node.init)) this.visitVariableDecl(node.init);
-   while(this.visitBooleanExpression(node.condition)) {
-     let returnValue : number | boolean | undefined = this.visitBlock(node.block);
-     if(returnValue !== undefined) {
-        return returnValue;
-      }
-     this.visitAssignment(node.increment);
-   }
-   return undefined;
+  visitFor(node: VFor) {
+    node.init.accept(this);
+    while (node.condition.accept(this)) {
+      let returnValue: number | boolean | undefined = this.visitBlock(
+        node.block
+      );
+      if (returnValue !== undefined) return returnValue;
+      this.visitAssignment(node.increment);
+    }
+    return undefined;
   }
   /**
    * Interprets on the fly the function call.
-   * @param node 
+   * @param node
    */
-  visitFunctionCall(node: FunctionCall) {
+  visitFunctionCall(node: VFunctionCall) {
     // Call of a function (a block with input arguments and a return value)
     let fun = node.functionCall.ref!;
     // 1 : check if the function exists
     let contextIndex = this.contexts.length - 1;
-    for(; contextIndex >= 0; contextIndex--) {
-      if(this.contexts[contextIndex].functionNames.includes(fun.name)) {
+    for (; contextIndex >= 0; contextIndex--) {
+      if (this.contexts[contextIndex].functionNames.includes(fun.name)) {
         break;
       }
     }
     // 2 : check existence of the function in the stack of contexts
-    if(contextIndex < 0) {
+    if (contextIndex < 0) {
       throw new Error(`Function ${fun.name} does not exist`);
     }
     // 3 : check the number of params
-    if(node.args.length>fun.params.length){
-      throw new Error(`Too many arguments for the call of ${fun.name} (${node.args.length} instead of ${fun.params.length} as expected)`)
+    if (node.args.length > fun.params.length) {
+      throw new Error(
+        `Too many arguments for the call of ${fun.name} (${node.args.length} instead of ${fun.params.length} as expected)`
+      );
     }
     // 4 : cast the parameters to context variables
-    let inputs : Map<string , MemoryZone> = new Map();
-    for(let i=0; i<fun.params.length ; i++){
+    let inputs: Map<string, MemoryZone> = new Map();
+    for (let i = 0; i < fun.params.length; i++) {
       let param = fun.params[i];
       let arg = node.args[i];
-      
-      inputs.set(param.name, {"type" : param.type.type, "value" : this.visitTypedExpression(arg)})
+
+      inputs.set(param.name, {
+        type: param.type.type,
+        value: arg.accept(this),
+      });
     }
     return this.visitBlock(fun.block, inputs);
   }
-  visitFunctionDef(node: FunctionDef) {
+  visitFunctionDef(node: VFunctionDef) {
     this.contexts[this.contexts.length - 1].functionNames.push(node.name);
   }
 
-  visitFunctionReturn(node: FunctionReturn) :  number | boolean {
-    return this.visitTypedExpression(node.expression);
+  visitFunctionReturn(node: VFunctionReturn): number | boolean {
+    // return this.visitTypedExpression(node.expression);
+    return node.expression.accept(this);
   }
 
-  visitIf(node: If) {
-    if(this.visitBooleanExpression(node.mainCondition)) {
-      let returnValue : number | boolean | undefined = this.visitBlock(node.thenBlock);
-      if(returnValue !== undefined) return returnValue;
-    }
-    else if(node.subsidaryConditions){
-      for(let condition of node.subsidaryConditions) {
-        if(this.visitBooleanExpression(condition)) {
-          let returnValue : number | boolean | undefined = this.visitBlock(node.thenBlock);
-          if(returnValue !== undefined) return returnValue;
+  visitIf(node: VIf) {
+    // if(this.visitBooleanExpression(node.mainCondition)) {
+    if (node.mainCondition.accept(this)) {
+      let returnValue: number | boolean | undefined = this.visitBlock(
+        node.thenBlock
+      );
+      if (returnValue !== undefined) return returnValue;
+    } else if (node.subsidaryConditions) {
+      for (let condition of node.subsidaryConditions) {
+        // if(this.visitBooleanExpression(condition)) {
+        if (condition.accept(this)) {
+          let returnValue: number | boolean | undefined = this.visitBlock(
+            node.thenBlock
+          );
+          if (returnValue !== undefined) return returnValue;
         }
       }
-    }
-    else if(node.elseBlock) {
-      let returnValue : number | boolean | undefined = this.visitBlock(node.elseBlock);
-      if(returnValue !== undefined) return returnValue;
+    } else if (node.elseBlock) {
+      let returnValue: number | boolean | undefined = this.visitBlock(
+        node.elseBlock
+      );
+      if (returnValue !== undefined) return returnValue;
     }
     return undefined;
   }
-  visitIntConstant(node: IntConstant): number {
+  visitIntConstant(node: VIntConstant): number {
     return node.value;
   }
-  visitMinus(node: Minus) : number{
-    return -this.visitNumberExpression(node.expression);
+  visitMinus(node: VMinus): number {
+    // return -this.visitNumberExpression(node.expression);
+    return -node.expression.accept(this);
   }
 
-  visitModel(node: Model) {
+  visitModel(node: VModel) {
     for (const def of node.functionsDef) {
       this.visitFunctionDef(def);
     }
     for (const stmt of node.statements) {
-      this.visitStatement(stmt);
+      stmt.accept(this);
     }
   }
 
-  visitMovement(node: Movement, value: number = 0) : void {
+  visitMovement(node: VMovement, value: number = 0): void {
     this.environment.moveRobot(this.robotIndex, node.movement, value);
   }
-  visitMulDiv(node: MulDiv) : number{
-    const left = this.visitNumberExpression(node.left);
-    const right = this.visitNumberExpression(node.right);
+  visitMulDiv(node: VMulDiv): number {
+    const left = node.left.accept(this);
+    const right = node.right.accept(this);
     switch (node.operator) {
       case "*":
         return left * right;
@@ -238,20 +246,20 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         return left % right;
     }
   }
-  visitNot(node: Not) {
-    return !this.visitBooleanExpression(node.expression);
+  visitNot(node: VNot) {
+    return !node.expression.accept(this);
   }
-  visitOr(node: Or): boolean {
-    const left = this.visitBooleanExpression(node.left);
-    const right = this.visitBooleanExpression(node.right);
+  visitOr(node: VOr): boolean {
+    const left = node.left.accept(this);
+    const right = node.right.accept(this);
     return left || right;
   }
-  visitParameter(node: Parameter) {
+  visitParameter(node: VParameter) {
     // Useless (already handled in visitFunctionCall)
   }
-  visitPlusMinus(node: PlusMinus) {
-    const left = this.visitNumberExpression(node.left);
-    const right = this.visitNumberExpression(node.right);
+  visitPlusMinus(node: VPlusMinus) {
+    const left = node.left.accept(this); 
+    const right = node.right.accept(this); 
     switch (node.operator) {
       case "+":
         return left + right;
@@ -260,43 +268,59 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
 
-  visitPrint(node: Print) {
-    this.environment.makeRobotSpeak(this.robotIndex, this.visitTypedExpression(node.expression));
+  visitPrint(node: VPrint) {
+    this.environment.makeRobotSpeak(
+      this.robotIndex,
+      node.expression.accept(this)
+    );
   }
-  visitRobotSpeedAdjust(node: RobotSpeedAdjust) : void {
-    this.environment.setRobotSpeed(this.robotIndex, this.visitDistanceUnit(node.unit, this.visitNumberExpression(node.speed)));
+  visitRobotSpeedAdjust(node: VRobotSpeedAdjust): void {
+    this.environment.setRobotSpeed(
+      this.robotIndex,
+      this.visitDistanceUnit(node.unit, node.speed.accept(this))
+    );
   }
-  visitRobotDistanceSensor(node: RobotDistanceSensor) : number{
-    const d : number =this.environment.getDistance(this.robotIndex);
+  visitRobotDistanceSensor(node: VRobotDistanceSensor): number {
+    const d: number = this.environment.getDistance(this.robotIndex);
     return this.visitDistanceUnit(node.unit, d);
   }
-  visitRobotMovement(node: RobotMovement) {
-    return this.visitMovement(node.robotMovement, this.visitNumberExpression(node.distance) )
+  visitRobotMovement(node: VRobotMovement) {
+    return this.visitMovement(node.robotMovement, node.distance.accept(this));
   }
-  visitRobotRotation(node: RobotRotation) {
-    this.visitRotation(node.robotRotation, this.visitNumberExpression(node.angle));
+  visitRobotRotation(node: VRobotRotation) {
+    this.visitRotation(node.robotRotation, node.angle.accept(this));
   }
-  visitRobotTimeSensor(node: RobotTimeSensor) : number{
-    return this.visitTimeUnit(node.unit, this.environment.getTime(this.robotIndex)); 
+  visitRobotTimeSensor(node: VRobotTimeSensor): number {
+    return this.visitTimeUnit(
+      node.unit,
+      this.environment.getTime(this.robotIndex)
+    );
   }
-  visitRotation(node: Rotation, value : number = 0) : void {
+  visitRotation(node: VRotation, value: number = 0): void {
     const angle = this.environment.getRobotAngle(this.robotIndex);
-    switch(node.rotation)
-    {
+    switch (node.rotation) {
       case "Clock":
-        this.environment.setRobotAngle(this.robotIndex, angle + value, "clockwise");
+        this.environment.setRobotAngle(
+          this.robotIndex,
+          angle + value,
+          "clockwise"
+        );
         break;
       case "Anticlock":
-        this.environment.setRobotAngle(this.robotIndex, angle - value, "anticlockwise")
+        this.environment.setRobotAngle(
+          this.robotIndex,
+          angle - value,
+          "anticlockwise"
+        );
         break;
     }
   }
   /**
    * Converts a time unit to seconds.
-   * @param node 
-   * @param value 
+   * @param node
+   * @param value
    */
-  visitTimeUnit(node: TimeUnit, value: number = 0) : number{
+  visitTimeUnit(node: VTimeUnit, value: number = 0): number {
     switch (node.unit) {
       case "s":
         return value;
@@ -304,99 +328,37 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         return value / 1000;
     }
   }
-  visitType(node: Type) {
-    // Not necessary. Handled by other methods. 
+  visitType(node: VType) {
+    // Not necessary. Handled by other methods.
   }
-  visitVariableDecl(node: VariableDecl) {
-    this.contexts[this.contexts.length - 1].variables.set(node.name, { type: node.type.type, value: this.visitTypedExpression(node.expression) });
+  visitVariableDecl(node: VVariableDecl) {
+    this.contexts[this.contexts.length - 1].variables.set(node.name, {
+      type: node.type.type,
+      value: node.expression.accept(this),
+    });
   }
-  visitVariableCall(node: VariableCall) : boolean | number {
+  visitVariableCall(node: VVariableCall): boolean | number {
     let name = node.variable.ref?.name!;
-    for(let contextIndex = this.contexts.length - 1; contextIndex >= 0; contextIndex--) {
+    for (
+      let contextIndex = this.contexts.length - 1;
+      contextIndex >= 0;
+      contextIndex--
+    ) {
       const context = this.contexts[contextIndex];
-      if(context.variables.has(name)) {
+      if (context.variables.has(name)) {
         return context.variables.get(name)!.value;
       }
     }
     throw new Error(`Variable ${name} does not exist`);
   }
 
-  visitWhile(node: While) {
-    //TODO: while (acceptExpression(this , node.condition));
-    while(this.visitBooleanExpression(node.condition)) {
-      let returnValue : number | boolean | undefined = this.visitBlock(node.block);
-      if(returnValue !== undefined)  return returnValue;
+  visitWhile(node: VWhile) {
+    while (node.condition.accept(this)) {
+      let returnValue: number | boolean | undefined = this.visitBlock(
+        node.block
+      );
+      if (returnValue !== undefined) return returnValue;
     }
     return undefined;
-  }
-
-// Custom visitor methods. Should be removed thanks to the weaver.
-
-
-  /**
-   * Custom method. Currently contains ifs for all possible statements. It
-   * @param stmt
-   */
-  visitStatement(stmt: Statement) {
-    // Assignment | ControlStructure | Expression | FunctionReturn | VariableDecl
-    
-    if (isAssignment(stmt)) this.visitAssignment(stmt);
-    else if (isControlStructure(stmt)) this.visitControlStructure(stmt);
-    else if (isExpression(stmt)) this.visitExpression(stmt);
-    else if (isFunctionReturn(stmt)) this.visitFunctionReturn(stmt);
-    else if (isVariableDecl(stmt))  this.visitVariableDecl(stmt);
-  }
-
-  visitControlStructure(stmt: ControlStructure) {
-    // For | If | While
-    if (isFor(stmt)) this.visitFor(stmt);
-    else if (isIf(stmt)) this.visitIf(stmt);
-    else if (isWhile(stmt)) this.visitWhile(stmt);
-  }
-
-  visitExpression(stmt: Expression): boolean | number | void {
-    // And | BoolConstant | Comparison | DoubleConstant | Equality | FunctionCall | IntConstant | Minus | MulDiv | Not | Or | PlusMinus | RobotAdjust | RobotDistanceSensor | RobotMovement | RobotRotation | RobotTimeSensor | VariableCall;
-    if (isAnd(stmt)) return this.visitAnd(stmt);
-    else if (isBoolConstant(stmt)) return this.visitBoolConstant(stmt);
-    else if (isComparison(stmt)) return this.visitComparison(stmt);
-    else if (isDoubleConstant(stmt)) return this.visitDoubleConstant(stmt);
-    else if (isEquality(stmt)) return this.visitEquality(stmt);
-    else if (isFunctionCall(stmt)) return this.visitFunctionCall(stmt);
-    else if (isIntConstant(stmt)) return this.visitIntConstant(stmt);
-    else if (isMinus(stmt)) return this.visitMinus(stmt);
-    else if (isMovement(stmt)) return this.visitMovement(stmt);
-    else if (isMulDiv(stmt)) return this.visitMulDiv(stmt);
-    else if (isNot(stmt)) return this.visitNot(stmt);
-    else if (isOr(stmt)) return this.visitOr(stmt);
-    else if (isPlusMinus(stmt)) return this.visitPlusMinus(stmt);
-    else if (isPrint(stmt)) return this.visitPrint(stmt);
-    else if (isRobotSpeedAdjust(stmt)) return this.visitRobotSpeedAdjust(stmt);
-    else if (isRobotDistanceSensor(stmt)) return this.visitRobotDistanceSensor(stmt);
-    else if (isRobotMovement(stmt)) return this.visitRobotMovement(stmt);
-    else if (isRobotRotation(stmt)) return this.visitRobotRotation(stmt);
-    else if (isRobotTimeSensor(stmt)) return this.visitRobotTimeSensor(stmt);
-    else if (isVariableCall(stmt)) return this.visitVariableCall(stmt);
-    else throw new Error("Expression not implemented.");
-  }
-
-  visitBooleanExpression(node: Expression): boolean {
-    let result = this.visitExpression(node);
-    if (typeof result === "boolean") {
-      return result;
-    } else throw new Error("Expression must be boolean");
-  }
-
-  visitNumberExpression(node: Expression): number {
-    let result = this.visitExpression(node);
-    if (typeof result === "number") {
-      return result;
-    } else throw new Error("Expression must be number");
-  }
-
-  visitTypedExpression(node: Expression): number | boolean {
-    let result = this.visitExpression(node);
-    if (typeof result === "number" || typeof result === "boolean") {
-      return result;
-    } else throw new Error("Expression must be number or boolean");
   }
 }

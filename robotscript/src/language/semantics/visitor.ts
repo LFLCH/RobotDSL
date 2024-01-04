@@ -1,50 +1,49 @@
 import { AstNode, CstNode, LangiumDocument, Reference } from "langium";
-import * as ASTInterfaces from "../generated/ast.js";
-import { Model } from "../generated/ast.js";
+import * as ASTInterfaces from "../representation/currentast.js";
 
 export interface RobotScriptVisitor {
   // One visit method for each concept of the language
-  visitAnd(node: ASTInterfaces.And): any;
-  visitAssignment(node: ASTInterfaces.Assignment): any;
-  visitBlock(node: ASTInterfaces.Block): any;
-  visitBoolConstant(node: ASTInterfaces.BoolConstant): any;
-  visitComparison(node: ASTInterfaces.Comparison): any;
-  visitDistanceUnit(node: ASTInterfaces.DistanceUnit): any;
-  visitDoubleConstant(node: ASTInterfaces.DoubleConstant): any;
-  visitEquality(node: ASTInterfaces.Equality): any;
-  visitFor(node: ASTInterfaces.For): any;
-  visitFunctionCall(node: ASTInterfaces.FunctionCall): any;
-  visitFunctionDef(node: ASTInterfaces.FunctionDef): any;
-  visitFunctionReturn(node: ASTInterfaces.FunctionReturn): any;
-  visitIf(node: ASTInterfaces.If): any;
-  visitIntConstant(node: ASTInterfaces.IntConstant): any;
-  visitMinus(node: ASTInterfaces.Minus): any;
-  visitModel(node: ASTInterfaces.Model): any;
-  visitMovement(node: ASTInterfaces.Movement): any;
-  visitMulDiv(node: ASTInterfaces.MulDiv): any;
-  visitNot(node: ASTInterfaces.Not): any;
-  visitOr(node: ASTInterfaces.Or): any;
-  visitParameter(node: ASTInterfaces.Parameter): any;
-  visitPlusMinus(node: ASTInterfaces.PlusMinus): any;
-  visitPrint(node: ASTInterfaces.Print): any;
-  visitRobotSpeedAdjust(node: ASTInterfaces.RobotSpeedAdjust): any;
-  visitRobotDistanceSensor(node: ASTInterfaces.RobotDistanceSensor): any;
-  visitRobotMovement(node: ASTInterfaces.RobotMovement): any;
-  visitRobotRotation(node: ASTInterfaces.RobotRotation): any;
-  visitRobotTimeSensor(node: ASTInterfaces.RobotTimeSensor): any;
-  visitRotation(node: ASTInterfaces.Rotation): any;
-  visitTimeUnit(node: ASTInterfaces.TimeUnit): any;
-  visitType(node: ASTInterfaces.Type): any;
-  visitVariableDecl(node: ASTInterfaces.VariableDecl): any;
-  visitVariableCall(node: ASTInterfaces.VariableCall): any;
-  visitWhile(node: ASTInterfaces.While): any;
+  visitAnd(node: VAnd): any;
+  visitAssignment(node: VAssignment): any;
+  visitBlock(node: VBlock): any;
+  visitBoolConstant(node: VBoolConstant): any;
+  visitComparison(node: VComparison): any;
+  visitDistanceUnit(node: VDistanceUnit): any;
+  visitDoubleConstant(node: VDoubleConstant): any;
+  visitEquality(node: VEquality): any;
+  visitFor(node: VFor): any;
+  visitFunctionCall(node: VFunctionCall): any;
+  visitFunctionDef(node: VFunctionDef): any;
+  visitFunctionReturn(node: VFunctionReturn): any;
+  visitIf(node: VIf): any;
+  visitIntConstant(node: VIntConstant): any;
+  visitMinus(node: VMinus): any;
+  visitModel(node: VModel): any;
+  visitMovement(node: VMovement): any;
+  visitMulDiv(node: VMulDiv): any;
+  visitNot(node: VNot): any;
+  visitOr(node: VOr): any;
+  visitParameter(node: VParameter): any;
+  visitPlusMinus(node: VPlusMinus): any;
+  visitPrint(node: VPrint): any;
+  visitRobotSpeedAdjust(node: VRobotSpeedAdjust): any;
+  visitRobotDistanceSensor(node: VRobotDistanceSensor): any;
+  visitRobotMovement(node: VRobotMovement): any;
+  visitRobotRotation(node: VRobotRotation): any;
+  visitRobotTimeSensor(node: VRobotTimeSensor): any;
+  visitRotation(node: VRotation): any;
+  visitTimeUnit(node: VTimeUnit): any;
+  visitType(node: VType): any;
+  visitVariableDecl(node: VVariableDecl): any;
+  visitVariableCall(node: VVariableCall): any;
+  visitWhile(node: VWhile): any;
 }
 
 export class VAnd implements ASTInterfaces.And {
   constructor(
     public $type: "And",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -54,10 +53,10 @@ export class VAssignment implements ASTInterfaces.Assignment {
   constructor(
     public $type: "Assignment",
     public name: string,
-    public expr: ASTInterfaces.Expression,
-    public symbol: Reference<ASTInterfaces.RobotSymbol>,
-    public expression: ASTInterfaces.Expression,
-    public $container: ASTInterfaces.Block
+    public expr: VExpression,
+    public symbol: Reference<VRobotSymbol>,
+    public expression: VExpression,
+    public $container: VBlock
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -66,8 +65,8 @@ export class VAssignment implements ASTInterfaces.Assignment {
 export class VBlock implements ASTInterfaces.Block {
   constructor(
     public $type: "Block",
-    public statements: ASTInterfaces.Statement[],
-    public $container: ASTInterfaces.FunctionDef
+    public statements: VStatement[],
+    public $container: VFunctionDef
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -86,8 +85,8 @@ export class VComparison implements ASTInterfaces.Comparison {
   constructor(
     public $type: "Comparison",
     public operator: "<" | "<=" | ">" | ">=",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -115,8 +114,8 @@ export class VEquality implements ASTInterfaces.Equality {
   constructor(
     public $type: "Equality",
     public operator: "!=" | "==",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -125,11 +124,11 @@ export class VEquality implements ASTInterfaces.Equality {
 export class VFor implements ASTInterfaces.For {
   constructor(
     public $type: "For",
-    public condition: ASTInterfaces.Expression,
-    public block: ASTInterfaces.Block,
-    public increment: ASTInterfaces.Assignment,
-    public init: ASTInterfaces.Assignment | ASTInterfaces.VariableDecl,
-    public $container: ASTInterfaces.Block
+    public condition: VExpression,
+    public block: VBlock,
+    public increment: VAssignment,
+    public init: VAssignment | VVariableDecl,
+    public $container: VBlock
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
 }
@@ -138,8 +137,8 @@ export class VFunctionCall implements ASTInterfaces.FunctionCall {
   constructor(
     public $type: "FunctionCall",
     public name: string,
-    public functionCall: Reference<ASTInterfaces.FunctionDef>,
-    public args: ASTInterfaces.Expression[],
+    public functionCall: Reference<VFunctionDef>,
+    public args: VExpression[],
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -149,10 +148,10 @@ export class VFunctionDef implements ASTInterfaces.FunctionDef {
   constructor(
     public $type: "FunctionDef",
     public name: string,
-    public block: ASTInterfaces.Block,
-    public params: ASTInterfaces.Parameter[],
-    public type: ASTInterfaces.Type,
-    public $container: Model
+    public block: VBlock,
+    public params: VParameter[],
+    public type: VType,
+    public $container: VModel
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -161,7 +160,7 @@ export class VFunctionDef implements ASTInterfaces.FunctionDef {
 export class VFunctionReturn implements ASTInterfaces.FunctionReturn {
   constructor(
     public $type: "FunctionReturn",
-    public expression: ASTInterfaces.Expression,
+    public expression: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -170,12 +169,12 @@ export class VFunctionReturn implements ASTInterfaces.FunctionReturn {
 export class VIf implements ASTInterfaces.If {
   constructor(
     public $type: "If",
-    public mainCondition: ASTInterfaces.Expression,
-    public subsidaryConditions: ASTInterfaces.Expression[],
-    public thenBlock: ASTInterfaces.Block,
-    public $container: ASTInterfaces.Block,
-    public elifBlock?: ASTInterfaces.Block | undefined,
-    public elseBlock?: ASTInterfaces.Block | undefined
+    public mainCondition: VExpression,
+    public subsidaryConditions: VExpression[],
+    public thenBlock: VBlock,
+    public $container: VBlock,
+    public elifBlock?: VBlock | undefined,
+    public elseBlock?: VBlock | undefined
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -193,7 +192,7 @@ export class VIntConstant implements ASTInterfaces.IntConstant {
 export class VMinus implements ASTInterfaces.Minus {
   constructor(
     public $type: "Minus",
-    public expression: ASTInterfaces.Expression,
+    public expression: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -202,8 +201,8 @@ export class VMinus implements ASTInterfaces.Minus {
 export class VModel implements ASTInterfaces.Model {
   constructor(
     public $type: "Model",
-    public functionsDef: ASTInterfaces.FunctionDef[],
-    public statements: ASTInterfaces.Statement[],
+    public functionsDef: VFunctionDef[],
+    public statements: VStatement[],
     public $container?: AstNode | undefined
   ) {}
 
@@ -222,9 +221,9 @@ export class VMovement implements ASTInterfaces.Movement {
 export class VMulDiv implements ASTInterfaces.MulDiv {
   constructor(
     public $type: "MulDiv",
-    public operator: "*" | "/",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public operator: "*" | "/" | "%",
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -233,7 +232,7 @@ export class VMulDiv implements ASTInterfaces.MulDiv {
 export class VNot implements ASTInterfaces.Not {
   constructor(
     public $type: "Not",
-    public expression: ASTInterfaces.Expression,
+    public expression: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -242,8 +241,8 @@ export class VNot implements ASTInterfaces.Not {
 export class VOr implements ASTInterfaces.Or {
   constructor(
     public $type: "Or",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -253,8 +252,8 @@ export class VParameter implements ASTInterfaces.Parameter {
   constructor(
     public $type: "Parameter",
     public name: string,
-    public type: ASTInterfaces.Type,
-    public $container: ASTInterfaces.FunctionDef,
+    public type: VType,
+    public $container: VFunctionDef,
     public $containerProperty?: string | undefined,
     public $containerIndex?: number | undefined,
     public $cstNode?: CstNode | undefined,
@@ -268,8 +267,8 @@ export class VPlusMinus implements ASTInterfaces.PlusMinus {
   constructor(
     public $type: "PlusMinus",
     public operator: "+" | "-",
-    public left: ASTInterfaces.Expression,
-    public right: ASTInterfaces.Expression,
+    public left: VExpression,
+    public right: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -278,7 +277,7 @@ export class VPlusMinus implements ASTInterfaces.PlusMinus {
 export class VPrint implements ASTInterfaces.Print {
   constructor(
     public $type: "Print",
-    public expression: ASTInterfaces.Expression,
+    public expression: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -287,8 +286,8 @@ export class VPrint implements ASTInterfaces.Print {
 export class VRobotSpeedAdjust implements ASTInterfaces.RobotSpeedAdjust {
   constructor(
     public $type: "RobotSpeedAdjust",
-    public speed: ASTInterfaces.Expression,
-    public unit: ASTInterfaces.DistanceUnit,
+    public speed: VExpression,
+    public unit: VDistanceUnit,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -297,8 +296,8 @@ export class VRobotSpeedAdjust implements ASTInterfaces.RobotSpeedAdjust {
 export class VRobotDistanceSensor implements ASTInterfaces.RobotDistanceSensor {
   constructor(
     public $type: "RobotDistanceSensor",
-    public args: ASTInterfaces.Expression,
-    public unit: ASTInterfaces.DistanceUnit,
+    public args: VExpression,
+    public unit: VDistanceUnit,
     public $container: any
   ) {}
 }
@@ -306,9 +305,9 @@ export class VRobotDistanceSensor implements ASTInterfaces.RobotDistanceSensor {
 export class VRobotMovement implements ASTInterfaces.RobotMovement {
   constructor(
     public $type: "RobotMovement",
-    public robotMovement: ASTInterfaces.Movement,
-    public distance: ASTInterfaces.Expression,
-    public unit: ASTInterfaces.DistanceUnit,
+    public robotMovement: VMovement,
+    public distance: VExpression,
+    public unit: VDistanceUnit,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -317,8 +316,8 @@ export class VRobotMovement implements ASTInterfaces.RobotMovement {
 export class VRobotRotation implements ASTInterfaces.RobotRotation {
   constructor(
     public $type: "RobotRotation",
-    public robotRotation: ASTInterfaces.Rotation,
-    public angle: ASTInterfaces.Expression,
+    public robotRotation: VRotation,
+    public angle: VExpression,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -328,7 +327,7 @@ export class VRobotTimeSensor implements ASTInterfaces.RobotTimeSensor {
   constructor(
     public $type: "RobotTimeSensor",
     public robotTimeSensor: "CurrentTime",
-    public unit: ASTInterfaces.TimeUnit,
+    public unit: VTimeUnit,
     public $container: any
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
@@ -358,9 +357,9 @@ export class VType implements ASTInterfaces.Type {
     public name: string,
     public type: "boolean" | "double" | "int" | "void",
     public $container:
-      | ASTInterfaces.Parameter
-      | ASTInterfaces.FunctionDef
-      | ASTInterfaces.VariableDecl
+      | VParameter
+      | VFunctionDef
+      | VVariableDecl
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -370,9 +369,9 @@ export class VVariableDecl implements ASTInterfaces.VariableDecl {
   constructor(
     public $type: "VariableDecl",
     public name: string,
-    public type: ASTInterfaces.Type,
-    public expression: ASTInterfaces.Expression,
-    public $container: ASTInterfaces.Block
+    public type: VType,
+    public expression: VExpression,
+    public $container: VBlock
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -391,50 +390,61 @@ export class VVariableCall implements ASTInterfaces.VariableCall {
 export class VWhile implements ASTInterfaces.While {
   constructor(
     public $type: "While",
-    public condition: ASTInterfaces.Expression,
-    public block: ASTInterfaces.Block,
-    public $container: ASTInterfaces.Block
+    public condition: VExpression,
+    public block: VBlock,
+    public $container: VBlock
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
 }
 
-// export function acceptExpression(
-//   visitor: RobotScriptVisitor,
-//   node: ASTInterfaces.Expression
-// ): any {
-//   switch (node.$type) {
-//     case "And":
-//       return visitor.accept(node);
-//     case "BoolConstant":
-//       return visitor.visitBoolConstant(node);
-//     case "Comparison":
-//       return visitor.visitComparison(node);
-//     case "DoubleConstant":
-//       return visitor.visitDoubleConstant(node);
-//     case "Equality":
-//       return visitor.visitEquality(node);
-//     case "FunctionCall":
-//       return visitor.visitFunctionCall(node);
-//     case "IntConstant":
-//       return visitor.visitIntConstant(node);
-//     case "Minus":
-//       return visitor.visitMinus(node);
-//     case "MulDiv":
-//       return visitor.visitMulDiv(node);
-//     case "Not":
-//       return visitor.visitNot(node);
-//     case "Or":
-//       return visitor.visitOr(node);
-//     case "PlusMinus":
-//       return visitor.visitPlusMinus(node);
-//     case "RobotDistanceSensor":
-//       return visitor.visitRobotDistanceSensor(node);
-//     case "RobotTimeSensor":
-//       return visitor.visitRobotTimeSensor(node);
-//     case "VariableCall":
-//       return visitor.visitVariableCall(node);
-//     default:
-//       throw new Error("Unknown expression type " + node.$type);
-//   }
-// }
+/**
+ * 
+ * THE FOLLOWING CLASSES ARE "ABSTRACT" AST NODES CLASSES
+ * CURRENTLY, THEY CAN ONLY BE USED IF WE USE THE CUSTOMIZED AST.ts FILE (currentast.ts)
+ * 
+ * IF THE NEW GRAMMAR HANDLES THIS ISSUE, THIS MESSAGE WONT BE NECESSARY ANYMORE  
+ */
+
+
+export class VExpression implements ASTInterfaces.Expression {
+  constructor(
+    public $type: "Expression",
+    public $container: any,
+    public $containerProperty?: string | undefined,
+    public $containerIndex?: number | undefined,
+    public $cstNode?: CstNode | undefined,
+    public $document?: LangiumDocument<AstNode> | undefined
+  ) {}
+ 
+  accept(visitor: RobotScriptVisitor): any {}
+}
+
+export class VStatement implements ASTInterfaces.Statement {
+  constructor(
+    public $type: "Statement",
+    public $container: any,
+    public $containerProperty?: string | undefined,
+    public $containerIndex?: number | undefined,
+    public $cstNode?: CstNode | undefined,
+    public $document?: LangiumDocument<AstNode> | undefined
+  ) {}
+  
+  accept(visitor: RobotScriptVisitor): any {}
+}
+
+
+export class VRobotSymbol implements ASTInterfaces.RobotSymbol {
+  constructor(
+    public  $container: ASTInterfaces.VariableDecl | ASTInterfaces.Parameter,
+    public $type: "RobotSymbol",
+    public name: string,
+    public type: ASTInterfaces.Type,
+    public $containerProperty?: string | undefined,
+    public $containerIndex?: number | undefined,
+    public $cstNode?: CstNode | undefined,
+    public $document?: LangiumDocument<AstNode> | undefined
+    ) {}
+    
+    accept(visitor: RobotScriptVisitor): any {}
+}

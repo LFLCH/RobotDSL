@@ -1,11 +1,16 @@
 void square(int size){
-    Clock 45;
     Forward size in m;
     Right size in m;
     Clock 90;
     Forward size in m;
     Clock 90;
     Forward size in m;
+    Clock 90;
 }
 
-square(10);
+int loopings = 10;
+for(int i=0;i<loopings;i=i+1){
+    Print i;
+    ModifySpeed (i+1)*10 in m;
+    square(5);
+}

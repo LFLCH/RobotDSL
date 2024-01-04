@@ -1,5 +1,4 @@
-import { Model } from "../language/generated/ast.js";
-
+import { VModel } from "../language/semantics/visitor.js";
 
 export class Compiler {
 
@@ -8,7 +7,7 @@ export class Compiler {
         ) {
      }
 
-    compile(model: Model): string {
+    compile(model: VModel): string {
         return `void setup() {
     // put your setup code here, to run once:
     Serial.begin(9600);

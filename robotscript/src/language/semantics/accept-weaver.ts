@@ -1,7 +1,7 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import * as InterfaceAST from '../generated/ast.js';
+import * as InterfaceAST from '../representation/currentast.js';
 import { RobotScriptServices } from '../robot-script-module.js';
-import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VModel } from './visitor.js';
+import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VBoolConstant, VComparison, VDistanceUnit, VDoubleConstant, VEquality, VFor, VFunctionCall, VFunctionDef, VFunctionReturn, VIf, VIntConstant, VMinus, VModel, VMovement, VMulDiv, VNot, VOr, VParameter, VPlusMinus, VPrint, VRobotDistanceSensor, VRobotMovement, VRobotRotation, VRobotSpeedAdjust, VRobotTimeSensor, VRotation, VTimeUnit, VType, VVariableCall, VVariableDecl, VWhile } from './visitor.js';
 
 /**
  * Register custom validation checks.
@@ -21,136 +21,140 @@ export function weaveAcceptMethods(services: RobotScriptServices) {
 export class RoboMlAcceptWeaver {
 
     weaveAnd(node : InterfaceAST.And, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAnd(node as unknown as VAnd);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAnd(node as VAnd);}
     }
 
     weaveAssignment(node : InterfaceAST.Assignment, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAssignment(node as unknown as VAssignment) ;}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAssignment(node as VAssignment) ;}
     }
 
     weaveBlock(node : InterfaceAST.Block, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitBlock(node as unknown as VBlock);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitBlock(node as  VBlock);}
     }
 
     weaveBoolConstant(node : InterfaceAST.BoolConstant, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitBoolConstant(node as unknown as InterfaceAST.BoolConstant);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitBoolConstant(node as  VBoolConstant);}
     }
 
     weaveComparison(node : InterfaceAST.Comparison, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitComparison(node as unknown as InterfaceAST.Comparison);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitComparison(node as  VComparison);}
     }
 
     weaveDistanceUnit(node : InterfaceAST.DistanceUnit, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitDistanceUnit(node as unknown as InterfaceAST.DistanceUnit);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitDistanceUnit(node as  VDistanceUnit);}
     }
 
     weaveDoubleConstant(node : InterfaceAST.DoubleConstant, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitDoubleConstant(node as unknown as InterfaceAST.DoubleConstant);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitDoubleConstant(node as  VDoubleConstant);}
     }
 
     weaveEquality(node : InterfaceAST.Equality, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitEquality(node as unknown as InterfaceAST.Equality);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitEquality(node as  VEquality);}
     }
 
     weaveFor(node : InterfaceAST.For, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFor(node as unknown as InterfaceAST.For);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFor(node as  VFor);}
     }
 
     weaveFunctionCall(node : InterfaceAST.FunctionCall, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionCall(node as unknown as InterfaceAST.FunctionCall);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionCall(node as  VFunctionCall);}
     }
 
     weaveFunctionDef(node : InterfaceAST.FunctionDef, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionDef(node as unknown as InterfaceAST.FunctionDef);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionDef(node as  VFunctionDef);}
     }
 
     weaveFunctionReturn(node : InterfaceAST.FunctionReturn, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionReturn(node as unknown as InterfaceAST.FunctionReturn);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitFunctionReturn(node as  VFunctionReturn);}
     }
 
     weaveIf(node : InterfaceAST.If, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitIf(node as unknown as InterfaceAST.If);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitIf(node as  VIf);}
     }
 
     weaveIntConstant(node : InterfaceAST.IntConstant, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitIntConstant(node as unknown as InterfaceAST.IntConstant);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitIntConstant(node as  VIntConstant);}
     }
 
     weaveMinus(node : InterfaceAST.Minus, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMinus(node as unknown as InterfaceAST.Minus);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMinus(node as  VMinus);}
     }
 
     weaveModel(node : InterfaceAST.Model, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitModel(node as unknown as VModel);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitModel(node as  VModel);}
     }
 
     weaveMovement(node : InterfaceAST.Movement, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMovement(node as unknown as InterfaceAST.Movement);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMovement(node as  VMovement);}
     }
 
     weaveMulDiv(node : InterfaceAST.MulDiv, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMulDiv(node as unknown as InterfaceAST.MulDiv);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitMulDiv(node as  VMulDiv);}
     }
 
     weaveNot(node : InterfaceAST.Not, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitNot(node as unknown as InterfaceAST.Not);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitNot(node as  VNot);}
     }
 
     weaveOr(node : InterfaceAST.Or, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitOr(node as unknown as InterfaceAST.Or);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitOr(node as  VOr);}
     }
 
     weaveParameter(node : InterfaceAST.Parameter, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitParameter(node as unknown as InterfaceAST.Parameter);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitParameter(node as  VParameter);}
     }
 
     weavePlusMinus(node : InterfaceAST.PlusMinus, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitPlusMinus(node as unknown as InterfaceAST.PlusMinus);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitPlusMinus(node as  VPlusMinus);}
+    }
+
+    weavePrint(node : InterfaceAST.Print, accept : ValidationAcceptor) : void{
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitPrint(node as  VPrint);}
     }
 
 
     weaveRobotSpeedAdjust(node : InterfaceAST.RobotSpeedAdjust, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotSpeedAdjust(node as unknown as InterfaceAST.RobotSpeedAdjust);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotSpeedAdjust(node as  VRobotSpeedAdjust);}
     }
 
     weaveRobotDistanceSensor(node : InterfaceAST.RobotDistanceSensor, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotDistanceSensor(node as unknown as InterfaceAST.RobotDistanceSensor);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotDistanceSensor(node as  VRobotDistanceSensor);}
     }
 
     weaveRobotMovement(node : InterfaceAST.RobotMovement, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotMovement(node as unknown as InterfaceAST.RobotMovement);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotMovement(node as  VRobotMovement);}
     }
 
     weaveRobotRotation(node : InterfaceAST.RobotRotation, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotRotation(node as unknown as InterfaceAST.RobotRotation);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotRotation(node as  VRobotRotation);}
     }
 
     weaveRobotTimeSensor(node : InterfaceAST.RobotTimeSensor, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotTimeSensor(node as unknown as InterfaceAST.RobotTimeSensor);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRobotTimeSensor(node as  VRobotTimeSensor);}
     }
 
     weaveRotation(node : InterfaceAST.Rotation, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRotation(node as unknown as InterfaceAST.Rotation);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitRotation(node as  VRotation);}
     }
 
     weaveTimeUnit(node : InterfaceAST.TimeUnit, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitTimeUnit(node as unknown as InterfaceAST.TimeUnit);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitTimeUnit(node as  VTimeUnit);}
     }
 
     weaveType(node : InterfaceAST.Type, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitType(node as unknown as InterfaceAST.Type);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitType(node as  VType);}
     }
 
     weaveVariableDecl(node : InterfaceAST.VariableDecl, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitVariableDecl(node as unknown as InterfaceAST.VariableDecl);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitVariableDecl(node as  VVariableDecl);}
     }
 
     weaveVariableCall(node : InterfaceAST.VariableCall, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitVariableCall(node as unknown as InterfaceAST.VariableCall);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitVariableCall(node as  VVariableCall);}
     }
 
     weaveWhile(node : InterfaceAST.While, accept : ValidationAcceptor) : void{
-        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitWhile(node as unknown as InterfaceAST.While);}
+        (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitWhile(node as  VWhile);}
     }
 
     checks: ValidationChecks<InterfaceAST.RobotScriptAstType> = {
@@ -176,6 +180,7 @@ export class RoboMlAcceptWeaver {
         Or : this.weaveOr,
         Parameter : this.weaveParameter,
         PlusMinus : this.weavePlusMinus,
+        Print : this.weavePrint,
         RobotSpeedAdjust : this.weaveRobotSpeedAdjust,
         RobotDistanceSensor : this.weaveRobotDistanceSensor,
         RobotMovement : this.weaveRobotMovement,
