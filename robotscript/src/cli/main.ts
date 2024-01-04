@@ -1,7 +1,6 @@
-import type { Model } from '../language/generated/ast.js';
 import chalk from 'chalk';
 import { Command } from 'commander';
-import { RobotScriptLanguageMetaData } from '../language/generated/module.js';
+import { RobotScriptLanguageMetaData } from '../language/representation/module.js';
 import { createRobotScriptServices } from '../language/robot-script-module.js';
 import { extractAstNode } from './cli-util.js';
 import { NodeFileSystem } from 'langium/node';

@@ -1,5 +1,5 @@
 import type { ValidationAcceptor, ValidationChecks } from 'langium';
-import {   type Model, type RobotScriptAstType } from './generated/ast.js';
+import {   type Model, type RobotScriptAstType } from './representation/currentast.js';
 import type { RobotScriptServices } from './robot-script-module.js';
 
 /**

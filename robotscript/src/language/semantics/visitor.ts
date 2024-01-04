@@ -1,6 +1,5 @@
 import { AstNode, CstNode, LangiumDocument, Reference } from "langium";
-import * as ASTInterfaces from "../generated/ast.js";
-import { Model } from "../generated/ast.js";
+import * as ASTInterfaces from "../representation/currentast.js";
 
 export interface RobotScriptVisitor {
   // One visit method for each concept of the language
@@ -38,8 +37,6 @@ export interface RobotScriptVisitor {
   visitVariableDecl(node: VVariableDecl): any;
   visitVariableCall(node: VVariableCall): any;
   visitWhile(node: VWhile): any;
-
-  // visitExpression(node: VExpression): any;
 }
 
 export class VAnd implements ASTInterfaces.And {
@@ -154,7 +151,7 @@ export class VFunctionDef implements ASTInterfaces.FunctionDef {
     public block: VBlock,
     public params: VParameter[],
     public type: VType,
-    public $container: Model
+    public $container: VModel
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}

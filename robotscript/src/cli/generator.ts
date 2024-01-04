@@ -1,11 +1,11 @@
 import * as fs from 'node:fs';
-import { Model } from '../language/generated/ast.js';
 import { extractDestinationAndName } from './cli-util.js';
 import { Compiler } from '../compilation/compiler.js';
 import path from 'node:path';
+import { VModel } from '../language/semantics/visitor.js';
 
 
-export function generateArduino(model : Model, filePath: string, destination: string | undefined): string {
+export function generateArduino(model : VModel, filePath: string, destination: string | undefined): string {
     const data = extractDestinationAndName(filePath, destination);
     const generatedFilePath = `${path.join(data.destination, data.name)}.ino`;
 

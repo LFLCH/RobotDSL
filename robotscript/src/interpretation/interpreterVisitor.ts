@@ -1,7 +1,6 @@
 
 import { RobotEnvironment } from "./environment/environment.js";
 import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VBoolConstant, VComparison, VDistanceUnit, VDoubleConstant, VEquality, VFor, VFunctionCall, VFunctionDef, VFunctionReturn, VIf, VIntConstant, VMinus, VModel, VMovement, VMulDiv, VNot, VOr, VParameter, VPlusMinus, VPrint, VRobotDistanceSensor, VRobotMovement, VRobotRotation, VRobotSpeedAdjust, VRobotSymbol, VRobotTimeSensor, VRotation, VTimeUnit, VType, VVariableCall, VVariableDecl, VWhile } from "../language/semantics/visitor.js";
-import {  isAssignment, isFunctionReturn, isVariableDecl } from "../language/generated/ast.js";
 
 
 interface MemoryZone {
@@ -78,13 +77,7 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
     // 2 : visit all statements
     for (const stmt of node.statements) {
-      if (isFunctionReturn(stmt)) {
-        returnValue = this.visitFunctionReturn(stmt);
-        break;
-      } else {
-        // this.visitStatement(stmt);
-        stmt.accept(this);
-      }
+        returnValue = stmt.accept(this);
     }
     // 3 : remove the context
     this.contexts.pop();
@@ -95,8 +88,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     return node.value === "true";
   }
   visitComparison(node: VComparison): boolean {
-    // const left = this.visitNumberExpression(node.left);
-    // const right = this.visitNumberExpression(node.right);
     const left = node.left.accept(this);
     const right = node.right.accept(this);
     switch (node.operator) {
@@ -132,8 +123,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     return node.value;
   }
   visitEquality(node: VEquality): boolean {
-    // const left = this.visitBooleanExpression(node.left);
-    // const right = this.visitBooleanExpression(node.right);
     const left = node.left.accept(this);
     const right = node.right.accept(this);
     switch (node.operator) {
@@ -144,11 +133,7 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
   visitFor(node: VFor) {
-    if (isAssignment(node.init)) this.visitAssignment(node.init);
-    // else if (isVariableDecl(node.init)) this.visitVariableDecl(node.init);
-    else if (isVariableDecl(node.init))
-      (node.init as VVariableDecl).accept(this);
-    //  while(this.visitBooleanExpression(node.condition)) {
+    node.init.accept(this);
     while (node.condition.accept(this)) {
       let returnValue: number | boolean | undefined = this.visitBlock(
         node.block
@@ -242,7 +227,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
       this.visitFunctionDef(def);
     }
     for (const stmt of node.statements) {
-      // this.visitStatement(stmt);
       stmt.accept(this);
     }
   }
@@ -251,8 +235,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     this.environment.moveRobot(this.robotIndex, node.movement, value);
   }
   visitMulDiv(node: VMulDiv): number {
-    // const left = this.visitNumberExpression(node.left);
-    // const right = this.visitNumberExpression(node.right);
     const left = node.left.accept(this);
     const right = node.right.accept(this);
     switch (node.operator) {
@@ -265,7 +247,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
   visitNot(node: VNot) {
-    // return !this.visitBooleanExpression(node.expression);
     return !node.expression.accept(this);
   }
   visitOr(node: VOr): boolean {
@@ -277,8 +258,8 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     // Useless (already handled in visitFunctionCall)
   }
   visitPlusMinus(node: VPlusMinus) {
-    const left = node.left.accept(this); // this.visitNumberExpression(node.left);
-    const right = node.right.accept(this); //this.visitNumberExpression(node.right);
+    const left = node.left.accept(this); 
+    const right = node.right.accept(this); 
     switch (node.operator) {
       case "+":
         return left + right;
@@ -288,14 +269,12 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitPrint(node: VPrint) {
-    // this.environment.makeRobotSpeak(this.robotIndex, this.visitTypedExpression(node.expression));
     this.environment.makeRobotSpeak(
       this.robotIndex,
       node.expression.accept(this)
     );
   }
   visitRobotSpeedAdjust(node: VRobotSpeedAdjust): void {
-    // this.environment.setRobotSpeed(this.robotIndex, this.visitDistanceUnit(node.unit, this.visitNumberExpression(node.speed)));
     this.environment.setRobotSpeed(
       this.robotIndex,
       this.visitDistanceUnit(node.unit, node.speed.accept(this))
@@ -306,11 +285,9 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     return this.visitDistanceUnit(node.unit, d);
   }
   visitRobotMovement(node: VRobotMovement) {
-    // return this.visitMovement(node.robotMovement, this.visitNumberExpression(node.distance) )
     return this.visitMovement(node.robotMovement, node.distance.accept(this));
   }
   visitRobotRotation(node: VRobotRotation) {
-    // this.visitRotation(node.robotRotation, this.visitNumberExpression(node.angle));
     this.visitRotation(node.robotRotation, node.angle.accept(this));
   }
   visitRobotTimeSensor(node: VRobotTimeSensor): number {
@@ -355,7 +332,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     // Not necessary. Handled by other methods.
   }
   visitVariableDecl(node: VVariableDecl) {
-    // this.contexts[this.contexts.length - 1].variables.set(node.name, { type: node.type.type, value: this.visitTypedExpression(node.expression) });
     this.contexts[this.contexts.length - 1].variables.set(node.name, {
       type: node.type.type,
       value: node.expression.accept(this),
@@ -377,7 +353,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitWhile(node: VWhile) {
-    // while(this.visitBooleanExpression(node.condition)) {
     while (node.condition.accept(this)) {
       let returnValue: number | boolean | undefined = this.visitBlock(
         node.block
@@ -386,76 +361,4 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
     return undefined;
   }
-
-
-// PREVIOUS VISIT METHODS FOR "ABSTRACT" AST NODES
-// JUST HERE AS A REMINDER.
-// DELETE IT WHEN THE NEW GRAMMAR WILL CORRECTLY HANDLE THE ISSUE OF ABSTRACT NODES as TYPES AND NOT AS INTERFACES.
-
-  // /**
-  //  * Custom method. Currently contains ifs for all possible statements. It
-  //  * @param stmt
-  //  */
-  // visitStatement(stmt: Statement) {
-  //   // Assignment | ControlStructure | Expression | FunctionReturn | VariableDecl
-
-  //   if (isAssignment(stmt)) this.visitAssignment(stmt);
-  //   else if (isControlStructure(stmt)) this.visitControlStructure(stmt);
-  //   else if (isExpression(stmt)) this.visitExpression(stmt);
-  //   else if (isFunctionReturn(stmt)) this.visitFunctionReturn(stmt);
-  //   else if (isVariableDecl(stmt))  this.visitVariableDecl(stmt);
-  // }
-
-  // visitControlStructure(stmt: ControlStructure) {
-  //   // For | If | While
-  //   if (isFor(stmt)) this.visitFor(stmt);
-  //   else if (isIf(stmt)) this.visitIf(stmt);
-  //   else if (isWhile(stmt)) this.visitWhile(stmt);
-  // }
-
-  // visitExpression(stmt: Expression): boolean | number | void {
-  //   // And | BoolConstant | Comparison | DoubleConstant | Equality | FunctionCall | IntConstant | Minus | MulDiv | Not | Or | PlusMinus | RobotAdjust | RobotDistanceSensor | RobotMovement | RobotRotation | RobotTimeSensor | VariableCall;
-  //   if (isAnd(stmt)) return this.visitAnd(stmt);
-  //   else if (isBoolConstant(stmt)) return this.visitBoolConstant(stmt);
-  //   else if (isComparison(stmt)) return this.visitComparison(stmt);
-  //   else if (isDoubleConstant(stmt)) return this.visitDoubleConstant(stmt);
-  //   else if (isEquality(stmt)) return this.visitEquality(stmt);
-  //   else if (isFunctionCall(stmt)) return this.visitFunctionCall(stmt);
-  //   else if (isIntConstant(stmt)) return this.visitIntConstant(stmt);
-  //   else if (isMinus(stmt)) return this.visitMinus(stmt);
-  //   else if (isMovement(stmt)) return this.visitMovement(stmt);
-  //   else if (isMulDiv(stmt)) return this.visitMulDiv(stmt);
-  //   else if (isNot(stmt)) return this.visitNot(stmt);
-  //   else if (isOr(stmt)) return this.visitOr(stmt);
-  //   else if (isPlusMinus(stmt)) return this.visitPlusMinus(stmt);
-  //   else if (isPrint(stmt)) return this.visitPrint(stmt);
-  //   else if (isRobotSpeedAdjust(stmt)) return this.visitRobotSpeedAdjust(stmt);
-  //   else if (isRobotDistanceSensor(stmt)) return this.visitRobotDistanceSensor(stmt);
-  //   else if (isRobotMovement(stmt)) return this.visitRobotMovement(stmt);
-  //   else if (isRobotRotation(stmt)) return this.visitRobotRotation(stmt);
-  //   else if (isRobotTimeSensor(stmt)) return this.visitRobotTimeSensor(stmt);
-  //   else if (isVariableCall(stmt)) return this.visitVariableCall(stmt);
-  //   else throw new Error("Expression not implemented.");
-  // }
-
-  // visitBooleanExpression(node: Expression): boolean {
-  //   let result = this.visitExpression(node);
-  //   if (typeof result === "boolean") {
-  //     return result;
-  //   } else throw new Error("Expression must be boolean");
-  // }
-
-  // visitNumberExpression(node: Expression): number {
-  //   let result = this.visitExpression(node);
-  //   if (typeof result === "number") {
-  //     return result;
-  //   } else throw new Error("Expression must be number");
-  // }
-
-  // visitTypedExpression(node: Expression): number | boolean {
-  //   let result = this.visitExpression(node);
-  //   if (typeof result === "number" || typeof result === "boolean") {
-  //     return result;
-  //   } else throw new Error("Expression must be number or boolean");
-  // }
 }
