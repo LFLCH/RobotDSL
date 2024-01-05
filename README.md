@@ -1,6 +1,8 @@
 # RobotDSL
 RobotDSL is a school project (ESIR3 - ASE) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
+Find more about the developpment process in the associated [file](documentation/devprocess.md).
+
 # RobotScript
 <p align="center">
   <img src="./assets/logo_name.svg" alt="robotscript logo" width="400">
@@ -61,12 +63,15 @@ npm run serve
 npm run langium:generate
 ``` 
 
-<!-- ## VScode launches
+## VScode 
+The Langium project has been developped using VSCode as main IDE. We therefore coded some tools that ease the developpment. 
+
+###  Launches
 <p align="center">
-<img src="./assets/vscode-extension-run.png" alt="vscode extension run" width="300">
+  <img src="./assets/vscode-extension-run.png" alt="vscode extension run" width="300">
 </p>
 
 VScode enables to automate debug processes, thanks to the *Run & Debug* tab.
 There you can select several options:
 - **Run Extension** launches a new VScode workspace, where the syntax analysis of the RobotScript files  will be applied.
-- **Start web server** will launch a web server in background. Then it will be possible to access to the web version at [```localhost:3000```](http://localhost:3000/) -->
+- **Start web server** will launch a web server in background. Then it will be possible to access to the web version at [```localhost:3000```](http://localhost:3000/)
