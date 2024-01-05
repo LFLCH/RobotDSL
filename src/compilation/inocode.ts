@@ -56,7 +56,7 @@ Omni.PIDEnable(0.31, 0.01, 0, 10);
         return `
         /**
          * We consider that the units are m, s and m/s
-         * /
+         */
         void robotMove(String movement, double distance){
 switch(movement) {
     // Convert distance in mm
@@ -119,7 +119,7 @@ void robotRotate(double angle){
 /**
  * We consider that the units are m/s
  * The second argument of setCarSpeedMMPS is the uptime
- * /
+ */
 void setRobotSpeed(double speed){
    Omni.setCarSpeedMMPS(speed, 10);
 }
