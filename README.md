@@ -5,7 +5,7 @@ Find more about the developpment process in the associated [file](documentation/
 
 # RobotScript
 <p align="center">
-  <img src="./assets/logo_name.svg" alt="robotscript logo" width="400">
+  <img src="./assets/logo_name.png" alt="robotscript logo" width="400">
 </p>
 <p align="center">
     RobotScript is the name of this language. It is a <a href="https://langium.org"> Langium</a> project. 
@@ -30,7 +30,7 @@ Compile the necessary files
 npm run build
 ```
 
-Interprete
+Interpret
 ```bash
 ./bin/cli.js interpret  <filepath.rbs> 
 ```
