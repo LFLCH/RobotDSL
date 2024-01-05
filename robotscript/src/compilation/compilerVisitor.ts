@@ -8,13 +8,13 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
     ) {}
 
     visitAnd(node: VAnd) {
-        return node.left.accept(this) + InoCode.AND + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + InoCode.AND + node.right.accept(this);
     }
     visitAssignment(node: VAssignment) {
         return node.symbol.ref?.name + InoCode.ASSIGN + node.expression.accept(this);
     }
     visitBlock(node: VBlock) {
-        return InoCode.BLOCK_START + node.statements.map(s => "  "+s.accept(this)).join(';\n') + InoCode.BLOCK_END;
+        return InoCode.BLOCK_START + node.statements.map(s => "  "+s.accept(this)).join(';\n') + ';'+InoCode.BLOCK_END;
     }
     visitBoolConstant(node: VBoolConstant) {
         return node.value==="true" ? InoCode.TRUE : InoCode.FALSE;
@@ -37,7 +37,7 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
             default:
                 throw new Error("Operator not supported");
         }
-        return node.left.accept(this) + comparison + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + comparison + node.right.accept(this);
     }
     /**
      * @returns a multiplication factor that helps to convert the current unit value in meters
@@ -69,7 +69,7 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
             default:
                 throw new Error("Operator not supported");
         }
-        return node.left.accept(this) + equality + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + equality + node.right.accept(this);
     }
     visitFor(node: VFor) {
         return InoCode.FOR + InoCode.COND_START + node.init.accept(this) + InoCode.FOR_SEPARATOR + node.condition.accept(this) + InoCode.FOR_SEPARATOR + node.increment.accept(this)+ InoCode.COND_END + node.block.accept(this);
@@ -101,21 +101,22 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
     }
     visitModel(node: VModel) {
         const functionsImplementations = node.functionsDef.map(f => f.accept(this)).join('\n');
-        const mainCode = node.statements.map(s => s.accept(this)).join(';\n');
-        return InoCode.INCLUDES+ '\n' + InoCode.DECLARATIONS + '\n' + InoCode.ROBOT_METHODS + '\n' + "void setup(){"+InoCode.SETUP_CONTENT+"}\n"+ functionsImplementations + "\n" + "void loop(){"+ InoCode.LOOP_CONTENT + "\n" + mainCode + "}";
+        const mainCode = node.statements.map(s => "  "+s.accept(this)).join(';\n') + ';'
+        return InoCode.INCLUDES+ '\n' + InoCode.DECLARATIONS + '\n' + InoCode.ROBOT_METHODS + '\n' + "void setup(){"+InoCode.SETUP_CONTENT+"}\n"+ functionsImplementations + "\n" + "void loop()"+InoCode.BLOCK_START + InoCode.LOOP_CONTENT + mainCode + InoCode.BLOCK_END;
     }
     visitMovement(node: VMovement) {
-        switch(node.movement)
-        {
-            case "Forward":
-                return 0;
-            case "Backward":
-                return -180;
-            case "Left":
-                return -90;
-            case "Right":
-                return +90;
-        }
+        // not necessary. The arduino method will handle itself. 
+        // switch(node.movement)
+        // {
+        //     case "Forward":
+        //         return 0;
+        //     case "Backward":
+        //         return -180;
+        //     case "Left":
+        //         return -90;
+        //     case "Right":
+        //         return +90;
+        // }
     }
     visitMulDiv(node: VMulDiv) {
         let operator = "";
@@ -130,13 +131,13 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
                 operator = InoCode.MODULO;
                 break;
         }
-        return node.left.accept(this) + operator + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + operator + node.right.accept(this);
     }
     visitNot(node: VNot) {
         return InoCode.NOT + node.expression.accept(this);
     }
     visitOr(node: VOr) {
-        return node.left.accept(this) + InoCode.OR + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + InoCode.OR + node.right.accept(this);
     }
     visitParameter(node: VParameter) {
         return node.type.accept(this) + " " + node.name;
@@ -151,10 +152,10 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
                 operator = InoCode.MINUS;
                 break;
         }
-        return node.left.accept(this) + operator + node.right.accept(this);
+        return '(' +node.left.accept(this) +')' + operator + node.right.accept(this);
     }
     visitPrint(node: VPrint) {
-        return "robotSpeak(" + node.expression.accept(this) + ")";
+        return "robotSpeak( String(" + node.expression.accept(this) + "))";
     }
     visitRobotSpeedAdjust(node: VRobotSpeedAdjust) {
         return "setRobotSpeed(" + '(' +node.speed.accept(this)+')'+ InoCode.TIMES+ '('+node.unit.accept(this)+')' + ")";
@@ -163,7 +164,7 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
         return "getRobotDistance()"+ InoCode.TIMES + node.unit.accept(this);
     }
     visitRobotMovement(node: VRobotMovement) {
-        return "robotMove(" + node.robotMovement.accept(this) + InoCode.PARAM_SEPARATOR + '('+node.distance.accept(this)+ ')' + InoCode.TIMES + node.unit.accept(this) + ")";
+        return "robotMove(" +'"'+ node.robotMovement.movement +'"'+ InoCode.PARAM_SEPARATOR + '('+node.distance.accept(this)+ ')' + InoCode.TIMES + node.unit.accept(this) + ")";
     }
     visitRobotRotation(node: VRobotRotation) {
         return "robotRotate(" +'(' +node.robotRotation.accept(this)+')'+ InoCode.TIMES + '(' +node.angle.accept(this)+ "))";

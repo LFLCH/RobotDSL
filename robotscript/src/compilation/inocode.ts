@@ -10,7 +10,9 @@ export class InoCode {
 #include <fuzzy_table.h>
 #include <PID_Beta6.h>
 #include <MotorWheel.h>
-#include <Omni4WD.h>`
+#include <Omni4WD.h>
+#include <String.h>
+`
 };
 
     static get  DECLARATIONS() : string {  
@@ -45,7 +47,7 @@ Omni.PIDEnable(0.31, 0.01, 0, 10);
     }
 
     static get ROBOT_METHODS() : string {
-        return `void robotMove(string movement, double distance){
+        return `void robotMove(String movement, double distance){
     //TODO implement
 }
 
