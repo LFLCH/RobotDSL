@@ -99,20 +99,19 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   }
 
   /**
-   * Visits a distance unit and returns its value in meters.
-   * @param node
-   * @param value
+   * @param node a distance unit
+   * @returns its factor to convert it in meters
    */
-  visitDistanceUnit(node: VDistanceUnit, value: number = 0): number {
+  visitDistanceUnit(node: VDistanceUnit): number {
     switch (node.unit) {
       case "m":
-        return value;
+        return 1;
       case "dm":
-        return value / 10;
+        return  0.1;
       case "cm":
-        return value / 100;
+        return 0.01;
       case "mm":
-        return value / 1000;
+        return 0.001;
     }
   }
   visitDoubleConstant(node: VDoubleConstant): number {
@@ -222,8 +221,8 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
 
-  visitMovement(node: VMovement, value: number = 0): void {
-    this.environment.moveRobot(this.robotIndex, node.movement, value);
+  visitMovement(node: VMovement): void {
+    // This method has no effect
   }
   visitMulDiv(node: VMulDiv): number {
     const left = node.left.accept(this);
@@ -268,55 +267,47 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   visitRobotSpeedAdjust(node: VRobotSpeedAdjust): void {
     this.environment.setRobotSpeed(
       this.robotIndex,
-      this.visitDistanceUnit(node.unit, node.speed.accept(this))
+      this.visitDistanceUnit(node.unit) * node.speed.accept(this)
     );
   }
   visitRobotDistanceSensor(node: VRobotDistanceSensor): number {
-    const d: number = this.environment.getDistance(this.robotIndex);
-    return this.visitDistanceUnit(node.unit, d);
+    return this.visitDistanceUnit(node.unit)*this.environment.getDistance(this.robotIndex);
   }
   visitRobotMovement(node: VRobotMovement) {
-    return this.visitMovement(node.robotMovement, this.visitDistanceUnit(node.unit, node.distance.accept(this)));
+    const value = this.visitDistanceUnit(node.unit)*node.distance.accept(this);
+    this.environment.moveRobot(this.robotIndex, node.robotMovement.movement, value);
   }
   visitRobotRotation(node: VRobotRotation) {
-    this.visitRotation(node.robotRotation, node.angle.accept(this));
-  }
-  visitRobotTimeSensor(node: VRobotTimeSensor): number {
-    return this.visitTimeUnit(
-      node.unit,
-      this.environment.getTime(this.robotIndex)
+    const angle = this.environment.getRobotAngle(this.robotIndex);
+    const value = node.angle.accept(this);
+    const rotation = this.visitRotation(node.robotRotation);
+    this.environment.setRobotAngle(
+      this.robotIndex,
+      angle + (value*rotation.factor),
+      rotation.name
     );
   }
-  visitRotation(node: VRotation, value: number = 0): void {
-    const angle = this.environment.getRobotAngle(this.robotIndex);
+  visitRobotTimeSensor(node: VRobotTimeSensor): number {
+    return this.visitTimeUnit(node.unit) * this.environment.getTime(this.robotIndex);
+  }
+  visitRotation(node: VRotation) : {"name": "clockwise" | "anticlockwise", "factor" : number} {
     switch (node.rotation) {
       case "Clock":
-        this.environment.setRobotAngle(
-          this.robotIndex,
-          angle + value,
-          "clockwise"
-        );
-        break;
+        return {"name" : "clockwise", "factor" : 1}
       case "Anticlock":
-        this.environment.setRobotAngle(
-          this.robotIndex,
-          angle - value,
-          "anticlockwise"
-        );
-        break;
+        return {"name": "anticlockwise", "factor" : -1}
     }
   }
   /**
-   * Converts a time unit to seconds.
    * @param node
-   * @param value
+   * @returns the conversion factor for translating the time unit to seconds.
    */
-  visitTimeUnit(node: VTimeUnit, value: number = 0): number {
+  visitTimeUnit(node: VTimeUnit): number {
     switch (node.unit) {
       case "s":
-        return value;
+        return 1;
       case "ms":
-        return value / 1000;
+        return 0.001;
     }
   }
   visitType(node: VType) {

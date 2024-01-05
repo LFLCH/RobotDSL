@@ -896,8 +896,8 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
               },
               {
                 "$type": "Assignment",
-                "feature": "elifBlock",
-                "operator": "=",
+                "feature": "elifBlocks",
+                "operator": "+=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {

@@ -88,7 +88,7 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
         let elseIfPart = "" 
         for(let i=0 ; i<node.subsidaryConditions.length; i++){
             const condition = node.subsidaryConditions[i];
-            elseIfPart+= InoCode.ELSE_IF + InoCode.COND_START + condition.accept(this) + InoCode.COND_END + node.elifBlocks[i];
+            elseIfPart+= InoCode.ELSE_IF + InoCode.COND_START + condition.accept(this) + InoCode.COND_END + node.elifBlocks[i].accept(this);
         }
         const elsePart = node.elseBlock ? InoCode.ELSE + node.elseBlock.accept(this) : "";
         return ifPart + elseIfPart + elsePart;
