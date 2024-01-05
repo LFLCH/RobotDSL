@@ -1,35 +1,72 @@
 # RobotDSL
-A simple Domain Specific Language for Omni4WD Robots.
+RobotDSL is a school project (ESIR3 - ASE) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
-## Structure Overview
+# RobotScript
+<p align="center">
+  <img src="./assets/logo_name.svg" alt="robotscript logo" width="400">
+</p>
+<p align="center">
+    RobotScript is the name of this language. It is a <a href="https://langium.org"> Langium</a> project. 
+</p>
 
-```c
-.
-├── model   // SVG Files representing the Metamodel
-├── robotscript // langium project for the DSL
-└── training // Folder for a better understanding of langium
-    └── RPC  // Rock Paper Scissors basic DSL
+### Interpret
+From a program and a given environnment, this project is able to calculate the state that the robot will have at each instant.
+
+### Compile
+A RobotScript program into Arduino code for Omni4WD robots.
+
+# Get Started
+After cloning this repository, don't forget to install the dependencies.
+```bash
+npm install && npm run langium:generate
 ```
 
 ## Main Commands
-For the langium projects, the following commands are very usefull.
-
-### Generate the necessary files handling the grammmar 
-```bash
-npm run langium:generate
-```
-
-### Compile for the cli
+### Use the CLI
+Compile the necessary files
 ```bash
 npm run build
 ```
 
-### Compile for the web
+Interprete
+```bash
+./bin/cli.js interpret  <filepath.rbs> 
+```
+
+Compile
+```bash
+./bin/cli.js compile  <filepath.rbs> 
+```
+
+#### Examples files
+Several Example files of valid RobotScript code are located in the ```examples/``` folder. 
+They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI.
+
+
+### Use the Web version
+
+Compile the necessary files
 ```bash
 npm run build:web
 ```
 
-### Launch the web server
+Launch the server
 ```bash
 npm run serve
 ```
+
+
+### Update the AST from the grammar 
+```bash
+npm run langium:generate
+``` 
+
+<!-- ## VScode launches
+<p align="center">
+<img src="./assets/vscode-extension-run.png" alt="vscode extension run" width="300">
+</p>
+
+VScode enables to automate debug processes, thanks to the *Run & Debug* tab.
+There you can select several options:
+- **Run Extension** launches a new VScode workspace, where the syntax analysis of the RobotScript files  will be applied.
+- **Start web server** will launch a web server in background. Then it will be possible to access to the web version at [```localhost:3000```](http://localhost:3000/) -->
