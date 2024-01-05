@@ -183,7 +183,7 @@ export class RobotEnvironment {
     public getDistance(robotIndex: number): number {
         const robot = this.robots[robotIndex];
         const entity = robot.clone().asMovingEntity();
-        let distance = Infinity; // TODO: calculate the distance
+        let distance = -1; // TODO: calculate the distance
         const distancecheck : DistanceCheck = {
             "value" : distance
         }
