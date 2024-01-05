@@ -11,6 +11,7 @@ export class InoCode {
 #include <PID_Beta6.h>
 #include <MotorWheel.h>
 #include <Omni4WD.h>
+#include <SONAR.h>
 #include <String.h>
 `
 };
@@ -30,7 +31,10 @@ MotorWheel wheel4(10, 7, 18, 19, &irq4);
 
 Omni4WD Omni(&wheel1, &wheel2, &wheel3, &wheel4);
 // Init the omni speed to 0.01 m/s (1st args in mm, 2nd to be invisible)
-Omni.setCarSpeedMMPS(10, 10);`
+Omni.setCarSpeedMMPS(10, 10);
+
+SONAR sonar11(0x11), sonar12(0x12), sonar13(0x13), sonar14(0x14);
+unsigned short distBuf[4];  `
     };
 
     static get  SETUP_CONTENT() : string {
@@ -124,8 +128,33 @@ void robotSpeak(String text){
     Serial.println(text);
 }
 
+unsigned char sonarsUpdate() { 
+    static unsigned char sonarCurr = 1; // A variable save a data used to flag the state of sonar 
+    if(sonarCurr==4) sonarCurr=1;  
+    else ++sonarCurr;  
+    if(sonarCurr==1) { // The condition is true?
+        distBuf[1]=sonar12.getDist(); // Get the value of distance from sonar12         
+        sonar12.trigger(); //  Trigger  sonar12  
+    } else if(sonarCurr==2) {  
+        distBuf[2]=sonar13.getDist();  
+        sonar13.trigger();  
+    } else if(sonarCurr==3){  
+        distBuf[3]=sonar14.getDist();  
+        sonar14.trigger();  
+    } else { 
+        distBuf[0]=sonar11.getDist();  
+        sonar11.trigger();  
+    } 
+        return  sonarCurr; // Return the  value  
+    } 
+
 double getRobotDistance(){
-    //TODO implement
+    unsigned char currentSonar = 1;
+    for(unsigned int i = 0; i < 4; i ++)
+    {
+        currentSonar = sonarsUpdate();
+        Serial.println("Sonar %d acquires a distance of %d", currentSonar, distBuf[currentSonar]);
+    }
 }
 
 double getRobotAngle(){
