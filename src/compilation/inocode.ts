@@ -157,10 +157,6 @@ double getRobotDistance(){
     }
 }
 
-double getRobotAngle(){
-    //TODO implement
-}
-
 double getRobotSpeed(){
     return Omni.getCarSpeedMMPS();
 }`
