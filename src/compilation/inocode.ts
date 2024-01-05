@@ -54,39 +54,40 @@ Omni.PIDEnable(0.31, 0.01, 0, 10);
 
     static get ROBOT_METHODS() : string {
         return `
-        /**
-         * We consider that the units are m, s and m/s
-         */
-        void robotMove(String movement, double distance){
-switch(movement) {
-    // Convert distance in mm
-    distance *= 1000;
 
-    // Get current speed
-    unsigned int speed = Omni.getCarSpeedMMPS();
+/**
+ * We consider that the units are m, s and m/s
+*/
+void robotMove(String movement, double distance){
+    switch(movement) {
+        // Convert distance in mm
+        distance *= 1000;
 
-    // Compute the duration in MS to the Omni does the movement
-    double duration = distance / speed;
-    
-    case "Forward":
-        Omni.setCarAdvance(speed);
-        Omni.delayMS(duration, false);
-        break;
-    case "Backward":
-        Omni.setCarBackoff(speed);
-        Omni.delayMS(duration, false);
-        break;
-    case "Left":
-        Omni.setCarLeft(speed);
-        Omni.delayMS(duration, false);
-        break;
-    case "Right":
-        Omni.setCarRight(speed);
-        Omni.delayMS(duration, false);
-        break;
-    default: 
-        Serial.print("Wrong movement provided.");
-}
+        // Get current speed
+        unsigned int speed = Omni.getCarSpeedMMPS();
+
+        // Compute the duration in MS to the Omni does the movement
+        double duration = distance / speed;
+        
+        case "Forward":
+            Omni.setCarAdvance(speed);
+            Omni.delayMS(duration, false);
+            break;
+        case "Backward":
+            Omni.setCarBackoff(speed);
+            Omni.delayMS(duration, false);
+            break;
+        case "Left":
+            Omni.setCarLeft(speed);
+            Omni.delayMS(duration, false);
+            break;
+        case "Right":
+            Omni.setCarRight(speed);
+            Omni.delayMS(duration, false);
+            break;
+        default: 
+            Serial.print("Wrong movement provided.");
+    }
 }
 
 // angle in degrees
