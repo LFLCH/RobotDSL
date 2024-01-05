@@ -66,6 +66,22 @@ npm run langium:generate
 ## VScode 
 The Langium project has been developped using VSCode as main IDE. We therefore coded some tools that ease the developpment. 
 
+## Extension
+```bash
+npm run build:extension
+```
+Then install the extension that was produced.
+<p align="center">
+  <img src="./assets/vscode_extension_install.png" alt="vscode extension install" width="300">
+</p>
+
+You can find it in the extensions tab of vscode. 
+It will activate the RobotScript language support for all you  ```.rbs``` files. 
+
+<p align="center">
+  <img src="./assets/extension_overview.png" alt="vscode extension install" width="300">
+</p>
+
 ###  Launches
 <p align="center">
   <img src="./assets/vscode-extension-run.png" alt="vscode extension run" width="300">

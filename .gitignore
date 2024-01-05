@@ -9,3 +9,4 @@ src/language/generated/
 uploads
 public
 generated
+robotscript-*.vsix

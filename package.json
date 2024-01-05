@@ -1,13 +1,20 @@
 {
     "name": "robotscript",
-    "description": "Please enter a brief description here",
+    "description": "A simple DSL for robots",
     "version": "0.0.1",
     "files": [
         "bin"
     ],
     "type": "module",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/LFLCH/RobotDSL.git"
+      },
+    "icon": "assets/logo_extension.png",
+    "publisher": "Léo Filoche && Jérémy Bindel",
     "scripts": {
         "build": "tsc -b tsconfig.json && node esbuild.mjs",
+        "build:extension" : "mv README.md README_.md && vsce package && mv README_.md README.md",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
@@ -42,7 +49,7 @@
         "@typescript-eslint/parser": "~5.58.0",
         "concurrently": "^7.6.0",
         "daisyui": "^4.4.23",
-        "esbuild": "^0.18.6",
+        "esbuild": "^0.18.20",
         "eslint": "~8.33.0",
         "langium-cli": "~2.0.0",
         "shx": "^0.3.4",
