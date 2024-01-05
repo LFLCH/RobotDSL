@@ -239,7 +239,7 @@ export function isFunctionReturn(item: unknown): item is FunctionReturn {
 export interface If extends AstNode {
     readonly $container: Block | Model;
     readonly $type: 'If';
-    elifBlock?: Block
+    elifBlocks: Array<Block>
     elseBlock?: Block
     mainCondition: Expression
     subsidaryConditions: Array<Expression>

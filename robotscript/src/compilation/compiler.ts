@@ -1,93 +1,16 @@
 import { VModel } from "../language/semantics/visitor.js";
+import { RobotCompilerVisitor } from "./compilerVisitor.js";
 
 export class Compiler {
 
-    
+    private visitor : RobotCompilerVisitor;
+
     constructor(
         ) {
+            this.visitor = new RobotCompilerVisitor();
      }
 
     compile(model: VModel): string {
-        return `void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-}
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-} 
-void setup() {
-    // put your setup code here, to run once:
-    Serial.begin(9600);
-}
-          
-void loop() {
-   // put your main code here, to run repeatedly:
-   Serial.println("Hello World!");
-   delay(1000);
-}           
-`
+        return this.visitor.visitModel(model);
     }
 }

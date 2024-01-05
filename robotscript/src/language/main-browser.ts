@@ -28,17 +28,15 @@ function liveASTAnalysis(){
     const documentChangeNotification = new NotificationType<DocumentChange>('browser/livechange');
     const jsonSerializer = RobotScript.serializer.JsonSerializer;
     shared.workspace.DocumentBuilder.onBuildPhase(DocumentState.Validated, documents => {
-        // for (const document of documents) {
-            const document = documents[0];
-            if(!document.diagnostics || document.diagnostics.length==0) currentModel = document.parseResult.value as VModel;
-            else currentModel = undefined;
-            jsonSerializer; 
-            connection.sendNotification(documentChangeNotification, {
-                uri: document.uri.toString(),
-                content: jsonSerializer.serialize(document.parseResult.value),
-                diagnostics: document.diagnostics ?? []
-            });
-            // }
+        const document = documents[0];
+        if(!document.diagnostics || document.diagnostics.length==0) currentModel = document.parseResult.value as VModel;
+        else currentModel = undefined;
+        jsonSerializer; 
+        connection.sendNotification(documentChangeNotification, {
+            uri: document.uri.toString(),
+            content: jsonSerializer.serialize(document.parseResult.value),
+            diagnostics: document.diagnostics ?? []
+        });
     });
 }
 

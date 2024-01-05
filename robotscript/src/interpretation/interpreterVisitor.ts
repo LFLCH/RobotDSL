@@ -26,9 +26,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
 
   // Visitor methods
   visitAnd(node: VAnd): boolean {
-    // const left = this.visitBooleanExpression(node.left);
-    // const right = this.visitBooleanExpression(node.right);
-    // return left && right;
     return node.left.accept(this) && node.right.accept(this);
   }
 
@@ -48,7 +45,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
         // 3 : check if the type is the same
         if(this.contexts[contextIndex].variables.get(nodevariable.name)?.type === type) {
           // 4 : update the value
-          // this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : this.visitTypedExpression(node.expression)});
           this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : node.expression.accept(this)});
         } else {
           throw new Error(`Type mismatch : variable ${nodevariable.name} is of type ${this.contexts[contextIndex].variables.get(nodevariable.name)?.type} but you are trying to assign a value of type ${type}`);
@@ -185,24 +181,20 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   }
 
   visitFunctionReturn(node: VFunctionReturn): number | boolean {
-    // return this.visitTypedExpression(node.expression);
     return node.expression.accept(this);
   }
 
   visitIf(node: VIf) {
-    // if(this.visitBooleanExpression(node.mainCondition)) {
     if (node.mainCondition.accept(this)) {
       let returnValue: number | boolean | undefined = this.visitBlock(
         node.thenBlock
       );
       if (returnValue !== undefined) return returnValue;
     } else if (node.subsidaryConditions) {
-      for (let condition of node.subsidaryConditions) {
-        // if(this.visitBooleanExpression(condition)) {
+      for (let i=0; i<node.subsidaryConditions.length ; i++) {
+        const condition = node.subsidaryConditions[i];
         if (condition.accept(this)) {
-          let returnValue: number | boolean | undefined = this.visitBlock(
-            node.thenBlock
-          );
+          let returnValue: number | boolean | undefined = this.visitBlock(node.elifBlocks[i]);
           if (returnValue !== undefined) return returnValue;
         }
       }
@@ -218,7 +210,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     return node.value;
   }
   visitMinus(node: VMinus): number {
-    // return -this.visitNumberExpression(node.expression);
     return -node.expression.accept(this);
   }
 
@@ -285,7 +276,7 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     return this.visitDistanceUnit(node.unit, d);
   }
   visitRobotMovement(node: VRobotMovement) {
-    return this.visitMovement(node.robotMovement, node.distance.accept(this));
+    return this.visitMovement(node.robotMovement, this.visitDistanceUnit(node.unit, node.distance.accept(this)));
   }
   visitRobotRotation(node: VRobotRotation) {
     this.visitRotation(node.robotRotation, node.angle.accept(this));

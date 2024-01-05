@@ -52,8 +52,6 @@ export class VAnd implements ASTInterfaces.And {
 export class VAssignment implements ASTInterfaces.Assignment {
   constructor(
     public $type: "Assignment",
-    public name: string,
-    public expr: VExpression,
     public symbol: Reference<VRobotSymbol>,
     public expression: VExpression,
     public $container: VBlock
@@ -136,7 +134,6 @@ export class VFor implements ASTInterfaces.For {
 export class VFunctionCall implements ASTInterfaces.FunctionCall {
   constructor(
     public $type: "FunctionCall",
-    public name: string,
     public functionCall: Reference<VFunctionDef>,
     public args: VExpression[],
     public $container: any
@@ -168,13 +165,13 @@ export class VFunctionReturn implements ASTInterfaces.FunctionReturn {
 
 export class VIf implements ASTInterfaces.If {
   constructor(
+    public $container: VBlock | VModel,
     public $type: "If",
     public mainCondition: VExpression,
     public subsidaryConditions: VExpression[],
     public thenBlock: VBlock,
-    public $container: VBlock,
-    public elifBlock?: VBlock | undefined,
-    public elseBlock?: VBlock | undefined
+    public elifBlocks: VBlock[],
+    public elseBlock?:VBlock | undefined,
   ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
@@ -296,7 +293,6 @@ export class VRobotSpeedAdjust implements ASTInterfaces.RobotSpeedAdjust {
 export class VRobotDistanceSensor implements ASTInterfaces.RobotDistanceSensor {
   constructor(
     public $type: "RobotDistanceSensor",
-    public args: VExpression,
     public unit: VDistanceUnit,
     public $container: any
   ) {}
@@ -380,7 +376,6 @@ export class VVariableDecl implements ASTInterfaces.VariableDecl {
 export class VVariableCall implements ASTInterfaces.VariableCall {
   constructor(
     public $type: "VariableCall",
-    public name: string,
     public variable: Reference<ASTInterfaces.RobotSymbol>,
     public $container: any
   ) {}

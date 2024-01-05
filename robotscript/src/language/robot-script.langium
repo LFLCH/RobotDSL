@@ -65,7 +65,7 @@ While:
 
 If:
     'if''('mainCondition=Expression')' thenBlock=Block
-    ('elseif''('subsidaryConditions+=Expression')'elifBlock=Block)*
+    ('elseif''('subsidaryConditions+=Expression')'elifBlocks+=Block)*
     ('else'elseBlock=Block)?
     ;
 
