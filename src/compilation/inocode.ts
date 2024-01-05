@@ -28,7 +28,9 @@ MotorWheel wheel3(9, 8, 16, 17, &irq3);
 irqISR(irq4, isr4);
 MotorWheel wheel4(10, 7, 18, 19, &irq4);
 
-Omni4WD Omni(&wheel1, &wheel2, &wheel3, &wheel4);`
+Omni4WD Omni(&wheel1, &wheel2, &wheel3, &wheel4);
+// Init the omni speed to 0.01 m/s (1st args in mm, 2nd to be invisible)
+Omni.setCarSpeedMMPS(10, 10);`
     };
 
     static get  SETUP_CONTENT() : string {
@@ -47,17 +49,75 @@ Omni.PIDEnable(0.31, 0.01, 0, 10);
     }
 
     static get ROBOT_METHODS() : string {
-        return `void robotMove(String movement, double distance){
-    //TODO implement
+        return `
+        /**
+         * We consider that the units are m, s and m/s
+         * /
+        void robotMove(String movement, double distance){
+switch(movement) {
+    // Convert distance in mm
+    distance *= 1000;
+
+    // Get current speed
+    unsigned int speed = Omni.getCarSpeedMMPS();
+
+    // Compute the duration in MS to the Omni does the movement
+    double duration = distance / speed;
+    
+    case "Forward":
+        Omni.setCarAdvance(speed);
+        Omni.delayMS(duration, false);
+        break;
+    case "Backward":
+        Omni.setCarBackoff(speed);
+        Omni.delayMS(duration, false);
+        break;
+    case "Left":
+        Omni.setCarLeft(speed);
+        Omni.delayMS(duration, false);
+        break;
+    case "Right":
+        Omni.setCarRight(speed);
+        Omni.delayMS(duration, false);
+        break;
+    default: 
+        Serial.print("Wrong movement provided.");
+}
 }
 
 // angle in degrees
 void robotRotate(double angle){
-    //TODO implement
+    // Convert angle to radians
+    float angleRadians = angleDegree * (3.14159265358979323846 / 180.0);
+
+    // Calculate arc length
+    float arcLength = ROBOT_RADIUS * (angleRadians / (2 * 3.14159265358979323846));
+
+    // Get current speed
+    unsigned int speed = Omni.getCarSpeedMMPS();
+
+    // Determine the rotation direction (left or right)
+    int rotationDirection = (angle < 0) ? -1 : 1;
+
+    // Call the appropriate rotation method based on the direction
+    if (rotationDirection == -1) {
+        Omni.setCarRotateRight(speed);
+    }else{
+        Omni.setCarRotateLeft(speed);
+    }
+
+    // Calculate time needed for rotation
+    float timeInSeconds = arcLength / speedMMPS;
+
+    Omni.delayMS(timeInSeconds * 1000);
 }
 
+/**
+ * We consider that the units are m/s
+ * The second argument of setCarSpeedMMPS is the uptime
+ * /
 void setRobotSpeed(double speed){
-   //TODO implement
+   Omni.setCarSpeedMMPS(speed, 10);
 }
 
 void robotSpeak(String text){
