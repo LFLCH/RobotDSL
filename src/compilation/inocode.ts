@@ -11,6 +11,7 @@ export class InoCode {
 #include <PID_Beta6.h>
 #include <MotorWheel.h>
 #include <Omni4WD.h>
+#define ROBOT_RADIUS 200 //Radius of the robot in [mm] found in the spec
 #include <HCSR04.h>
 `
 };
@@ -57,41 +58,36 @@ Omni.setCarSpeedMMPS(10, 10);
  * We consider that the units are m, s and m/s
 */
 void robotMove(String movement, double distance){
-    switch(movement) {
-        // Convert distance in mm
-        distance *= 1000;
+    // Convert distance in mm
+    distance *= 1000;
 
-        // Get current speed
-        unsigned int speed = Omni.getCarSpeedMMPS();
+    // Get current speed
+    unsigned int speed = Omni.getCarSpeedMMPS();
 
-        // Compute the duration in MS to the Omni does the movement
-        double duration = distance / speed;
-        
-        case "Forward":
-            Omni.setCarAdvance(speed);
-            Omni.delayMS(duration, false);
-            break;
-        case "Backward":
-            Omni.setCarBackoff(speed);
-            Omni.delayMS(duration, false);
-            break;
-        case "Left":
-            Omni.setCarLeft(speed);
-            Omni.delayMS(duration, false);
-            break;
-        case "Right":
-            Omni.setCarRight(speed);
-            Omni.delayMS(duration, false);
-            break;
-        default: 
-            Serial.print("Wrong movement provided.");
+    // Compute the duration in MS to the Omni does the movement
+    double duration = distance / speed;
+    
+    if(movement == "Forward") {
+        Omni.setCarAdvance(speed);
+        Omni.delayMS(duration, false);
+    }else if(movement == "Backward"){
+        Omni.setCarBackoff(speed);
+        Omni.delayMS(duration, false);
+    }else if(movement == "Left"){
+        Omni.setCarLeft(speed);
+        Omni.delayMS(duration, false);
+    }else if(movement == "Right"){
+        Omni.setCarRight(speed);
+        Omni.delayMS(duration, false);
+    }else{
+        Serial.print("Wrong movement provided.");
     }
 }
 
 // angle in degrees
 void robotRotate(double angle){
     // Convert angle to radians
-    float angleRadians = angleDegree * (3.14159265358979323846 / 180.0);
+    float angleRadians = angle * (3.14159265358979323846 / 180.0);
 
     // Calculate arc length
     float arcLength = ROBOT_RADIUS * (angleRadians / (2 * 3.14159265358979323846));
@@ -110,7 +106,7 @@ void robotRotate(double angle){
     }
 
     // Calculate time needed for rotation
-    float timeInSeconds = arcLength / speedMMPS;
+    float timeInSeconds = arcLength / speed;
 
     Omni.delayMS(timeInSeconds * 1000);
 }
@@ -130,7 +126,7 @@ void robotSpeak(String text){
 double getRobotDistance(){
     for(int i = 0; i < 4; i ++)
     {
-        Serial.println("Sonar %d acquires a distance of %d", i, hc.dist(i));
+        Serial.println("Sonar %d acquires a distance of %%.2f", i + 1, hc.dist(i));
     }
     Omni.delayMS(60);
 }
