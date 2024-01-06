@@ -16,11 +16,6 @@ document.addEventListener('run-content', async (event) => {
     }
     let cs : CanvasSession = new CanvasSession(environment);
     cs.start();
-
-    for(const instruction of environment.instructions){
-        cs.runInstruction(instruction);
-    }
-
 });
 
 document.addEventListener('run-error', (event) => {

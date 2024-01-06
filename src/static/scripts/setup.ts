@@ -21,7 +21,6 @@ async function  setup() {
             spaceAtStart : spaceAtStart
         };
         client.sendNotification("browser/run", params)
-        // client.sendNotification("browser/run", { content: getMainCode(config), params : params })
     });
 
     document.getElementById("compile")!.addEventListener("click", () => {

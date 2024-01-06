@@ -65,7 +65,7 @@ export function createUserConfig(config: ClassicConfig): UserConfig {
 }
 
 function getMonarchGrammar(){
-    // Grammar defined in out/syntaxes/robot-script.monarch.json
+    // Grammar defined in out/syntaxes/robot-script.monarch.js
     return {
         keywords: [
             'Anticlock', 'Backward', 'Clock', 'CurrentDistance', 'CurrentTime', 'Forward', 'Left', 'ModifySpeed', 'Print', 'Right', 'boolean', 'cm', 'dm', 'double', 'else', 'elseif', 'false', 'for', 'if', 'in', 'int', 'm', 'mm', 'ms', 'return', 's', 'true', 'void', 'while'
@@ -77,8 +77,8 @@ function getMonarchGrammar(){
         tokenizer: {
             initial: [
                 { regex: /[_a-zA-Z][\w_]*/, action: { cases: { '@keywords': { "token": "keyword" }, '@default': { "token": "ID" } } } },
-                { regex: /[0-9]+/, action: { "token": "number" } },
-                { regex: /[0-9]+.[0-9]+/, action: { "token": "number" } },
+                { regex: /\d+\.\d+/, action: { "token": "number" } },
+                { regex: /\d+/, action: { "token": "number" } },
                 { include: '@whitespace' },
                 { regex: /@symbols/, action: { cases: { '@operators': { "token": "operator" }, '@default': { "token": "" } } } },
             ],
