@@ -25,8 +25,8 @@ A RobotScript program can be translated into Arduino code using the compiler. Cu
 </p>
 
 ### Demonstration
-<video src="assets/main_demo.mp4" controls title="Demo"></video>
-
+<!--<video src="assets/main_demo.mp4" controls title="Demo"></video>-->
+https://github.com/LFLCH/RobotDSL/assets/62034725/906b660a-8045-4425-becb-3102c87b029d
 ## Get Started
 After cloning this repository, don't forget to install the dependencies.
 ```bash
