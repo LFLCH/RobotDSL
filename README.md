@@ -1,9 +1,10 @@
 # RobotDSL
 RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
+
 ## RobotScript
 <p align="center">
-  <img src="./assets/logo_name.png" alt="robotscript logo" width="400">
+  <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/751f97e1-838f-4b40-bf3a-aff89487d674" alt="Logo name" width="400">
 </p>
 <p align="center">
     RobotScript is a programming language specialized for mobile robots. <br>
@@ -15,18 +16,18 @@ RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that
 From a program and a given environnment, the interpreter is able to calculate the state that the robot will have at each instant. It is possible to interpret a same program for several robots. 
 
 <p align="center">
-  <img src="assets/demo_squares.gif" alt="robotscript logo" width="300">
+  <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/37c81912-b6d8-4b3c-a0e4-51da07f74b28" alt="Demo squares" width="300">
 </p>
 
 ### Compile
 A RobotScript program can be translated into Arduino code using the compiler. Currently, it is specifically done for [Omni4WD](https://manualzz.com/doc/o/96ghj/manual-omni4wd) robots.
 <p align="center">
-<img src="./assets/robot_preview.png" alt="Omni 4 WD robot" width="150">
+<img src="https://github.com/LFLCH/RobotDSL/assets/62034725/f3789fe0-d5d5-474f-8d64-476e5a408397" alt="Robot Preview" width="150">
 </p>
 
 ### Demonstration
-<!--<video src="assets/main_demo.mp4" controls title="Demo"></video>-->
-https://github.com/LFLCH/RobotDSL/assets/62034725/906b660a-8045-4425-becb-3102c87b029d
+<video src="https://github.com/LFLCH/RobotDSL/assets/62034725/906b660a-8045-4425-becb-3102c87b029d" title="Main demo"></video>
+
 ## Get Started
 After cloning this repository, don't forget to install the dependencies.
 ```bash
@@ -91,19 +92,19 @@ npm run build:extension
 ```
 Then install the extension that was produced.
 <p align="center">
-  <img src="./assets/vscode_extension_install.png" alt="vscode extension install" width="300">
+  <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/11b490cf-b9ad-4028-aa7d-afd199713ac0" alt="vscode extension install" width="300">
 </p>
 
 You can find it in the extensions tab of vscode. 
 It will activate the RobotScript language support for all the  ```.rbs``` files. 
 
 <p align="center">
-  <img src="./assets/extension_overview.png" alt="vscode extension install" width="300">
+  <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/f1f836ac-37fe-4493-b582-c2bc4c3cecf9" alt="vscode extension overview" width="300">
 </p>
 
 ###  Launches
 <p align="center">
-  <img src="./assets/vscode-extension-run.png" alt="vscode extension run" width="300">
+  <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/b3198de1-16f1-416e-a914-feb88d7207db" alt="vscode extension run" width="300">
 </p>
 
 VScode enables to automate debug processes, thanks to the *Run & Debug* tab.
