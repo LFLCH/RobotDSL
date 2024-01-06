@@ -1496,15 +1496,37 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
               },
               {
                 "$type": "Assignment",
-                "feature": "value",
+                "feature": "intpart",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@30"
+                    "$ref": "#/rules@29"
                   },
                   "arguments": []
                 }
+              },
+              {
+                "$type": "Group",
+                "elements": [
+                  {
+                    "$type": "Keyword",
+                    "value": "."
+                  },
+                  {
+                    "$type": "Assignment",
+                    "feature": "decimpart",
+                    "operator": "=",
+                    "terminal": {
+                      "$type": "RuleCall",
+                      "rule": {
+                        "$ref": "#/rules@29"
+                      },
+                      "arguments": []
+                    }
+                  }
+                ],
+                "cardinality": "?"
               }
             ]
           },
@@ -1935,51 +1957,6 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
       "definition": {
         "$type": "RegexToken",
         "regex": "/[0-9]+/"
-      },
-      "fragment": false,
-      "hidden": false
-    },
-    {
-      "$type": "TerminalRule",
-      "name": "DOUBLE",
-      "type": {
-        "$type": "ReturnType",
-        "name": "number"
-      },
-      "definition": {
-        "$type": "TerminalAlternatives",
-        "elements": [
-          {
-            "$type": "TerminalGroup",
-            "elements": [
-              {
-                "$type": "TerminalRuleCall",
-                "rule": {
-                  "$ref": "#/rules@29"
-                }
-              },
-              {
-                "$type": "CharacterRange",
-                "left": {
-                  "$type": "Keyword",
-                  "value": "."
-                }
-              },
-              {
-                "$type": "TerminalRuleCall",
-                "rule": {
-                  "$ref": "#/rules@29"
-                }
-              }
-            ]
-          },
-          {
-            "$type": "TerminalRuleCall",
-            "rule": {
-              "$ref": "#/rules@29"
-            }
-          }
-        ]
       },
       "fragment": false,
       "hidden": false

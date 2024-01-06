@@ -102,8 +102,9 @@ export class VDistanceUnit implements ASTInterfaces.DistanceUnit {
 export class VDoubleConstant implements ASTInterfaces.DoubleConstant {
   constructor(
     public $type: "DoubleConstant",
-    public value: number,
-    public $container: any
+    public $container: any,
+    public intpart : number,
+    public decimpart ?: number
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
 }

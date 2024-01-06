@@ -4,8 +4,8 @@
  ******************************************************************************/
 
 import type { LangiumGeneratedServices, LangiumGeneratedSharedServices, LangiumSharedServices, LangiumServices, LanguageMetaData, Module } from 'langium';
+import { RobotScriptAstReflection } from '../generated/ast.js';
 import { RobotScriptGrammar } from './grammar.js';
-import { RobotScriptAstReflection } from './currentast.js';
 
 export const RobotScriptLanguageMetaData = {
     languageId: 'robot-script',
