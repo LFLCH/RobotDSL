@@ -1,33 +1,44 @@
 # RobotDSL
-RobotDSL is a school project (ESIR3 - ASE) that aims to create a simple Domain Specific Language (DSL) for Robots.
-
-Find more about the developpment process in the associated [file](documentation/devprocess.md).
-
-The specific robot is an [Omni4WD](https://manualzz.com/doc/o/96ghj/manual-omni4wd).
-
-<img src="./assets/robot_preview.png" alt="Omni 4 WD robot" width="200">
+RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
 ## RobotScript
 <p align="center">
   <img src="./assets/logo_name.png" alt="robotscript logo" width="400">
 </p>
 <p align="center">
-    RobotScript is the name of our programming language. It is a <a href="https://langium.org"> Langium</a> project. 
+    RobotScript is a programming language specialized for mobile robots. <br>
+    This repository is a <a href="https://langium.org"> Langium</a> project. <br>
+    It provides a CLI as well as a WEB IDE to compile and interpret RobotScript programs.
 </p>
 
 ### Interpret
-From a program and a given environnment, our toolkit will be able to calculate the state that the robot will have at each instant.
+From a program and a given environnment, the toolkit is able to calculate the state that the robot will have at each instant. It is possible to interpret a same program for several robots. 
+
+<p align="center">
+  <img src="assets/demo_squares.gif" alt="robotscript logo" width="300">
+</p>
 
 ### Compile
-A RobotScript program into Arduino code for Omni4WD robots.
-Several Example files of valid RobotScript code are located in the ```examples/``` folder. 
-They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI (explain below).
+A RobotScript program can be translated into Arduino code. Currently, it is specifically done for [Omni4WD](https://manualzz.com/doc/o/96ghj/manual-omni4wd) robots.
+<p align="center">
+<img src="./assets/robot_preview.png" alt="Omni 4 WD robot" width="150">
+</p>
 
 ## Get Started
 After cloning this repository, don't forget to install the dependencies.
 ```bash
 npm install && npm run langium:generate
 ```
+## Resources
+### Documentation
+The ```documentation/``` folder contains several documentation files.
+- Read [rbs.md](documentation/rbs.md) to learn more about the language syntax.
+- Read [devprocess.md](documentation/devprocess.md) to learn more about the steps the we followed to achieve this project.   
+
+### Examples
+Several example files of valid RobotScript code are located in the ```examples/``` folder. 
+They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI (explain below).
+
 
 ## Main Commands
 ### Use the CLI
@@ -45,10 +56,6 @@ Compile
 ```bash
 ./bin/cli.js compile  <filepath.rbs> 
 ```
-
-### Resources
-#### Documentation
-Learn more about the language syntax by reading its [documentation](documentation/rbs.md) file.
 
 
 ### Use the Web version

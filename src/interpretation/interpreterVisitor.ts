@@ -320,7 +320,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   visitVariableDecl(node: VVariableDecl) {
     let value = node.expression.accept(this);
     if(node.type.type==="int") value = Math.floor(value as number);
-    if(node.type.type)
     this.contexts[this.contexts.length - 1].variables.set(node.name, {
       type: node.type.type,
       value: value,

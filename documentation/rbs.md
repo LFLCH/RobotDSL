@@ -109,11 +109,19 @@ else {
 ```
 ### ```for``` 
 ```ts
-for(<variable assignement> ; <boolean condition>; <variable assignement>){
+for(<variable declaration or assignement> ; <boolean condition>; <variable update with assignement>){
     ...
 }
 ```
-Please not that the increment (```++```) and decrement (```--```) are not currently available, so it is necessary to use another arithmetical while writting the second variable assignement.
+Please not that the increment (```++```, ```+=```) and decrement (```--```, ```-=```) are not currently available, so it is necessary to use another arithmetical operation while writting the variable update.
+
+Example
+```ts
+for(int i=0; i<5 ; i=i+1){
+    Print i;
+}
+// 0 1 2 3 4
+```
 
 ### ```while```
 ```ts
@@ -122,6 +130,14 @@ while(<boolean condition>){
 }
 ```
 Please garanty the while loop to have an end. 
+```ts
+int i=0;
+while(i<5){
+    Print i;
+    i=i+1;
+}
+// 0 1 2 3 4
+```
 
 ## Functions
 Definition
@@ -150,19 +166,17 @@ repeat(19, 3); // 19 19 19
 ```
 
 ## Sensors and robot actions
-The sensors and the actions allow the developper to interact with the robot. They are not methods, just keywords. They can be used to send an operation to process for the robot, or to capture data from the robot. 
+The sensors and the actions allow the developper to interact with the robot. They are not methods, just keywords. They can be used to send an operation to process for the robot (robot action), or to capture data from the robot (sensor). 
 Thay all have the same aspect. 
 ```ts
-<sensorOrAction> in <sensorUnit> 
+<sensorOrAction> value in <sensorUnit> 
 ``` 
 ### Robot actions
-operation to process
 - ```Forward```, ```Backward```, ```Left``` and ```Right``` : make the robot move, in the given direction. 
 - ```ModifySpeed``` : change the speed of the robot
 -  ```Clock```, ```Anticlock``` : rotate the robot, in degrees. They are the only robot action that do not require a conversion, therefore, they do not need the conversion part (```in <sensorUnit>```).
 
 ### Sensors
-data capture
 - ```CurrentTime``` : access the robot internal time. It is a relative time, that is computed since it began to run the program.  
 - ```CurrentDistance``` : access the distance to the nearest obstacle in front of the robot. The returned value is negative if no obstacle was found.
 
@@ -176,7 +190,18 @@ In this way, we manipulate :
 
 We also manipulate **speed**, but it is always expressed as a distance unit, per second. For instance, if the robot says it has a speed of  ```25 m```, you should understand that it has a speed of ```25 m/s```. 
 
-
+Example
+```ts
+Forward 5 in m;
+ModifySpeed 5 in m;
+Backward 12.3 in m;
+Clock 45;
+Left 564 in cm;
+Anticlock -160;
+Right 6 in m;
+Print CurrentDistance in cm;
+Print CurrentTime in s;
+```
 ## Debugging
 ### ```Print```
 Logs a value in the console.  
