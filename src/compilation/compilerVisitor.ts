@@ -54,16 +54,9 @@ export class RobotCompilerVisitor implements RobotScriptVisitor{
                 return 0.001;
         }
     }
-    visitDoubleConstant(node: VDoubleConstant) {
-        // converting the int of the decim part to a real decimal (0.xxx)
-        if(node.decimpart){
-            const numDigits = Math.floor(Math.log10(node.decimpart)) + 1;
-            const divisor = Math.pow(10, numDigits);
-            const decimalPart = node.decimpart / divisor;
-            return node.intpart + decimalPart;
-          }
-          else return node.intpart;
-    }
+    visitDoubleConstant(node: VDoubleConstant): number {
+        return node.value;
+      }
     visitEquality(node: VEquality) {
         let equality =""
         switch(node.operator){

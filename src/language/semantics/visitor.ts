@@ -55,7 +55,7 @@ export class VAssignment implements ASTInterfaces.Assignment {
     public symbol: Reference<VRobotSymbol>,
     public expression: VExpression,
     public $container: VBlock
-  ) {}
+    ) {}
 
   accept(visitor: RobotScriptVisitor): any {}
 }
@@ -103,8 +103,7 @@ export class VDoubleConstant implements ASTInterfaces.DoubleConstant {
   constructor(
     public $type: "DoubleConstant",
     public $container: any,
-    public intpart : number,
-    public decimpart ?: number
+    public value : number,
   ) {}
   accept(visitor: RobotScriptVisitor): any {}
 }

@@ -1496,7 +1496,7 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
               },
               {
                 "$type": "Assignment",
-                "feature": "intpart",
+                "feature": "value",
                 "operator": "=",
                 "terminal": {
                   "$type": "RuleCall",
@@ -1505,28 +1505,6 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
                   },
                   "arguments": []
                 }
-              },
-              {
-                "$type": "Group",
-                "elements": [
-                  {
-                    "$type": "Keyword",
-                    "value": "."
-                  },
-                  {
-                    "$type": "Assignment",
-                    "feature": "decimpart",
-                    "operator": "=",
-                    "terminal": {
-                      "$type": "RuleCall",
-                      "rule": {
-                        "$ref": "#/rules@29"
-                      },
-                      "arguments": []
-                    }
-                  }
-                ],
-                "cardinality": "?"
               }
             ]
           },
@@ -1547,7 +1525,7 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
                 "terminal": {
                   "$type": "RuleCall",
                   "rule": {
-                    "$ref": "#/rules@29"
+                    "$ref": "#/rules@30"
                   },
                   "arguments": []
                 }
@@ -1949,6 +1927,20 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
     },
     {
       "$type": "TerminalRule",
+      "name": "DOUBLE",
+      "type": {
+        "$type": "ReturnType",
+        "name": "number"
+      },
+      "definition": {
+        "$type": "RegexToken",
+        "regex": "/-?\\\\d+\\\\.\\\\d+/"
+      },
+      "fragment": false,
+      "hidden": false
+    },
+    {
+      "$type": "TerminalRule",
       "name": "INT",
       "type": {
         "$type": "ReturnType",
@@ -1956,7 +1948,7 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
       },
       "definition": {
         "$type": "RegexToken",
-        "regex": "/[0-9]+/"
+        "regex": "/-?\\\\d+/"
       },
       "fragment": false,
       "hidden": false

@@ -32,7 +32,6 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
   visitAssignment(node: VAssignment) {
     const nodevariable : VRobotSymbol | undefined = node.symbol.ref;
     if(nodevariable) {
-      const type = nodevariable.type.type;
       // 1 : check if variable exists among the contexts, starting from the last one (the most recent)
       let contextIndex = this.contexts.length - 1;
       for(; contextIndex >= 0; contextIndex--) {
@@ -42,12 +41,17 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
       }
       // 2 : if variable exists, update it
       if(contextIndex >= 0) {
-        // 3 : check if the type is the same
-        if(this.contexts[contextIndex].variables.get(nodevariable.name)?.type === type) {
+        let value : any = node.expression.accept(this);
+        const possible_types = (typeof value === "boolean") ? ["boolean"] : ["double", "int"];
+        const current_variable = this.contexts[contextIndex].variables.get(nodevariable.name)!;
+        // 3 : check if the type is acceptable
+        if(possible_types.includes(current_variable.type)) {
           // 4 : update the value
-          this.contexts[contextIndex].variables.set(nodevariable.name, {type : type, value : node.expression.accept(this)});
-        } else {
-          throw new Error(`Type mismatch : variable ${nodevariable.name} is of type ${this.contexts[contextIndex].variables.get(nodevariable.name)?.type} but you are trying to assign a value of type ${type}`);
+          if(current_variable.type === "int") value = Math.floor(value);
+          this.contexts[contextIndex].variables.set(nodevariable.name, {type : current_variable.type, value : value});
+        } 
+        else {
+          throw new Error(`Variable ${nodevariable.name} is of type ${current_variable.type} and cannot be assigned to a value of type ${typeof value}`);
         }
       }
     }
@@ -115,14 +119,7 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
   visitDoubleConstant(node: VDoubleConstant): number {
-    // converting the int of the decim part to a real decimal (0.xxx)
-    if(node.decimpart){
-      const numDigits = Math.floor(Math.log10(node.decimpart)) + 1;
-      const divisor = Math.pow(10, numDigits);
-      const decimalPart = node.decimpart / divisor;
-      return node.intpart + decimalPart;
-    }
-    else return node.intpart;
+    return node.value;
   }
   visitEquality(node: VEquality): boolean {
     const left = node.left.accept(this);
@@ -321,9 +318,12 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     // Not necessary. Handled by other methods.
   }
   visitVariableDecl(node: VVariableDecl) {
+    let value = node.expression.accept(this);
+    if(node.type.type==="int") value = Math.floor(value as number);
+    if(node.type.type)
     this.contexts[this.contexts.length - 1].variables.set(node.name, {
       type: node.type.type,
-      value: node.expression.accept(this),
+      value: value,
     });
   }
   visitVariableCall(node: VVariableCall): boolean | number {

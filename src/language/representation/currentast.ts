@@ -18,7 +18,8 @@ import { AbstractAstReflection } from 'langium';
 export const RobotScriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
-    INT: /[0-9]+/,
+    DOUBLE: /-?\d+\.\d+/,
+    INT: /-?\d+/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
 };
@@ -157,8 +158,7 @@ export function isDistanceUnit(item: unknown): item is DistanceUnit {
 export interface DoubleConstant extends AstNode {
     readonly $container: And | Assignment | Block | Comparison | Equality | For | FunctionCall | FunctionReturn | If | Minus | Model | MulDiv | Not | Or | PlusMinus | Print | RobotMovement | RobotRotation | RobotSpeedAdjust | VariableDecl | While;
     readonly $type: 'DoubleConstant';
-    decimpart?: number
-    intpart: number
+    value: number
 }
 
 export const DoubleConstant = 'DoubleConstant';
