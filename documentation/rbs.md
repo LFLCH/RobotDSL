@@ -67,7 +67,7 @@ And all the binary operations are used like the following :
 If you manage several operations in a same expression, you can use ```(``` ```)``` parenthesis to garanty their order of interpretation explicitly.
 For instance ```(b+c)*a``` will solve ```b+c``` first, then multiply the result by ```a```.
 
-### Boolean Operations
+### Boolean Operators
 **unary**
 - Not : ```!```
   
@@ -81,7 +81,7 @@ For instance ```(b+c)*a``` will solve ```b+c``` first, then multiply the result 
   - Greater or equals : ```>=``` 
   - Equals : ```==```
   - Differs : ```!=```
-### Arithmetical Operations
+### Arithmetical Operators
 **unary**
 - Minus : ```-```
 
@@ -149,23 +149,24 @@ void repeat(int value, int n){
 repeat(19, 3); // 19 19 19
 ```
 
-## Sensors
-The sensors allow the developper to interact with the robot. They are not methods, just keywords. They can be used to send an operation to process for the robot, or to capture data from the robot. 
+## Sensors and robot actions
+The sensors and the actions allow the developper to interact with the robot. They are not methods, just keywords. They can be used to send an operation to process for the robot, or to capture data from the robot. 
 Thay all have the same aspect. 
 ```ts
-<sensorAction> in <sensorUnit> 
+<sensorOrAction> in <sensorUnit> 
 ``` 
-### Sensor actions
+### Robot actions
 operation to process
 - ```Forward```, ```Backward```, ```Left``` and ```Right``` : make the robot move, in the given direction. 
 - ```ModifySpeed``` : change the speed of the robot
 -  ```Clock```, ```Anticlock``` : rotate the robot, in degrees. They are the only robot action that do not require a conversion, therefore, they do not need the conversion part (```in <sensorUnit>```).
 
+### Sensors
 data capture
 - ```CurrentTime``` : access the robot internal time. It is a relative time, that is computed since it began to run the program.  
 - ```CurrentDistance``` : access the distance to the nearest obstacle in front of the robot. The returned value is negative if no obstacle was found.
 
-### Sensor Units
+### Robot Units
 The units used are widespread and easily understable by everyone.
 
 In this way, we manipulate :
