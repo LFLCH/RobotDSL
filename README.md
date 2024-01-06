@@ -3,19 +3,25 @@ RobotDSL is a school project (ESIR3 - ASE) that aims to create a simple Domain S
 
 Find more about the developpment process in the associated [file](documentation/devprocess.md).
 
-# RobotScript
+The specific robot is an [Omni4WD](https://manualzz.com/doc/o/96ghj/manual-omni4wd).
+
+<img src="./assets/robot_preview.png" alt="Omni 4 WD robot" width="200">
+
+## RobotScript
 <p align="center">
   <img src="./assets/logo_name.png" alt="robotscript logo" width="400">
 </p>
 <p align="center">
-    RobotScript is the name of this language. It is a <a href="https://langium.org"> Langium</a> project. 
+    RobotScript is the name of our programming language. It is a <a href="https://langium.org"> Langium</a> project. 
 </p>
 
 ### Interpret
-From a program and a given environnment, this project is able to calculate the state that the robot will have at each instant.
+From a program and a given environnment, our toolkit will be able to calculate the state that the robot will have at each instant.
 
 ### Compile
 A RobotScript program into Arduino code for Omni4WD robots.
+Several Example files of valid RobotScript code are located in the ```examples/``` folder. 
+They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI (explain below).
 
 ## Get Started
 After cloning this repository, don't forget to install the dependencies.
@@ -43,10 +49,6 @@ Compile
 ### Resources
 #### Documentation
 Learn more about the language syntax by reading its [documentation](documentation/rbs.md) file.
-
-#### Example files
-Several Example files of valid RobotScript code are located in the ```examples/``` folder. 
-They can be used as reference to understand the language and to verify the behavior of the different implemented processes (parsing, compiling, etc.), using the CLI.
 
 
 ### Use the Web version
