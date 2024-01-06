@@ -30,9 +30,8 @@ MotorWheel wheel4(10, 7, 18, 19, &irq4);
 
 Omni4WD Omni(&wheel1, &wheel2, &wheel3, &wheel4);
 // Init the omni speed to 0.01 m/s (1st args in mm, 2nd to be invisible)
-Omni.setCarSpeedMMPS(10, 10);
 
-HCSR04 hc (2, new int[4]{1, 6, 13, 20}, 4)`
+HCSR04 hc (2, new int[4]{1, 6, 13, 20}, 4);`
     };
 
     static get  SETUP_CONTENT() : string {
@@ -42,6 +41,7 @@ TCCR1B = TCCR1B & 0xf8 | 0x01; // Pin9,Pin10 PWM 31250Hz
 TCCR2B = TCCR2B & 0xf8 | 0x01; // Pin3,Pin11 PWM 31250Hz
 
 Omni.PIDEnable(0.31, 0.01, 0, 10);
+Omni.setCarSpeedMMPS(10, 10);
 `
     }
     
