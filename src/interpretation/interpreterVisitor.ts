@@ -115,7 +115,14 @@ export class RobotInterpreterVisitor implements RobotScriptVisitor {
     }
   }
   visitDoubleConstant(node: VDoubleConstant): number {
-    return node.value;
+    // converting the int of the decim part to a real decimal (0.xxx)
+    if(node.decimpart){
+      const numDigits = Math.floor(Math.log10(node.decimpart)) + 1;
+      const divisor = Math.pow(10, numDigits);
+      const decimalPart = node.decimpart / divisor;
+      return node.intpart + decimalPart;
+    }
+    else return node.intpart;
   }
   visitEquality(node: VEquality): boolean {
     const left = node.left.accept(this);

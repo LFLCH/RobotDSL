@@ -19,7 +19,6 @@ export const RobotScriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
     INT: /[0-9]+/,
-    DOUBLE: /((([0-9]+)\.([0-9]+))|([0-9]+))/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
 };
@@ -158,7 +157,8 @@ export function isDistanceUnit(item: unknown): item is DistanceUnit {
 export interface DoubleConstant extends AstNode {
     readonly $container: And | Assignment | Block | Comparison | Equality | For | FunctionCall | FunctionReturn | If | Minus | Model | MulDiv | Not | Or | PlusMinus | Print | RobotMovement | RobotRotation | RobotSpeedAdjust | VariableDecl | While;
     readonly $type: 'DoubleConstant';
-    value: number
+    decimpart?: number
+    intpart: number
 }
 
 export const DoubleConstant = 'DoubleConstant';
@@ -656,6 +656,7 @@ export class RobotScriptAstReflection extends AbstractAstReflection {
                 return {
                     name: 'If',
                     mandatory: [
+                        { name: 'elifBlocks', type: 'array' },
                         { name: 'subsidaryConditions', type: 'array' }
                     ]
                 };
