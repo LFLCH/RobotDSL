@@ -108,8 +108,8 @@ MulOrDiv infers Expression:
 
 Primary infers Expression:
     '(' Expression ')' |
-    {infer Not} "!" expression=Primary | 
     {infer Minus} "-" expression=Primary |
+    {infer Not} "!" expression=Primary | 
     Atomic
     ;   
 
@@ -129,8 +129,8 @@ Atomic infers Expression:
 
 hidden terminal WS: /\s+/;
 terminal ID: /[_a-zA-Z][\w_]*/;
-terminal DOUBLE returns number: /-?\d+\.\d+/;
-terminal INT returns number: /-?\d+/;
+terminal DOUBLE returns number: /\d+\.\d+/;
+terminal INT returns number: /\d+/;
 
 hidden terminal ML_COMMENT: /\/\*[\s\S]*?\*\//;
 hidden terminal SL_COMMENT: /\/\/[^\n\r]*/;

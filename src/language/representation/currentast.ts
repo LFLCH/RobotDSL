@@ -18,8 +18,8 @@ import { AbstractAstReflection } from 'langium';
 export const RobotScriptTerminals = {
     WS: /\s+/,
     ID: /[_a-zA-Z][\w_]*/,
-    DOUBLE: /-?\d+\.\d+/,
-    INT: /-?\d+/,
+    DOUBLE: /\d+\.\d+/,
+    INT: /\d+/,
     ML_COMMENT: /\/\*[\s\S]*?\*\//,
     SL_COMMENT: /\/\/[^\n\r]*/,
 };

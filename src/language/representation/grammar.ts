@@ -1409,12 +1409,12 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
                 "$type": "Action",
                 "inferredType": {
                   "$type": "InferredType",
-                  "name": "Not"
+                  "name": "Minus"
                 }
               },
               {
                 "$type": "Keyword",
-                "value": "!"
+                "value": "-"
               },
               {
                 "$type": "Assignment",
@@ -1437,12 +1437,12 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
                 "$type": "Action",
                 "inferredType": {
                   "$type": "InferredType",
-                  "name": "Minus"
+                  "name": "Not"
                 }
               },
               {
                 "$type": "Keyword",
-                "value": "-"
+                "value": "!"
               },
               {
                 "$type": "Assignment",
@@ -1934,7 +1934,7 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
       },
       "definition": {
         "$type": "RegexToken",
-        "regex": "/-?\\\\d+\\\\.\\\\d+/"
+        "regex": "/\\\\d+\\\\.\\\\d+/"
       },
       "fragment": false,
       "hidden": false
@@ -1948,7 +1948,7 @@ export const RobotScriptGrammar = (): Grammar => loadedRobotScriptGrammar ?? (lo
       },
       "definition": {
         "$type": "RegexToken",
-        "regex": "/-?\\\\d+/"
+        "regex": "/\\\\d+/"
       },
       "fragment": false,
       "hidden": false
