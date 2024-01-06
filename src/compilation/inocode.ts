@@ -12,7 +12,6 @@ export class InoCode {
 #include <MotorWheel.h>
 #include <Omni4WD.h>
 #include <HCSR04.h>
-#include <String.h>
 `
 };
 
@@ -33,7 +32,7 @@ Omni4WD Omni(&wheel1, &wheel2, &wheel3, &wheel4);
 // Init the omni speed to 0.01 m/s (1st args in mm, 2nd to be invisible)
 Omni.setCarSpeedMMPS(10, 10);
 
-HSCR04 hc (2, new int[4]{1, 6, 13, 20}, 4)`
+HCSR04 hc (2, new int[4]{1, 6, 13, 20}, 4)`
     };
 
     static get  SETUP_CONTENT() : string {
