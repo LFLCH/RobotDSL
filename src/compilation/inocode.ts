@@ -126,7 +126,11 @@ void robotSpeak(String text){
 double getRobotDistance(){
     for(int i = 0; i < 4; i ++)
     {
-        Serial.println("Sonar %d acquires a distance of %%.2f", i + 1, hc.dist(i));
+        Serial.print("Sonar ");
+        Serial.print(i + 1);
+        Serial.print(" acquires a distance of ");
+        Serial.print(hc.dist(i));
+        Serial.println(".");
     }
     Omni.delayMS(60);
 }
