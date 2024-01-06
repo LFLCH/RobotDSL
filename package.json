@@ -14,7 +14,7 @@
     "publisher": "Léo Filoche && Jérémy Bindel",
     "scripts": {
         "build": "tsc -b tsconfig.json && node esbuild.mjs",
-        "build:extension" : "mv README.md README_.md && vsce package && mv README_.md README.md",
+        "build:extension" : "vsce package",
         "watch": "concurrently -n tsc,esbuild -c blue,yellow \"tsc -b tsconfig.json --watch\" \"node esbuild.mjs --watch\"",
         "lint": "eslint src --ext ts",
         "langium:generate": "langium generate",
