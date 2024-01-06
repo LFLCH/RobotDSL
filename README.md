@@ -1,5 +1,5 @@
 # RobotDSL
-RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
+RobotDSL is a school project (ESIR3 - Advanced Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
 
 ## RobotScript
@@ -13,7 +13,7 @@ RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that
 </p>
 
 ### Interpret
-From a program and a given environnment, the interpreter is able to calculate the state that the robot will have at each instant. It is possible to interpret a same program for several robots. 
+From a program and a given environment, the interpreter is able to calculate the state that the robot will have at each instant. It is possible to interpret a same program for several robots. 
 
 <p align="center">
   <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/37c81912-b6d8-4b3c-a0e4-51da07f74b28" alt="Demo squares" width="300">

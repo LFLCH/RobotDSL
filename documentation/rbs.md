@@ -8,6 +8,8 @@ Every directly written statement, or called statement via a function call will b
 
 You will find illustration examples in the [examples](../examples) folder.
 
+Some examples are deliberately made more complex to demonstrate the expressiveness of our language.
+
 The language is still recent, and currently, all the described rules are not necessarily verified before or during compilation or execution. We therefore encourage you to respect what is written here to have the most expected result.
 
 ## Types
