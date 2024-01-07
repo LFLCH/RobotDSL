@@ -44,6 +44,11 @@ saveBrowserButtons.forEach((btn)=>{
     });
 });
 
+/**
+ * 
+ * @param {string} message 
+ * @param {string} level between success, warning, error, info 
+ */
 function toastPop(message, level="success") {
     const toastContent = document.getElementById("toast-content");
     toastContent.querySelector(".toast-title").innerText = message;
