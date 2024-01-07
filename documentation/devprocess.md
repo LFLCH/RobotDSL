@@ -70,7 +70,7 @@ After a try on the VSCode server with our LSP, we then do not obtain any syntax 
 The grammar can currently be found in the file [robot-script.langium](../src/language/robot-script.langium).
 
 ## Creation of a parsing tool
-After having written a valid grammar, we then decided to create a parsing tool. This tool would be very usefull, given that many processes on the language need to parse the program. 
+After having written a valid grammar, we then decided to create a parsing tool. This tool would be very useful, given that many processes on the language need to parse the program. 
 
 To do so, it has been decided to use the [Visitor](https://refactoring.guru/fr/design-patterns/visitor) design pattern. With the *accept* method, it is an elegant way to resolve abstract nodes, that cannot be resolved like the concrete ones otherwise. For instance, an *Expression* is an abstract node : it can be a *AND*, a *OR*, a *FunctionCall*, etc...
 
@@ -119,7 +119,7 @@ In the absence of solutions, we continued for a time to develop the other compon
 You can have a glance at the project using this solution with the tag [ASTParsing.If](https://github.com/LFLCH/RobotDSL/releases/tag/ASTParsing.if) (at the time, only the interpreter was beeing developped).
 
 
-Nevertheless, after several discussions, and attempts to tweak the grammar, we [decided](https://github.com/LFLCH/RobotDSL/pull/6) to apply manually apply a slight modification on the generated file : change those ```Type``` into ```interface```. It is of course not the best thing we wanted, be we prefered having a full use of the design pattern, rather than not using it completely, making it less interesting. 
+Nevertheless, after several discussions, and attempts to tweak the grammar, we [decided](https://github.com/LFLCH/RobotDSL/pull/6) to apply manually apply a slight modification on the generated file : change those ```Type``` into ```interface```. It is of course not the best thing we wanted, but we prefered having a full use of the design pattern, rather than not using it completely, making it less interesting. 
 
 The ```generated``` folder has been replaced by the [```representation```](../src/language/representation) folder, and the ```ast.ts``` file has been renammed to [```currentast.ts```](../src/language/representation/currentast.ts), in order to show that particular use.
 
