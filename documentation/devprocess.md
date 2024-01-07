@@ -154,7 +154,11 @@ As you may notice, there are many parenthesis in the compiled expressions. It is
 The compilation files are located in the compilation folder : [```src/compilation```](../src/compilation/).
 
 ## Developpment of language support tools
+In order to use the compiler and the interpreter, we had do implement tools that enable it. 
+It is why we coded the CLI and the WEB IDE, whose structure was already in place thanks to Langium.
+
 ### CLI
+Nothing much to say about the CLI. It is the fastest language support tool : fast to build, code and use. However, it is not really adaptated to the view the simulation context, given that it makes robots moving in a 2D space. Despite it all, the CLI can be used for both : interpretation and compilation, and this proved useful for debugging. It is very easy to use and program. We added some optional parameters, to customize it a little. Type ```./bin/cli.js <interpret or compile> -h``` to know them. 
 
 ### WEB IDE
 
