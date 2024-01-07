@@ -1,4 +1,4 @@
-// JSON data that will be sent to be drawn. 
+// Environment during the execution of the instructions, that is handled by the simulation
 
 export interface RunningEnvironment {
     initrobots: MovingEntity[], 
@@ -53,4 +53,33 @@ export interface Log{
 export interface Vector {
     x : number, 
     y : number
+}
+
+export function instructionToString(instruction : Instruction) : string{
+    const id = instruction.robot.initstate.id;
+    const name = instruction.name;
+    const time = instruction.timestamp;
+    const duration = instruction.duration;
+    let value ="";
+    if(name==="move"){
+        const move = (instruction.value as Move);
+        value = move.name+ ": " + move.distance +"m";
+    }
+    else if(name ==="rotate"){
+        const rotation = (instruction.value as Rotation);
+        value = rotation.name + ": " + rotation.value + "deg";
+    }
+    else if(name==="distance"){
+        const distance = (instruction.value as DistanceCheck);
+        value = "check distance: " +distance.value + "m";
+    }
+    else if(name==="speed"){
+        const speed = (instruction.value as Speedset);
+        value = "speed setting: "+speed.value + "s";
+    }
+    else if(name==="speak"){
+        const speak = (instruction.value as Log);
+        value = "Speak :" + speak.value;
+    }
+    return id + " (t=" + time +")" +"  "+ value + " for "+ duration+"s";
 }

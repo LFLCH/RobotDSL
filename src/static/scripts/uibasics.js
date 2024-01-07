@@ -138,50 +138,43 @@ document.addEventListener('code-captured', (e)=>{
 });
 
 const exampleCodes = [
-    `void square(int size){
-    Forward size in m;
-    Right size*100 in cm;
-    Clock 270;
-    Backward size in m;
-    Anticlock 180-90+90;
-    Left (size*2)/2 in m;
+    `// RobotScript is running in the web!
+Forward 2 in m;
+Backward 1 in m;
+Left 3 in m;
+Right 3.5 in m;`,
+`void square(int size){
+    Forward 1 in m;
+    Clock 90;
+    Forward 10 in dm;
+    Clock 90;
+    Forward 100 in cm;
+    Clock 90;
+    Forward 1000 in mm;
     Clock 90;
 }
 
-// Draw five times the same square
-// Each time faster
+// Follow a square path 3 times.
 
-int loopings = 5;
-for(int i=0;i<loopings;i=i+1){
-    Print i;
-    ModifySpeed (i+1)*10 in m;
-    square(5);
-}`,
-    `int sum(int a, int b){
-  int c = a + b;
-  
-  return c;
+int square_number = 3;
+double square_size = 2.5;
+
+for(int i=0; i< square_number ; i = i+1){
+    square(square_size);
 }
-
-int a = sum(5, 6);
-
-int b = a - 3 * 4 / 5;
-
-Print b;
 `,
-    `void square(int nb){
-for(int i = 0; i < nb; i=i+1){
-    Forward 1 in m;
-    Clock 90;
-    Forward 1 in m;
-    Clock 90;
-    Forward 1 in m;
-    Clock 90;
-    Forward 1 in m;
-    Clock 90;
+`// The default speed is 1 m/s. We set it to 2 m/s.
+ModifySpeed 2 in m; 
+
+// Draw a snail shell shape during 30 s.
+
+int i=1;
+while(CurrentTime in s < 30){
+    Anticlock 90;
+    Forward i in dm;
+    i = i +1;
+    Print i;
 }
-}
-square(4);
 `
 ]
 
@@ -189,13 +182,15 @@ const exampleButtons = document.querySelectorAll('.example-button');
 
 exampleButtons.forEach((btn)=>{
     btn.addEventListener('click', ()=>{
-        resetLocally();
         const id = btn.name.split('-')[1];
-        const code = exampleCodes[id-1];
+        const code = id<=exampleCodes.length ? exampleCodes[id-1] : window.localStorage.getItem("mainCode") ?? exampleCodes[0];
         document.dispatchEvent(new CustomEvent('load-code', {detail: {code: code}}));   
     });
 });
 
+if(!window.localStorage.getItem("mainCode")){
+    window.localStorage.setItem("mainCode", exampleCodes[0]);
+}
 
 const playingCanvasButtons = document.querySelectorAll('.playing-canvas');
 const pausedCanvasButtons = document.querySelectorAll('.paused-canvas');

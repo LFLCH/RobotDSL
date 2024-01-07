@@ -10,6 +10,7 @@ import { EnvironmentParameters } from '../interpretation/environment/parameters.
 import { Compiler } from '../compilation/compiler.js';
 import { generate } from './generator.js';
 import { RobotEnvironment } from '../interpretation/environment/environment.js';
+import { instructionToString } from '../interpretation/environment/runningEnvironment.js';
 
 
 export const generateArduinoAction = async (fileName: string, opts: CompilationOptions): Promise<void> => {
@@ -41,7 +42,9 @@ export const interpretRobotScriptFile = async (fileName: string, opts : Interpre
         console.log(chalk.green(`RunningEnvironment generated successfully: ${generatedFilePath}`));
     }
     if(opts.log === "true"){
-        console.log(result);
+        environment.instructions.forEach(instruction => {
+            console.log(instructionToString(instruction));
+        });
     }
 
 }
@@ -77,7 +80,7 @@ export default function(): void {
         .command('interpret')
         .argument('<file>', `source file (possible file extensions: ${fileExtensions})`)
         .option('-d, --destination <dir>', 'destination directory of the generated JSON file from (RunningEnvironment format)', undefined)
-        .option('-l, --log', 'logs the generated JSON file to the console', "true")
+        .option('-l, --log', 'log all the computed instruction', "true")
         .option('-r, --robotsNumber <number>', 'number of robots', '1')
         .option('-s, --spaceAtStart <number>', 'space between robots at start', '0')
         .description('interprets a RobotScript file (.rbs)')

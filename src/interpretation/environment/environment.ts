@@ -76,18 +76,23 @@ export class RobotEnvironment {
     public setRobotAngle(robotIndex: number, angle: number, rotationname : "clockwise" | "anticlockwise") : void {
         const robot = this.robots[robotIndex]; 
         const entity = robot.clone().asMovingEntity();
+        // the duration must be proportional to the angle and the movement speed
+        const rotationSpeed = robot.speed * 0.0005;
+        const duration = (Math.abs(angle - robot.angle) / 360) / rotationSpeed;
         robot.angle = RobotEnvironment.validAngle(angle);
         const angleset : Rotation = {
             "name" : rotationname,
-            "duration" : 500,
+            "duration" : duration,
             "value" : robot.angle
         }
+        const nextstate = robot.clone().asMovingEntity();
+        nextstate.angle = angle;
         robot.addInstruction({
             "timestamp" : 0,
-            "duration" : 123,
+            "duration" : angleset.duration,
             "robot" : {
                 "initstate" : entity,
-                "nextstate" : robot.clone().asMovingEntity()
+                "nextstate" : nextstate
             },
             "name" : "rotate",
             "value" : angleset
@@ -125,11 +130,11 @@ export class RobotEnvironment {
      */
     public moveRobot(robotIndex : number, movement : "Forward" | "Backward" | "Left" | "Right", distance : number){
         const robot = this.robots[robotIndex];
-        const entity = robot.clone().asMovingEntity();
         const duration = distance/robot.speed; // in seconds
         const action = RobotEnvironment.computeRobotAction(movement, robot.angle, distance);
         const vector : Vector = action.vector;
-        robot.angle = RobotEnvironment.validAngle(action.angle) ;
+        if(action.angle !== robot.angle) this.setRobotAngle(robotIndex,RobotEnvironment.validAngle(action.angle), "clockwise");
+        const entity = robot.clone().asMovingEntity();
         robot.position.x = vector.x +robot.position.x;
         robot.position.y = vector.y + robot.position.y;
         const name = movement==="Forward"?"forward": movement==="Backward"?"backward": movement==="Left"?"left": "right"; 
