@@ -1,5 +1,5 @@
 # RobotDSL
-RobotDSL is a school project (ESIR3 - Advanced Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
+RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
 
 ## RobotScript
