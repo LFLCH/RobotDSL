@@ -24,7 +24,7 @@ class Robot {
           const progress = (this.time - instru.timestamp) / instru.duration;
           this.x = instru.robot.nextstate.x * progress + instru.robot.initstate.x * (1 - progress);
           this.y = instru.robot.nextstate.y * progress + instru.robot.initstate.y * (1 - progress);
-          this.angle = instru.robot.nextstate.angle;
+          this.angle = instru.robot.nextstate.angle * progress + instru.robot.initstate.angle * (1 - progress);
         }
         else if(ended){
           this.x = instru.robot.nextstate.x;
