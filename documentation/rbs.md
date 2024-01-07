@@ -180,7 +180,7 @@ Thay all have the same aspect.
 
 ### Sensors
 - ```CurrentTime``` : access the robot internal time. It is a relative time, that is computed since it began to run the program.  
-- ```CurrentDistance``` : access the distance to the nearest obstacle in front of the robot. The returned value is negative if no obstacle was found.
+- ```CurrentDistance``` : access the distance to the nearest obstacle next to the robot. The returned value is negative if no obstacle was found.
 
 ### Robot Units
 The units used are widespread and easily understable by everyone.
