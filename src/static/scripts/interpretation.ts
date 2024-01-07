@@ -1,4 +1,4 @@
-import { RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
+import { RunningEnvironment, instructionToString } from "../../interpretation/environment/runningEnvironment.js";
 import { CanvasSession, changeCanvasVisibility } from "./canvas.js";
 import { changeArduinoWrapperVisibility } from "./compilation.js";
 import { addTerminalLine } from "./terminal.js";
@@ -11,7 +11,7 @@ document.addEventListener('run-content', async (event) => {
     changeArduinoWrapperVisibility(false);
     const environment = (event as CustomEvent<RunningEnvironment>).detail;
     for(const instruction of environment.instructions){
-        addTerminalLine("[SIMULATION]"+ instruction.name + ' ' + JSON.stringify(instruction.value) );
+        addTerminalLine("[SIMULATION] "+ instructionToString(instruction));
     }
     let cs : CanvasSession = new CanvasSession(environment);
     cs.start();

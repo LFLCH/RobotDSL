@@ -5,7 +5,8 @@ ModifySpeed 2 in m;
 
 int i=1;
 while(CurrentTime in s < 30){
+    Anticlock 90;
     Forward i in dm;
-    Left i in dm;
     i = i +1;
+    Print i;
 }

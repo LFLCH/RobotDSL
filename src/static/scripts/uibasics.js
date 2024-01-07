@@ -163,17 +163,17 @@ for(int i=0; i< square_number ; i = i+1){
     square(square_size);
 }
 `,
-`
-// The default speed is 1 m/s. We set it to 2 m/s.
+`// The default speed is 1 m/s. We set it to 2 m/s.
 ModifySpeed 2 in m; 
 
 // Draw a snail shell shape during 30 s.
 
 int i=1;
 while(CurrentTime in s < 30){
+    Anticlock 90;
     Forward i in dm;
-    Left i in dm;
     i = i +1;
+    Print i;
 }
 `
 ]
