@@ -2,6 +2,7 @@
 RobotDSL is a school project (ESIR3 - Automated Software Engineering class) that aims to create a simple Domain Specific Language (DSL) for Robots.
 
 
+
 ## RobotScript
 <p align="center">
   <img src="https://github.com/LFLCH/RobotDSL/assets/62034725/751f97e1-838f-4b40-bf3a-aff89487d674" alt="Logo name" width="400">
@@ -26,7 +27,7 @@ A RobotScript program can be translated into Arduino code using the compiler. Cu
 </p>
 
 ### Demonstration
-<video src="https://github.com/LFLCH/RobotDSL/assets/62034725/906b660a-8045-4425-becb-3102c87b029d" title="Main demo"></video>
+<video src="https://github.com/LFLCH/RobotDSL/assets/62034725/2c7e0810-ffab-4e8b-9ed2-457636bfce4e" title="Main demo"></video>
 
 ## Get Started
 After cloning this repository, don't forget to install the dependencies.
