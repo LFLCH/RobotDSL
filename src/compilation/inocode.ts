@@ -124,15 +124,19 @@ void robotSpeak(String text){
 }
 
 double getRobotDistance(){
-    for(int i = 0; i < 4; i ++)
+    float current_dist = hc.dist(0);
+    float min_dist = current_dist;
+    float [] dists = {current_dist, 0.0f, 0.0f, 0.0f};
+    for(int i = 1; i < 4; i ++)
     {
-        Serial.print("Sonar ");
-        Serial.print(i + 1);
-        Serial.print(" acquires a distance of ");
-        Serial.print(hc.dist(i));
-        Serial.println(".");
+        current_dist = hc.dist(i);
+        if(current_dist < min_dist) {
+            min_dist = current_dist;
+        }
+        dists[i] = current_dist;
     }
     Omni.delayMS(60);
+    return min_dist;
 }
 
 double getRobotSpeed(){
