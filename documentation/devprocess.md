@@ -135,9 +135,23 @@ When an interpretation is done, a JSON format object is returned, in order to be
 
 Finally, at the end of development, we chose to add a concept of interpretation parameters, allowing the user to adjust a little the environnment at start (number of robots and their position). The selection of those parameters can be done in the web IDE, as well as in the CLI.
 
-The interpretation files are located in the interpretation folder  [```src/interpretation```](../src/interpretation).
+The interpretation files are located in the interpretation folder : [```src/interpretation```](../src/interpretation).
 
 ## Compiler
+The compiler was coded after the Interpreter. Its [visitor](../src/compilation/compilerVisitor.ts) is more "pure", using only accept methods, where the interpreter visits the concrete nodes. 
+
+Apart from that aspect, it is really close to it. The compiler aims to convert RobotScript programms into Arduino ones. It is  why you can see a [```inocode.ts```](../src/compilation/inocode.ts) file, that contains all the Arduino syntax and the methods that allow an interaction with a Omni4WD robot. This class is only composed of string constants. We thought is was a good idea for that use. 
+
+Given that we did not have access to those robots when the compiler was finished to coded, our only guaranty that the program is valid, is by compiling the arduino code in Arduino IDE, with the loaded external libraries. Fortunatly, it is the case on our example files.
+
+<p align="center">
+  <img src="assets/arduino_valid_compilation.png" alt="ino valid compilation" width="600"><br>
+  Example of valid compilation in Arduino IDE with a generated Arduino code from a RobotScript program compilation.
+</p>
+
+As you may notice, there are many parenthesis in the compiled expressions. It is done to keep the same priority as in the rbs program. 
+
+The compilation files are located in the compilation folder : [```src/compilation```](../src/compilation/).
 
 ## Developpment of language support tools
 ### CLI
