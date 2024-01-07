@@ -160,7 +160,21 @@ It is why we coded the CLI and the WEB IDE, whose structure was already in place
 ### CLI
 Nothing much to say about the CLI. It is the fastest language support tool : fast to build, code and use. However, it is not really adaptated to the view the simulation context, given that it makes robots moving in a 2D space. Despite it all, the CLI can be used for both : interpretation and compilation, and this proved useful for debugging. It is very easy to use and program. We added some optional parameters, to customize it a little. Type ```./bin/cli.js <interpret or compile> -h``` to know them. 
 
+The CLI files are located in the cli folder [```src/cli```](../src/cli/).
+
 ### WEB IDE
+The web IDE developpment represented a lots of effort. We wanted to have something easy and intuitive to use. All the features are described in [```rbs.md```](./rbs.md).
+Liking coding in typescript over javascript, we enabled the possibility to code in both for the frontend. 
+
+The WEB IDE is composed of 3 parts : 
+- The node server (backend) : [```web/```](../src/web/), it starts and hosts the application.  
+- The client (frontend) : [```static/```](../src/static/), it is the UI, and it represents graphically the simulation with the [PJ.js library](https://p5js.org/) 
+- The language server (frontend) : [```language/mainbrowser.ts```](../src/language/main-browser.ts), it is where the interpretation and compilation tasks care computed. 
+
+Managing all those parts needs requires rigor. It is why we clearly separated the data types that are exchanged.
+The data is transmited using VSCode LSP notifications between the client and the server.
+The data inside the client (ts and js files) is transmited using JS Events. 
+And (more rare, only for saving on the device), the data is transmited using HTTP Requets from the frontend to the backend.
 
 ## Known isssues
 Drawing (web)
