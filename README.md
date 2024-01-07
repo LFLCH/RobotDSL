@@ -37,6 +37,7 @@ npm install && npm run langium:generate
 ### Documentation
 The ```documentation/``` folder contains several documentation files.
 - Read [rbs.md](documentation/rbs.md) to learn more about the language syntax.
+- Read [web.md](documentation/web.md) to learn how to use the WEB IDE.
 - Read [devprocess.md](documentation/devprocess.md) to learn more about the steps the we followed to achieve this project.   
 
 ### Examples
