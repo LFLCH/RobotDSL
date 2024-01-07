@@ -28,12 +28,43 @@ copyButtons.forEach((btn)=>{
 
 const saveDiskButtons = document.querySelectorAll('.save-disk');
 
-saveDiskButtons.forEach((btn)=>{
-    btn.addEventListener('click', ()=>{
-        const code = document.getElementById(btn.getAttribute('data-save')).innerText;
-        const event = new CustomEvent('save-code', {detail: {code: code}});
-        document.dispatchEvent(event);
+// The save button tries to save the code in a file. 
+//If it is on localhost, it will directly save the code on the computer. 
+//Otherwise, it will create a download link.
+saveDiskButtons.forEach((btn) => {
+  // check if the  instance is in localhost
+  if (window.location.hostname === "localhost") {
+    btn.addEventListener("click", () => {
+      const code = document.getElementById(
+        btn.getAttribute("data-save")
+      ).innerText;
+      const event = new CustomEvent("save-code", { detail: { code: code } });
+      document.dispatchEvent(event);
     });
+  } else {
+    btn.addEventListener("click", () => {
+      // Content to be saved in the file
+      const fileContent = document.getElementById(
+        btn.getAttribute("data-save")
+      ).innerText;
+
+      // Create a Blob with the content
+      const blob = new Blob([fileContent], { type: "text/plain" });
+
+      // Create a download link
+      const link = document.createElement("a");
+      link.href = window.URL.createObjectURL(blob);
+      link.download = "robotscript.ino";
+
+      // Append the link to the body and trigger the click event
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.dispatchEvent(new CustomEvent('toast-notification', {detail : {"message" : "Saving the arduino code...", "level": "info"}}));
+      document.body.removeChild(link);
+    });
+  }
 });
 
 const saveBrowserButtons = document.querySelectorAll('.save-browser');

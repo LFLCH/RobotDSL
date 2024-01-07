@@ -75,6 +75,10 @@ function run(){
     );
 }
 
+/**
+ * Save the compilation result in a file
+ * @warning this function should only be called in a local environment 
+ */
 function save(){
     connection.onNotification('browser/save-compilation', async (params: {type: string}) => {
         const data = await fetch(`http://localhost:3001/save-arduino?content=${encodeURIComponent(currentCompilationResult!)}`).then(async (response) => {
