@@ -1,11 +1,11 @@
 void square(int size){
-    Forward 1 in m;
+    Forward 1 * size in m;
     Clock 90;
-    Forward 10 in dm;
+    Forward 10 * size in dm;
     Clock 90;
-    Forward 100 in cm;
+    Forward 100 * size in cm;
     Clock 90;
-    Forward 1000 in mm;
+    Forward 1000 * size in mm;
     Clock 90;
 }
 
