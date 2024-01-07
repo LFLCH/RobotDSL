@@ -9,12 +9,12 @@ import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VBoolConstant, VComparis
  */
 export function weaveAcceptMethods(services: RobotScriptServices) {
     const registry = services.validation.ValidationRegistry;
-    const weaver = services.validation.RoboMlAcceptWeaver
+    const weaver = services.validation.RobotScriptAcceptWeaver
     registry.register(weaver.checks, weaver);
 }
 
 
-export class RoboMlAcceptWeaver {
+export class RobotScriptAcceptWeaver {
 
     weaveAnd(node : InterfaceAST.And, accept : ValidationAcceptor) : void{
         (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAnd(node as VAnd);}
