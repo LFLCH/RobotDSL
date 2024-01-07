@@ -109,13 +109,7 @@ function getWorker() {
  * Retrieves the program code to display, either a default or from local storage
  */
 function getMainCode() {
-    let mainCode = `// RobotScript is running in the web!
-Forward 2 in m;
-Backward 2 in m;
-Left 5 in m;
-Right 10 in m;
-    `;
-    
+    let mainCode = `//RobotScript is running in the web !`;
     // seek to restore any previous code from our last session
     if (window.localStorage) {
         const storedCode = window.localStorage.getItem('mainCode');
@@ -123,7 +117,6 @@ Right 10 in m;
             mainCode = storedCode;
         }
     }
-
     return mainCode;
 }
 

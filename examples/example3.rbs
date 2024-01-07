@@ -1,19 +1,11 @@
-void square(int size){
-    Forward size in m;
-    Right size*100 in cm;
-    Clock 270;
-    Backward size in m;
-    Anticlock 180-90+90;
-    Left (size*2)/2 in m;
-    Clock 90;
-}
+// The default speed is 1 m/s. We set it to 2 m/s.
+ModifySpeed 2 in m; 
 
-// Draw five times the same square
-// Each time faster
+// Draw a snail shell shape during 30 s.
 
-int loopings = 5;
-for(int i=0;i<loopings;i=i+1){
-    Print i;
-    ModifySpeed (i+1)*10 in m;
-    square(5);
+int i=1;
+while(CurrentTime in s < 30){
+    Forward i in dm;
+    Left i in dm;
+    i = i +1;
 }
