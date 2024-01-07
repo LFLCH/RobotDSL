@@ -126,7 +126,7 @@ void robotSpeak(String text){
 double getRobotDistance(){
     float current_dist = hc.dist(0);
     float min_dist = current_dist;
-    float [] dists = {current_dist, 0.0f, 0.0f, 0.0f};
+    float dists [] = {current_dist, 0.0f, 0.0f, 0.0f};
     for(int i = 1; i < 4; i ++)
     {
         current_dist = hc.dist(i);
