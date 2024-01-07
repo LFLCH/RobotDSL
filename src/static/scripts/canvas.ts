@@ -1,7 +1,6 @@
 import { Instruction, Move, MovingEntity, RunningEnvironment } from "../../interpretation/environment/runningEnvironment.js";
 
 export const canvas : HTMLCanvasElement  = document.getElementById('simulation-canvas') as HTMLCanvasElement;
-const context = canvas.getContext('2d')!;
 const slider: HTMLInputElement = document.getElementById('simulation-progress-slider') as HTMLInputElement;
 
 export function changeCanvasVisibility(visible : boolean = true){
@@ -60,11 +59,5 @@ export class CanvasSession{
   }
   document.dispatchEvent(new CustomEvent('init-canvas', {detail: {"env" : {"robots" : robots, "instructions" : instructions}}}));
   console.log("Canvas session started");
-}
-
-public runInstruction(instruction : Instruction){
-  // converting values to pixels 
-  
-  // document.dispatchEvent(new CustomEvent('canvas-run-instruction', {detail: instruction}));
 }
 }

@@ -42,10 +42,10 @@ interface FilePathData {
     name: string
 }
 
-export function extractDestinationAndName(filePath: string, destination: string | undefined): FilePathData {
+export function extractDestinationAndName(filePath: string, destination: string): FilePathData {
     filePath = path.basename(filePath, path.extname(filePath)).replace(/[.-]/g, '');
     return {
-        destination: destination ?? path.join(path.dirname(filePath), 'generated'),
+        destination: destination,
         name: path.basename(filePath)
     };
 }

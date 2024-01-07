@@ -44,6 +44,11 @@ saveBrowserButtons.forEach((btn)=>{
     });
 });
 
+/**
+ * 
+ * @param {string} message 
+ * @param {string} level between success, warning, error, info 
+ */
 function toastPop(message, level="success") {
     const toastContent = document.getElementById("toast-content");
     toastContent.querySelector(".toast-title").innerText = message;
@@ -103,25 +108,24 @@ document.addEventListener('code-captured', (e)=>{
 
 const exampleCodes = [
     `void square(int size){
-        Forward size in m;
-        Right size*100 in cm;
-        Clock 270;
-        Backward size in m;
-        Anticlock 180-90+90;
-        Left (size*2)/2 in m;
-        Clock 90;
-    }
-    
-    // Draw five times the same square
-    // Each time faster
-    
-    int loopings = 5;
-    for(int i=0;i<loopings;i=i+1){
-        Print i;
-        ModifySpeed (i+1)*10 in m;
-        square(5);
-    }    
-    `,
+    Forward size in m;
+    Right size*100 in cm;
+    Clock 270;
+    Backward size in m;
+    Anticlock 180-90+90;
+    Left (size*2)/2 in m;
+    Clock 90;
+}
+
+// Draw five times the same square
+// Each time faster
+
+int loopings = 5;
+for(int i=0;i<loopings;i=i+1){
+    Print i;
+    ModifySpeed (i+1)*10 in m;
+    square(5);
+}`,
     `int sum(int a, int b){
   int c = a + b;
   

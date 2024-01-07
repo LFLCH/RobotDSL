@@ -5,20 +5,16 @@ import { RobotScriptVisitor, VAnd, VAssignment, VBlock, VBoolConstant, VComparis
 
 /**
  * Register custom validation checks.
- * TODO : Call this function in the language module.ts file (see registerValidationChecks(...);)
+ * @info this function needs to be called in the language module.ts file (see registerValidationChecks(...);)
  */
 export function weaveAcceptMethods(services: RobotScriptServices) {
     const registry = services.validation.ValidationRegistry;
-    const weaver = services.validation.RoboMlAcceptWeaver
+    const weaver = services.validation.RobotScriptAcceptWeaver
     registry.register(weaver.checks, weaver);
 }
 
-/**
- * TODO:
- * You must implement a weaving function for each concrete concept of the language.
- * you will also need to fill the check data structure to map the weaving function to the Type of node
- */
-export class RoboMlAcceptWeaver {
+
+export class RobotScriptAcceptWeaver {
 
     weaveAnd(node : InterfaceAST.And, accept : ValidationAcceptor) : void{
         (<any> node).accept = (visitor: RobotScriptVisitor) => {return visitor.visitAnd(node as VAnd);}

@@ -8,7 +8,7 @@ import { EnvironmentParameters } from "./parameters.js";
 export class RobotEnvironment {
 
     public static getDefaultEnvironment(): RobotEnvironment {
-        return new RobotEnvironment([new Robot("@Robot1", {x: 0, y: 0}), new Robot("@Robot2", {x: 3, y: 3})]);
+        return new RobotEnvironment([new Robot("@Robot1", {x: 0, y: 0})]);
     }
 
     public static getParameteredEnvironment(params : EnvironmentParameters) : RobotEnvironment {
@@ -84,7 +84,7 @@ export class RobotEnvironment {
         }
         robot.addInstruction({
             "timestamp" : 0,
-            "duration" : 0,
+            "duration" : 123,
             "robot" : {
                 "initstate" : entity,
                 "nextstate" : robot.clone().asMovingEntity()
